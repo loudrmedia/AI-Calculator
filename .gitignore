@@ -39,3 +39,6 @@ coverage/
 .vercel
 .wrangler/
 *.tsbuildinfo
+
+# Portable GitHub CLI (installed via npm run install:gh)
+tools/gh/

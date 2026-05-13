@@ -1,0 +1,12 @@
+{
+  "name": "ai-calculator-project",
+  "private": true,
+  "description": "AI Case Calculator — monorepo (web + optional worker). Portable GitHub CLI for auth.",
+  "scripts": {
+    "install:gh": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/install-gh-portable.ps1",
+    "gh": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/gh.ps1",
+    "gh:login": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/gh.ps1 auth login --hostname github.com --git-protocol https --web",
+    "gh:setup-git": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/gh.ps1 auth setup-git",
+    "gh:status": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/gh.ps1 auth status"
+  }
+}
