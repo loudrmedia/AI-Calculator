@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Free AI Case Calculator | Estimate Your Claim Value',
@@ -23,7 +24,32 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        
+        {/* TrustedForm - Lead Certification */}
+        <Script
+          id="trustedform"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var tf = document.createElement('script');
+                tf.type = 'text/javascript';
+                tf.async = true;
+                tf.src = ("https:" == document.location.protocol ? 'https' : 'http') +
+                  '://api.trustedform.com/trustedform.js?field=xxTrustedFormCertUrl&use_tagged_consent=true&l=' +
+                  new Date().getTime() + Math.random();
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(tf, s);
+              })();
+            `,
+          }}
+        />
+        <noscript>
+          <img src="https://api.trustedform.com/ns.gif" alt="" />
+        </noscript>
+      </body>
     </html>
   );
 }

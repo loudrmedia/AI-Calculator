@@ -24,6 +24,12 @@ export function ResultsStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result, submitted]);
 
+  const getTrustedFormCertUrl = (): string | undefined => {
+    if (typeof window === 'undefined') return undefined;
+    const input = document.querySelector<HTMLInputElement>('input[name="xxTrustedFormCertUrl"]');
+    return input?.value || undefined;
+  };
+
   const submitLead = async () => {
     if (!result || submitted) return;
 
@@ -41,6 +47,7 @@ export function ResultsStep() {
           modelVersion: result.modelVersion,
         },
         utmParams: getUtmParams(),
+        trustedFormCertUrl: getTrustedFormCertUrl(),
         submittedAt: new Date().toISOString(),
       };
 

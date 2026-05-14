@@ -42,6 +42,7 @@ interface LeadPayload {
     utm_content?: string;
     utm_term?: string;
   };
+  trustedFormCertUrl?: string;
   submittedAt: string;
 }
 
@@ -129,6 +130,8 @@ function transformForZapier(payload: LeadPayload): Record<string, unknown> {
     utm_campaign: payload.utmParams?.utm_campaign || '',
     utm_content: payload.utmParams?.utm_content || '',
     utm_term: payload.utmParams?.utm_term || '',
+    
+    trusted_form_cert_url: payload.trustedFormCertUrl || '',
     
     submitted_at: payload.submittedAt,
     source: 'ai_case_calculator',
