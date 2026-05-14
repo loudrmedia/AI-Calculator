@@ -59,6 +59,7 @@ interface LeadPayload {
 const ALLOWED_ORIGINS = [
   'https://autoreliefassistance.com',
   'https://www.autoreliefassistance.com',
+  'https://cal.getautoreliefassistance.com',
   'https://cawa.autoreliefassistance.com',
   'http://localhost:3000',
 ];
