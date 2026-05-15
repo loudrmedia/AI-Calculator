@@ -35,8 +35,19 @@ export default function RootLayout({
         {/* TrustedForm - Lead Certification */}
         <Script
           id="trustedform"
-          src="https://api.trustedform.com/trustedform.js?field=xxTrustedFormCertUrl&use_tagged_consent=true"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var tf = document.createElement('script');
+                tf.type = 'text/javascript';
+                tf.async = true;
+                tf.src = 'https://api.trustedform.com/trustedform.js?field=xxTrustedFormCertUrl&use_tagged_consent=true&l=' + new Date().getTime() + Math.random();
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(tf, s);
+              })();
+            `,
+          }}
         />
         <noscript>
           <img src="https://api.trustedform.com/ns.gif" alt="" />
