@@ -26,8 +26,25 @@ export function ResultsStep() {
 
   const getTrustedFormCertUrl = (): string | undefined => {
     if (typeof window === 'undefined') return undefined;
-    const input = document.querySelector<HTMLInputElement>('input[name="xxTrustedFormCertUrl"]');
-    return input?.value || undefined;
+    
+    // Try multiple methods to get TrustedForm certificate URL
+    // Method 1: Our explicit input by ID
+    const inputById = document.getElementById('xxTrustedFormCertUrl') as HTMLInputElement;
+    if (inputById?.value) return inputById.value;
+    
+    // Method 2: Hidden input field by name (TrustedForm may create its own)
+    const inputByName = document.querySelector<HTMLInputElement>('input[name="xxTrustedFormCertUrl"]');
+    if (inputByName?.value) return inputByName.value;
+    
+    // Method 3: TrustedForm's auto-generated ID pattern
+    const inputByPattern = document.getElementById('xxTrustedFormCertUrl_0') as HTMLInputElement;
+    if (inputByPattern?.value) return inputByPattern.value;
+    
+    // Method 4: Window object (some TrustedForm versions)
+    const win = window as typeof window & { TrustedForm?: { certUrl?: string } };
+    if (win.TrustedForm?.certUrl) return win.TrustedForm.certUrl;
+    
+    return undefined;
   };
 
   const submitLead = async () => {

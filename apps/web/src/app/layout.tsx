@@ -27,6 +27,11 @@ export default function RootLayout({
       <body>
         {children}
         
+        {/* Hidden form for TrustedForm to inject certificate URL */}
+        <form id="trustedform-container" style={{ display: 'none' }} aria-hidden="true">
+          <input type="hidden" name="xxTrustedFormCertUrl" id="xxTrustedFormCertUrl" />
+        </form>
+        
         {/* TrustedForm - Lead Certification */}
         <Script
           id="trustedform"
