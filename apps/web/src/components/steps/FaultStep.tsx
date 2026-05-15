@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { FaultStatus } from '../../lib/types';
 
@@ -30,15 +30,25 @@ export function FaultStep() {
     dispatch({ type: 'SET_FAULT_STATUS', payload: status });
   };
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (selected) {
       dispatch({ type: 'NEXT_STEP' });
     }
-  };
+  }, [selected, dispatch]);
 
   const handleBack = () => {
     dispatch({ type: 'PREV_STEP' });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && selected) {
+        handleContinue();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selected, handleContinue]);
 
   return (
     <div>

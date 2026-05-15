@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { 
   SoftTissueInjury, 
@@ -82,15 +82,25 @@ export function InjuriesStep() {
     injuries.substantial.length > 0 ||
     injuries.catastrophic.length > 0;
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (hasSelection) {
       dispatch({ type: 'NEXT_STEP' });
     }
-  };
+  }, [hasSelection, dispatch]);
 
   const handleBack = () => {
     dispatch({ type: 'PREV_STEP' });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && hasSelection) {
+        handleContinue();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasSelection, handleContinue]);
 
   return (
     <div>

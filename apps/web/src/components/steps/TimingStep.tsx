@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentTiming } from '../../lib/types';
 
@@ -21,15 +21,25 @@ export function TimingStep() {
     dispatch({ type: 'SET_TIMING', payload: timing });
   };
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (selected) {
       dispatch({ type: 'NEXT_STEP' });
     }
-  };
+  }, [selected, dispatch]);
 
   const handleBack = () => {
     dispatch({ type: 'PREV_STEP' });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && selected) {
+        handleContinue();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selected, handleContinue]);
 
   const showWarning = selected === 'one_to_two_years' || selected === 'more_than_two_years';
 

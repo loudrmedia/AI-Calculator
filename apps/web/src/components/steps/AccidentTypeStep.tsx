@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentType } from '../../lib/types';
 
@@ -20,11 +20,21 @@ export function AccidentTypeStep() {
     dispatch({ type: 'SET_ACCIDENT_TYPE', payload: type });
   };
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (selected) {
       dispatch({ type: 'NEXT_STEP' });
     }
-  };
+  }, [selected, dispatch]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && selected) {
+        handleContinue();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selected, handleContinue]);
 
   return (
     <div>

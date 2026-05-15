@@ -100,6 +100,7 @@ export function ContactStep() {
             setEmail(e.target.value);
             setErrors((prev) => ({ ...prev, email: undefined }));
           }}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           placeholder="your@email.com"
         />
         {errors.email && <p className="error-message">{errors.email}</p>}
@@ -112,6 +113,7 @@ export function ContactStep() {
           id="phone"
           value={phone}
           onChange={handlePhoneChange}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           placeholder="(555) 555-5555"
         />
         {errors.phone && <p className="error-message">{errors.phone}</p>}

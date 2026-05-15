@@ -50,6 +50,7 @@ export function NameStep() {
               setFirstName(e.target.value);
               setErrors((prev) => ({ ...prev, firstName: undefined }));
             }}
+            onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
             placeholder="First name"
           />
           {errors.firstName && <p className="error-message">{errors.firstName}</p>}
@@ -65,6 +66,7 @@ export function NameStep() {
               setLastName(e.target.value);
               setErrors((prev) => ({ ...prev, lastName: undefined }));
             }}
+            onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
             placeholder="Last name"
           />
           {errors.lastName && <p className="error-message">{errors.lastName}</p>}

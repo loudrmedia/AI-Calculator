@@ -47,6 +47,7 @@ export function ZipCodeStep() {
           id="zipCode"
           value={zipCode}
           onChange={handleZipChange}
+          onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
           placeholder="Enter 5-digit zip code"
           maxLength={5}
           inputMode="numeric"
