@@ -5,12 +5,22 @@ import { useFunnel } from '../../lib/funnel-context';
 
 const CONSENT_TEXT = `By clicking "GET RESULTS," you expressly consent to receive calls and text messages for marketing purposes using automated technology. You agree that we may contact you at any time, including before 8am or after 9pm local time. Consent is not a condition of purchase. You agree to our Privacy Policy and Terms of Use.`;
 
+type ContactErrors = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  consent?: string;
+};
+
 export function ContactStep() {
   const { state, dispatch } = useFunnel();
+  const [firstName, setFirstName] = useState(state.contact.firstName || '');
+  const [lastName, setLastName] = useState(state.contact.lastName || '');
   const [email, setEmail] = useState(state.contact.email || '');
   const [phone, setPhone] = useState(state.contact.phone || '');
   const [consent, setConsent] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; phone?: string; consent?: string }>({});
+  const [errors, setErrors] = useState<ContactErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateEmail = (email: string) => {
@@ -36,7 +46,14 @@ export function ContactStep() {
   };
 
   const validate = () => {
-    const newErrors: { email?: string; phone?: string; consent?: string } = {};
+    const newErrors: ContactErrors = {};
+
+    if (!firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+    if (!lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
 
     if (!email.trim()) {
       newErrors.email = 'Email is required';
@@ -63,6 +80,8 @@ export function ContactStep() {
 
     setIsSubmitting(true);
 
+    dispatch({ type: 'SET_FIRST_NAME', payload: firstName.trim() });
+    dispatch({ type: 'SET_LAST_NAME', payload: lastName.trim() });
     dispatch({ type: 'SET_EMAIL', payload: email.trim() });
     dispatch({ type: 'SET_PHONE', payload: phone });
     dispatch({
@@ -95,12 +114,46 @@ export function ContactStep() {
 
       <h2 className="step-title">Last step: where should we send your results?</h2>
 
+      <div className="input-row">
+        <div className="input-group">
+          <label htmlFor="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            autoFocus
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              setErrors((prev) => ({ ...prev, firstName: undefined }));
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            placeholder="First name"
+          />
+          {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+              setErrors((prev) => ({ ...prev, lastName: undefined }));
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            placeholder="Last name"
+          />
+          {errors.lastName && <p className="error-message">{errors.lastName}</p>}
+        </div>
+      </div>
+
       <div className="input-group">
         <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
-          autoFocus
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);

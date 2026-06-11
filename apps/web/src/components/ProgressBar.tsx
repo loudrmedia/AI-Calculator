@@ -11,15 +11,18 @@ export function ProgressBar() {
   const userSteps = totalSteps - 1;
   const displayProgress = Math.min(
     100,
-    Math.round(12 + (currentStepIndex / (userSteps - 1)) * 88)
+    Math.round(20 + (currentStepIndex / (userSteps - 1)) * 80)
   );
+  // Animate 0% -> 20% on first load only; on later steps the animation's
+  // "forwards" fill would override the inline width, so the class is dropped
+  const isFirstStep = currentStepIndex === 0;
 
   return (
     <div>
       <div className="progress-bar">
         <div className="progress-track">
           <div
-            className="progress-fill"
+            className={`progress-fill ${isFirstStep ? 'progress-fill-init' : ''}`}
             style={{ width: `${displayProgress}%` }}
           />
         </div>

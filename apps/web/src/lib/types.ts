@@ -123,7 +123,6 @@ export type FunnelStep =
   | 'timing'
   | 'zip_code'
   | 'description'
-  | 'name'
   | 'contact'
   | 'results';
 

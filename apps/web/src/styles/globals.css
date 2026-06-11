@@ -180,6 +180,118 @@ body {
   font-size: 15px;
 }
 
+/* Card entrance on page load */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: cardEntrance 0.5s ease-out forwards;
+}
+
+/* Settlement teaser above the card */
+.settlement-teaser {
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+  border-left: 3px solid var(--primary);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--gray-700);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Trust badges under the card */
+.trust-badge-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--gray-400);
+  margin-top: 8px;
+}
+
+.trust-badge-divider {
+  color: var(--gray-300);
+}
+
+/* Exit-intent popup */
+.exit-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 24px;
+  animation: step-in 0.25s ease;
+}
+
+.exit-popup {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  padding: 36px 32px 28px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.exit-popup h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.exit-popup p {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.exit-popup-cta {
+  width: 100%;
+  font-size: 16px;
+}
+
+.exit-popup-note {
+  font-size: 12px;
+  color: var(--gray-400);
+  margin-top: 12px;
+  margin-bottom: 0 !important;
+}
+
+.exit-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.exit-popup-close:hover {
+  color: var(--gray-700);
+}
+
 /* Methodology credibility strip */
 .methodology-strip {
   background: #eff6ff;
@@ -677,6 +789,21 @@ body {
   transition: width 0.4s ease;
 }
 
+/* First-load fill animation; only applied on step 1 where the end keyframe
+   matches the inline width (forwards would otherwise pin later steps at 20%) */
+@keyframes progressInit {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 20%;
+  }
+}
+
+.progress-fill-init {
+  animation: progressInit 0.6s ease-out forwards;
+}
+
 .progress-text {
   font-size: 13px;
   color: var(--gray-500);
@@ -844,6 +971,36 @@ body {
   color: white;
   font-size: 13px;
   font-weight: 700;
+}
+
+/* Staggered reveal of options on each step */
+.options-grid .option-button {
+  opacity: 0;
+  animation: cardEntrance 0.3s ease-out forwards;
+}
+
+.options-grid .option-button:nth-child(1) { animation-delay: 0.1s; }
+.options-grid .option-button:nth-child(2) { animation-delay: 0.15s; }
+.options-grid .option-button:nth-child(3) { animation-delay: 0.2s; }
+.options-grid .option-button:nth-child(4) { animation-delay: 0.25s; }
+.options-grid .option-button:nth-child(5) { animation-delay: 0.3s; }
+.options-grid .option-button:nth-child(6) { animation-delay: 0.35s; }
+
+/* Highlighted option with badge (e.g. "Most common") */
+.option-highlighted {
+  border-color: var(--primary);
+}
+
+.option-badge {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
 }
 
 .option-button .icon {
@@ -1558,6 +1715,52 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Compact above-the-fold so the first option is visible without scrolling */
+  .header {
+    margin-bottom: 14px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .header p {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .trust-row {
+    gap: 6px 12px;
+    margin-top: 10px;
+  }
+
+  .trust-item {
+    font-size: 12px;
+  }
+
+  .progress-bar {
+    margin-bottom: 10px;
+  }
+
+  .progress-text {
+    margin-top: 6px;
+    margin-bottom: 12px;
+  }
+
+  .step-title {
+    margin-bottom: 14px;
+  }
+
+  .step-subtitle {
+    margin-top: -6px;
+    margin-bottom: 16px;
+  }
+
+  .step-subtitle-mobile-hidden {
+    display: none;
+  }
+
   .value-comparison {
     grid-template-columns: 1fr;
   }
@@ -1662,6 +1865,11 @@ body {
 
   .offer-checker-input-row {
     flex-direction: column;
+  }
+
+  .settlement-teaser {
+    margin-bottom: 12px;
+    font-size: 13px;
   }
 
   .settlement-range-row {

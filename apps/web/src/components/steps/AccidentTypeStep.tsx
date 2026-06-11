@@ -4,8 +4,8 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentType } from '../../lib/types';
 
-const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string }[] = [
-  { value: 'car_accident', label: 'Car Accident', icon: '🚗' },
+const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string; badge?: string }[] = [
+  { value: 'car_accident', label: 'Car Accident', icon: '🚗', badge: 'Most common' },
   { value: 'motorcycle_accident', label: 'Motorcycle Accident', icon: '🏍️' },
   { value: 'truck_accident', label: 'Truck Accident', icon: '🚛' },
   { value: 'bicycle_accident', label: 'Bicycle Accident', icon: '🚲' },
@@ -56,17 +56,20 @@ export function AccidentTypeStep() {
   return (
     <div>
       <h2 className="step-title">What type of accident were you involved in?</h2>
-      <p className="step-subtitle">Select one to see your free estimate — takes about 1 minute.</p>
+      <p className="step-subtitle step-subtitle-mobile-hidden">
+        Select one to see your free estimate — takes about 1 minute.
+      </p>
 
       <div className="options-grid">
         {ACCIDENT_TYPES.map((type) => (
           <button
             key={type.value}
-            className={`option-button ${selected === type.value ? 'selected' : ''}`}
+            className={`option-button ${type.badge ? 'option-highlighted' : ''} ${selected === type.value ? 'selected' : ''}`}
             onClick={() => handleSelect(type.value)}
           >
             <span className="icon">{type.icon}</span>
             <span>{type.label}</span>
+            {type.badge && <span className="option-badge">{type.badge}</span>}
           </button>
         ))}
       </div>

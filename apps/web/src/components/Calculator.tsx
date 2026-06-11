@@ -9,6 +9,7 @@ import { FAQ } from './FAQ';
 import { Footer } from './Footer';
 import { Disclaimer } from './Disclaimer';
 import { SettlementRanges } from './SettlementRanges';
+import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
 import {
   AccidentTypeStep,
@@ -17,7 +18,6 @@ import {
   TimingStep,
   ZipCodeStep,
   DescriptionStep,
-  NameStep,
   ContactStep,
   ResultsStep,
 } from './steps';
@@ -46,8 +46,6 @@ export function Calculator() {
         return <ZipCodeStep />;
       case 'description':
         return <DescriptionStep />;
-      case 'name':
-        return <NameStep />;
       case 'contact':
         return <ContactStep />;
       case 'results':
@@ -66,11 +64,18 @@ export function Calculator() {
       
       <main className="main-content">
         <div className="container">
+          {isFirstStep && (
+            <div className="settlement-teaser">
+              💰 Average car accident settlements range from <strong>$5,000 to $300,000+</strong>
+              {' '}— answer a few questions to see your personalized estimate.
+            </div>
+          )}
+
           <div className="card">
             {!isResultsPage && (
               <div className="header">
-                <h1>Find Out What Your Case Is Really Worth</h1>
-                <p>Most accident victims settle for far less than they could. Get your free AI estimate before you accept anything.</p>
+                <h1>Injured in an Accident? See What Your Case Is Worth in 60 Seconds</h1>
+                <p>Insurance adjusters lowball 9 out of 10 claims. Get your real number — free, private, no obligation.</p>
                 <div className="trust-row">
                   <span className="trust-item"><span className="trust-check">✓</span> 100% Free</span>
                   <span className="trust-item"><span className="trust-check">✓</span> Takes ~1 Minute</span>
@@ -94,9 +99,13 @@ export function Calculator() {
                   {CONFIG.PHONE_NUMBER}
                 </a>
               </p>
-              <p style={{ fontSize: '12px', color: 'var(--gray-400)', marginTop: '8px' }}>
-                🔒 Privacy Protected
-              </p>
+              <div className="trust-badge-row">
+                <span className="trust-badge">🔒 256-bit Encrypted</span>
+                <span className="trust-badge-divider">•</span>
+                <span className="trust-badge">✅ TrustedForm Certified</span>
+                <span className="trust-badge-divider">•</span>
+                <span className="trust-badge">🚫 Never Shared Without Consent</span>
+              </div>
             </div>
           )}
 
@@ -117,6 +126,8 @@ export function Calculator() {
       </main>
 
       <Footer />
+
+      <ExitIntentPopup />
 
       {/* Sticky call bar — mobile only */}
       <a href={CONFIG.PHONE_LINK} className="mobile-call-bar">

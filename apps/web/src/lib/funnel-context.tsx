@@ -18,7 +18,6 @@ const STEPS: FunnelStep[] = [
   'timing',
   'zip_code',
   'description',
-  'name',
   'contact',
   'results',
 ];
@@ -30,7 +29,6 @@ const STEP_LABELS: Record<FunnelStep, string> = {
   timing: 'Timing',
   zip_code: 'Location',
   description: 'Details',
-  name: 'Name',
   contact: 'Contact',
   results: 'Results',
 };
