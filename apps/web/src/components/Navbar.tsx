@@ -17,7 +17,7 @@ export function Navbar() {
           </span>
         </a>
         <a href={PHONE_LINK} className="navbar-cta">
-          <span className="cta-label">CALL US RIGHT NOW</span>
+          <span className="cta-label">FREE CASE REVIEW — CALL NOW</span>
           <span className="cta-phone">{PHONE_NUMBER}</span>
         </a>
       </div>

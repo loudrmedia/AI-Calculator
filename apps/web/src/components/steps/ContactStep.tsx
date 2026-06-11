@@ -85,16 +85,22 @@ export function ContactStep() {
 
   return (
     <div>
-      <h2 className="step-title">Final step. What are your contact details?</h2>
-      <p style={{ color: 'var(--gray-500)', marginBottom: '24px', fontSize: '14px' }}>
-        Your case estimate is ready. Enter your contact details to see its full value.
-      </p>
+      <div className="estimate-ready-banner">
+        <span className="trust-check">✓</span>
+        <span>
+          <strong>Good news — your estimate is ready.</strong> See your case value instantly on
+          the next screen.
+        </span>
+      </div>
+
+      <h2 className="step-title">Last step: where should we send your results?</h2>
 
       <div className="input-group">
         <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
+          autoFocus
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -107,7 +113,7 @@ export function ContactStep() {
       </div>
 
       <div className="input-group">
-        <label htmlFor="phone">Phone</label>
+        <label htmlFor="phone">Phone (your specialist will call this number)</label>
         <input
           type="tel"
           id="phone"
@@ -118,6 +124,10 @@ export function ContactStep() {
         />
         {errors.phone && <p className="error-message">{errors.phone}</p>}
       </div>
+
+      <p className="privacy-note">
+        🔒 Your information is secure, confidential, and never sold.
+      </p>
 
       <div className="consent-box">
         <label>
@@ -161,7 +171,7 @@ export function ContactStep() {
               Processing...
             </>
           ) : (
-            'GET RESULTS »'
+            'GET MY RESULTS »'
           )}
         </button>
       </div>

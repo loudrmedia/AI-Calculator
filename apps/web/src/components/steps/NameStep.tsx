@@ -37,7 +37,8 @@ export function NameStep() {
 
   return (
     <div>
-      <h2 className="step-title">What&apos;s your name?</h2>
+      <h2 className="step-title">Almost there! Who is this estimate for?</h2>
+      <p className="step-subtitle">Your personalized case value is two quick fields away.</p>
 
       <div className="input-row">
         <div className="input-group">
@@ -45,6 +46,7 @@ export function NameStep() {
           <input
             type="text"
             id="firstName"
+            autoFocus
             value={firstName}
             onChange={(e) => {
               setFirstName(e.target.value);

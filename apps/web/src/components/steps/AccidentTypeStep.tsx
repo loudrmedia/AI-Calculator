@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentType } from '../../lib/types';
 
@@ -15,13 +15,30 @@ const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string }[] = [
 export function AccidentTypeStep() {
   const { state, dispatch } = useFunnel();
   const selected = state.inputs.accidentType;
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Auto-advance after selection so users don't need an extra click
   const handleSelect = (type: AccidentType) => {
     dispatch({ type: 'SET_ACCIDENT_TYPE', payload: type });
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    advanceTimer.current = setTimeout(() => {
+      dispatch({ type: 'NEXT_STEP' });
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    };
+  }, []);
 
   const handleContinue = useCallback(() => {
     if (selected) {
+      // Cancel any pending auto-advance so we don't dispatch NEXT_STEP twice
+      if (advanceTimer.current) {
+        clearTimeout(advanceTimer.current);
+        advanceTimer.current = null;
+      }
       dispatch({ type: 'NEXT_STEP' });
     }
   }, [selected, dispatch]);
@@ -39,7 +56,8 @@ export function AccidentTypeStep() {
   return (
     <div>
       <h2 className="step-title">What type of accident were you involved in?</h2>
-      
+      <p className="step-subtitle">Select one to see your free estimate — takes about 1 minute.</p>
+
       <div className="options-grid">
         {ACCIDENT_TYPES.map((type) => (
           <button

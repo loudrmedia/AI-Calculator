@@ -1,37 +1,54 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { FaultStatus } from '../../lib/types';
 
 const FAULT_OPTIONS: { value: FaultStatus; label: string; description: string }[] = [
   { 
     value: 'not_at_fault', 
-    label: 'No', 
-    description: 'The accident was not my fault' 
+    label: 'No, it was not my fault', 
+    description: 'Someone else caused the accident' 
   },
   { 
     value: 'partial_fault', 
-    label: 'Partially', 
-    description: 'I may have been partially at fault' 
+    label: 'I may have been partially at fault', 
+    description: 'You can often still recover compensation' 
   },
   { 
     value: 'at_fault', 
-    label: 'Yes', 
-    description: 'The accident was my fault' 
+    label: 'Yes, it was my fault', 
+    description: 'Some options may still be available' 
   },
 ];
 
 export function FaultStep() {
   const { state, dispatch } = useFunnel();
   const selected = state.inputs.faultStatus;
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Auto-advance after selection so users don't need an extra click
   const handleSelect = (status: FaultStatus) => {
     dispatch({ type: 'SET_FAULT_STATUS', payload: status });
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    advanceTimer.current = setTimeout(() => {
+      dispatch({ type: 'NEXT_STEP' });
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    };
+  }, []);
 
   const handleContinue = useCallback(() => {
     if (selected) {
+      // Cancel any pending auto-advance so we don't dispatch NEXT_STEP twice
+      if (advanceTimer.current) {
+        clearTimeout(advanceTimer.current);
+        advanceTimer.current = null;
+      }
       dispatch({ type: 'NEXT_STEP' });
     }
   }, [selected, dispatch]);
@@ -52,7 +69,10 @@ export function FaultStep() {
 
   return (
     <div>
-      <h2 className="step-title">Was the accident your fault?</h2>
+      <h2 className="step-title">Were you at fault for the accident?</h2>
+      <p className="step-subtitle">
+        Be honest — even partial fault doesn&apos;t disqualify you in most states.
+      </p>
 
       <div className="options-grid">
         {FAULT_OPTIONS.map((option) => (

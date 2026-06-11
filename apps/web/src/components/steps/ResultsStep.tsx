@@ -1,14 +1,39 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { formatCurrency, formatRange, getInjuryCategoryLabel } from '../../lib/calculator';
 import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
+import { OfferChecker } from '../OfferChecker';
 import { CONFIG } from '../../lib/config';
 
 const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
 const PHONE_LINK = CONFIG.PHONE_LINK;
+
+// Animates a number counting up to its target for a rewarding reveal
+function useCountUp(target: number, durationMs = 1200) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (target <= 0) {
+      setValue(target);
+      return;
+    }
+    let frame: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(target * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [target, durationMs]);
+
+  return value;
+}
 
 export function ResultsStep() {
   const { state } = useFunnel();
@@ -16,6 +41,13 @@ export function ResultsStep() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  // Synchronous guard against duplicate submissions (e.g. StrictMode double-effect)
+  const submitAttempted = useRef(false);
+
+  const withAttorneyAvg = result
+    ? Math.round((result.withAttorney.grossLow + result.withAttorney.grossHigh) / 2)
+    : 0;
+  const animatedValue = useCountUp(withAttorneyAvg);
 
   useEffect(() => {
     if (result && !submitted) {
@@ -48,7 +80,8 @@ export function ResultsStep() {
   };
 
   const submitLead = async () => {
-    if (!result || submitted) return;
+    if (!result || submitted || submitAttempted.current) return;
+    submitAttempted.current = true;
 
     setIsSubmitting(true);
     setSubmitError(null);
@@ -82,6 +115,7 @@ export function ResultsStep() {
     } catch (error) {
       console.error('Lead submission error:', error);
       setSubmitError('Failed to save your information. Please try again.');
+      submitAttempted.current = false; // allow manual retry
     } finally {
       setIsSubmitting(false);
     }
@@ -113,27 +147,20 @@ export function ResultsStep() {
 
   return (
     <div style={{ textAlign: 'center' }}>
-      {/* Callback emphasis banner */}
-      <div className="callback-banner" style={{ textAlign: 'left' }}>
-        <div className="callback-icon">📞</div>
-        <div className="callback-text">
-          <strong>An Accident Claim Specialist Will Call You Shortly</strong>
-          <p>We&apos;re reviewing your case and will reach out as soon as possible.</p>
-        </div>
-      </div>
-
-      {/* Main title */}
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <h2 className="step-title" style={{ marginBottom: '8px' }}>
-          Your Evidence-Based Claim Value Estimate
+      {/* Personalized success moment */}
+      <div className="results-success-header">
+        <div className="results-success-icon">✓</div>
+        <h2 className="step-title" style={{ marginBottom: '4px' }}>
+          {state.contact.firstName ? `Congratulations, ${state.contact.firstName}!` : 'Congratulations!'}
         </h2>
         <p style={{ color: 'var(--gray-500)', fontSize: '14px' }}>
-          Based on {getInjuryCategoryLabel(result.severityCategory).toLowerCase()}
+          Your claim estimate is ready — based on{' '}
+          {getInjuryCategoryLabel(result.severityCategory).toLowerCase()}.
         </p>
       </div>
 
       {showWarning && (
-        <div className="disclaimer-box warning" style={{ marginBottom: '24px' }}>
+        <div className="disclaimer-box warning" style={{ marginBottom: '24px', textAlign: 'left' }}>
           <h4>⚠️ Time-Sensitive Notice</h4>
           <p>
             Most states impose a 2-3 year statute of limitations for personal injury claims. 
@@ -152,15 +179,24 @@ export function ResultsStep() {
         </div>
       ) : (
         <>
+          {/* Hero value — the payoff, front and center */}
+          <div className="hero-value-card">
+            <div className="hero-value-label">Your Estimated Case Value</div>
+            <div className="hero-value-amount">{formatCurrency(animatedValue)}</div>
+            <div className="hero-value-range">
+              Range with attorney: {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
+            </div>
+          </div>
+
           <div className="results-section">
-            <h3>Comparison: With Attorney vs Without</h3>
+            <h3>With Attorney vs Without</h3>
             
             <div className="comparison-grid">
               <div className="result-card highlight">
                 <div className="result-label">With Attorney</div>
                 <div className="result-sublabel">Average</div>
                 <div className="result-value" style={{ fontSize: '26px' }}>
-                  ✓ {formatCurrency(Math.round((result.withAttorney.grossLow + result.withAttorney.grossHigh) / 2))}
+                  ✓ {formatCurrency(withAttorneyAvg)}
                 </div>
                 <div className="result-detail">
                   Range: {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
@@ -188,54 +224,32 @@ export function ResultsStep() {
               background: '#f0fdf4',
               borderRadius: '8px'
             }}>
-              *Based on your claim details, you&apos;d <strong>significantly benefit</strong> from speaking with an attorney.
+              With an attorney, you could recover{' '}
+              <strong>
+                +{formatCurrency(result.withAttorney.netLow - result.withoutAttorney.high)} to{' '}
+                +{formatCurrency(result.withAttorney.netHigh - result.withoutAttorney.low)} more
+              </strong>{' '}
+              — even after fees.
             </p>
           </div>
 
-          <div className="results-section">
-            <h3>Potential Additional Value with Attorney</h3>
-            <div className="result-card">
-              <div className="result-value" style={{ color: 'var(--success)', fontSize: '24px' }}>
-                +{formatCurrency(result.withAttorney.netLow - result.withoutAttorney.high)} to +{formatCurrency(result.withAttorney.netHigh - result.withoutAttorney.low)}
-              </div>
-              <div className="result-detail">
-                Potential additional recovery even after fees
-              </div>
-            </div>
-          </div>
+          <OfferChecker result={result} />
         </>
       )}
 
-      <div className="disclaimer-box" style={{ textAlign: 'left' }}>
-        <h4>📋 Important Notice</h4>
-        <ul>
-          {result.disclaimers.filter(d => !d.includes('TIME-SENSITIVE')).map((disclaimer, index) => (
-            <li key={index} style={{ marginBottom: '8px' }}>{disclaimer}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Data sources - smaller and less prominent */}
-      <div className="data-sources-compact">
-        <CitationRenderer citations={result.citations} showFullDetails={false} />
-      </div>
-
-      {/* Call to action with specialist emphasis */}
-      <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--gray-900)', marginBottom: '12px' }}>
-          Don&apos;t Wait - Speak With a Specialist Now
+      {/* Primary CTA — directly after the value, before any legal content */}
+      <div className="results-cta-section">
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--gray-900)', marginBottom: '8px' }}>
+          Lock In Your Free Case Review
         </h3>
-        <p style={{ fontSize: '14px', color: 'var(--gray-600)', marginBottom: '8px' }}>
-          One of our accident claim specialists will contact you at{' '}
-          <strong>{state.contact.email}</strong> or <strong>{state.contact.phone}</strong> very soon.
+        <p style={{ fontSize: '14px', color: 'var(--gray-600)', marginBottom: '16px' }}>
+          Specialists are reviewing your case now. Calling is the fastest way to protect
+          your claim&apos;s value.
         </p>
-        <p style={{ fontWeight: '600', color: 'var(--gray-800)', marginBottom: '16px' }}>
-          For immediate assistance, call us directly:
-        </p>
-        
+
         <a 
           href={PHONE_LINK} 
-          className="btn btn-primary"
+          className="btn btn-primary call-pulse"
           style={{ 
             display: 'inline-flex', 
             alignItems: 'center', 
@@ -249,8 +263,50 @@ export function ResultsStep() {
         </a>
         
         <p style={{ fontSize: '12px', color: 'var(--gray-400)', marginTop: '12px' }}>
-          Free consultation • No obligation
+          Free consultation • No obligation • No fees unless you win
         </p>
+      </div>
+
+      {/* Expectation setting — primes the lead to answer the call */}
+      <div className="next-steps">
+        <h3>What Happens Next</h3>
+        <ol>
+          <li>
+            <span className="next-step-num">1</span>
+            <span>
+              <strong>Your case is being reviewed.</strong> We&apos;ve received your details
+              and confirmed your estimate.
+            </span>
+          </li>
+          <li>
+            <span className="next-step-num">2</span>
+            <span>
+              <strong>Expect a call shortly</strong> at <strong>{state.contact.phone}</strong>.
+              Answering quickly keeps your case moving.
+            </span>
+          </li>
+          <li>
+            <span className="next-step-num">3</span>
+            <span>
+              <strong>Get your action plan.</strong> A specialist will explain exactly how to
+              pursue the full value of your claim.
+            </span>
+          </li>
+        </ol>
+      </div>
+
+      <div className="disclaimer-box" style={{ textAlign: 'left' }}>
+        <h4>📋 Important Notice</h4>
+        <ul>
+          {result.disclaimers.filter(d => !d.includes('TIME-SENSITIVE')).map((disclaimer, index) => (
+            <li key={index} style={{ marginBottom: '8px' }}>{disclaimer}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Data sources - smaller and less prominent */}
+      <div className="data-sources-compact">
+        <CitationRenderer citations={result.citations} showFullDetails={false} />
       </div>
 
       {submitError && (

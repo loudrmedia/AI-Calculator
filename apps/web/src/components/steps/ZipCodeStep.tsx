@@ -38,13 +38,17 @@ export function ZipCodeStep() {
 
   return (
     <div>
-      <h2 className="step-title">What&apos;s your zip code?</h2>
+      <h2 className="step-title">Where did the accident happen?</h2>
+      <p className="step-subtitle">
+        Settlements vary a lot by state — your zip code personalizes your estimate.
+      </p>
 
       <div className="input-group">
         <label htmlFor="zipCode">Zip Code</label>
         <input
           type="text"
           id="zipCode"
+          autoFocus
           value={zipCode}
           onChange={handleZipChange}
           onKeyDown={(e) => e.key === 'Enter' && handleContinue()}
@@ -61,7 +65,7 @@ export function ZipCodeStep() {
           checked={hasPropertyDamage}
           onChange={(e) => setHasPropertyDamage(e.target.checked)}
         />
-        <span>My vehicle was damaged in the accident</span>
+        <span>My vehicle was damaged (this can add to your payout)</span>
       </label>
 
       <div className="button-row">

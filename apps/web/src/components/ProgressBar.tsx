@@ -1,29 +1,31 @@
 'use client';
 
 import React from 'react';
-import { useFunnel, STEPS } from '../lib/funnel-context';
+import { useFunnel } from '../lib/funnel-context';
 
 export function ProgressBar() {
-  const { currentStepIndex, totalSteps, progress } = useFunnel();
+  const { currentStepIndex, totalSteps } = useFunnel();
+
+  // Exclude the results step from the user-facing count, and start the bar
+  // partially filled (endowed progress) so the form feels nearly underway
+  const userSteps = totalSteps - 1;
+  const displayProgress = Math.min(
+    100,
+    Math.round(12 + (currentStepIndex / (userSteps - 1)) * 88)
+  );
 
   return (
     <div>
       <div className="progress-bar">
-        {STEPS.map((step, index) => (
+        <div className="progress-track">
           <div
-            key={step}
-            className={`progress-segment ${
-              index < currentStepIndex
-                ? 'completed'
-                : index === currentStepIndex
-                ? 'active'
-                : ''
-            }`}
+            className="progress-fill"
+            style={{ width: `${displayProgress}%` }}
           />
-        ))}
+        </div>
       </div>
       <p className="progress-text">
-        PROGRESS {Math.round(progress)}%
+        Step {Math.min(currentStepIndex + 1, userSteps)} of {userSteps} &middot; {displayProgress}% complete
       </p>
     </div>
   );

@@ -18,18 +18,19 @@ export function DescriptionStep() {
 
   return (
     <div>
-      <h2 className="step-title">Briefly describe your accident to us.</h2>
+      <h2 className="step-title">Want a stronger case review? Tell us what happened.</h2>
       <p style={{ color: 'var(--gray-500)', marginBottom: '24px', fontSize: '14px' }}>
-        Optional: This helps us better understand your situation.
+        Optional — but details like injuries, treatment, and how the accident happened help
+        specialists fight for your full payout.
       </p>
 
       <div className="input-group">
-        <label htmlFor="description">Your Details</label>
+        <label htmlFor="description">What happened?</label>
         <textarea
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe what happened in the accident..."
+          placeholder="Example: I was rear-ended at a red light. I've had neck pain and missed two weeks of work..."
           rows={5}
           maxLength={2000}
         />
@@ -46,6 +47,10 @@ export function DescriptionStep() {
           Continue »
         </button>
       </div>
+
+      <button className="skip-link" onClick={handleContinue}>
+        Skip this step →
+      </button>
     </div>
   );
 }

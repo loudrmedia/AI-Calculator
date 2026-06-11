@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentTiming } from '../../lib/types';
 
@@ -16,13 +16,34 @@ const TIMING_OPTIONS: { value: AccidentTiming; label: string }[] = [
 export function TimingStep() {
   const { state, dispatch } = useFunnel();
   const selected = state.inputs.accidentTiming;
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Auto-advance after selection, except when the statute-of-limitations
+  // warning needs to be read first
   const handleSelect = (timing: AccidentTiming) => {
     dispatch({ type: 'SET_TIMING', payload: timing });
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    const needsWarning = timing === 'one_to_two_years' || timing === 'more_than_two_years';
+    if (!needsWarning) {
+      advanceTimer.current = setTimeout(() => {
+        dispatch({ type: 'NEXT_STEP' });
+      }, 300);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    };
+  }, []);
 
   const handleContinue = useCallback(() => {
     if (selected) {
+      // Cancel any pending auto-advance so we don't dispatch NEXT_STEP twice
+      if (advanceTimer.current) {
+        clearTimeout(advanceTimer.current);
+        advanceTimer.current = null;
+      }
       dispatch({ type: 'NEXT_STEP' });
     }
   }, [selected, dispatch]);
@@ -45,7 +66,10 @@ export function TimingStep() {
 
   return (
     <div>
-      <h2 className="step-title">When did this accident occur?</h2>
+      <h2 className="step-title">When did the accident happen?</h2>
+      <p className="step-subtitle">
+        Acting quickly protects your claim — recent accidents are easiest to maximize.
+      </p>
 
       <div className="options-grid">
         {TIMING_OPTIONS.map((option) => (
@@ -61,11 +85,11 @@ export function TimingStep() {
 
       {showWarning && (
         <div className="disclaimer-box warning" style={{ marginTop: '16px' }}>
-          <h4>⚠️ Time-Sensitive Notice</h4>
+          <h4>⚠️ Your Window May Be Closing</h4>
           <p>
-            Most states impose a 2-3 year statute of limitations for personal injury claims. 
-            Based on your selection, you should consult an attorney promptly to understand 
-            your specific deadline.
+            Most states only allow 2-3 years to file a personal injury claim. You may still
+            qualify — but finish your estimate now and speak with a specialist before your
+            deadline passes.
           </p>
         </div>
       )}
