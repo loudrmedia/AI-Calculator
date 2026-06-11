@@ -59,6 +59,8 @@ export function InjuriesStep() {
   const injuries = state.inputs.injuries || EMPTY_INJURIES;
   const [tier, setTier] = useState<InjuryTier | null>(() => deriveTier(injuries));
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const chipSectionRef = useRef<HTMLDivElement>(null);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const updateInjuries = (newInjuries: InjurySelection) => {
     dispatch({ type: 'SET_INJURIES', payload: newInjuries });
@@ -83,11 +85,19 @@ export function InjuriesStep() {
       catastrophic: newTier === 'severe' ? injuries.catastrophic : [],
       noInjury: false,
     });
+
+    // Scroll the newly revealed injury options into view (chips render below
+    // the fold on mobile); small delay lets React commit the chip section first
+    if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    scrollTimer.current = setTimeout(() => {
+      chipSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
   };
 
   useEffect(() => {
     return () => {
       if (advanceTimer.current) clearTimeout(advanceTimer.current);
+      if (scrollTimer.current) clearTimeout(scrollTimer.current);
     };
   }, []);
 
@@ -208,7 +218,7 @@ export function InjuriesStep() {
       </div>
 
       {showChips && (
-        <div className="chip-section">
+        <div className="chip-section" ref={chipSectionRef}>
           <p className="chip-section-label">
             Select everything that applies — each one can increase your estimate.
           </p>
