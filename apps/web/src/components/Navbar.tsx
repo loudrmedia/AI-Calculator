@@ -11,10 +11,7 @@ export function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <a href="/" className="navbar-logo">
-          <span className="logo-text">
-            <span className="logo-main">Auto Relief</span>
-            <span className="logo-sub">Assistance</span>
-          </span>
+          <img src="/logo-landscape.jpg" alt="Auto Relief Assistance" className="navbar-logo-img" />
         </a>
         <a href={PHONE_LINK} className="navbar-cta">
           <span className="cta-label">FREE CASE REVIEW — CALL NOW</span>

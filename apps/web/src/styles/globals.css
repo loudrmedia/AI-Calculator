@@ -43,7 +43,7 @@ body {
 
 .main-content {
   flex: 1;
-  padding-top: 80px;
+  padding-top: 92px;
 }
 
 /* Navbar Styles */
@@ -52,7 +52,8 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: #000;
+  background: #fff;
+  border-bottom: 1px solid var(--gray-200);
   z-index: 1000;
   padding: 12px 24px;
 }
@@ -71,25 +72,12 @@ body {
   text-decoration: none;
 }
 
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-
-.logo-main {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.logo-sub {
-  font-size: 24px;
-  font-weight: 700;
-  color: #dc2626;
-  letter-spacing: 0.5px;
+.navbar-logo-img {
+  height: 64px;
+  width: auto;
+  max-width: min(420px, 62vw);
+  display: block;
+  object-fit: contain;
 }
 
 .navbar-cta {
@@ -107,7 +95,7 @@ body {
 .cta-label {
   font-size: 11px;
   font-weight: 600;
-  color: #fff;
+  color: var(--gray-600);
   letter-spacing: 0.5px;
 }
 
@@ -931,7 +919,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 44px 16px 20px;
+  padding: 11px 44px 11px 20px;
   background: white;
   border: 2px solid var(--gray-200);
   border-radius: 12px;
@@ -1814,8 +1802,10 @@ body {
     padding: 10px 16px;
   }
 
-  .navbar-logo img {
-    height: 40px;
+  .navbar-logo img,
+  .navbar-logo-img {
+    height: 52px;
+    max-width: min(280px, 58vw);
   }
 
   .cta-phone {
@@ -1829,7 +1819,7 @@ body {
 
 @media (max-width: 480px) {
   .main-content {
-    padding-top: 70px;
+    padding-top: 84px;
   }
 
   .container {
