@@ -80,6 +80,10 @@ body {
   object-fit: contain;
 }
 
+.navbar-logo-mobile {
+  display: none;
+}
+
 .navbar-cta {
   display: flex;
   flex-direction: column;
@@ -1802,10 +1806,14 @@ body {
     padding: 10px 16px;
   }
 
-  .navbar-logo img,
-  .navbar-logo-img {
-    height: 34px;
-    max-width: min(230px, 58vw);
+  .navbar-logo-desktop {
+    display: none;
+  }
+
+  .navbar-logo-mobile {
+    display: block;
+    height: 26px;
+    max-width: min(170px, 50vw);
   }
 
   .cta-phone {
