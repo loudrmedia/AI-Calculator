@@ -28,7 +28,7 @@ export function ProgressBar() {
         </div>
       </div>
       <p className="progress-text">
-        Step {Math.min(currentStepIndex + 1, userSteps)} of {userSteps} &middot; {displayProgress}% complete
+        {displayProgress}% complete
       </p>
     </div>
   );

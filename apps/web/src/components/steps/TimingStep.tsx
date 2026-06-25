@@ -5,12 +5,12 @@ import { useFunnel } from '../../lib/funnel-context';
 import { AccidentTiming } from '../../lib/types';
 
 const TIMING_OPTIONS: { value: AccidentTiming; label: string }[] = [
-  { value: 'less_than_30_days', label: 'Less Than 30 Days Ago' },
-  { value: 'one_to_three_months', label: '1-3 Months Ago' },
-  { value: 'three_to_six_months', label: '3-6 Months Ago' },
-  { value: 'six_to_twelve_months', label: '6-12 Months Ago' },
-  { value: 'one_to_two_years', label: '1-2 Years Ago' },
-  { value: 'more_than_two_years', label: 'More Than 2 Years Ago' },
+  { value: 'within_7_days', label: 'Within the last 7 days' },
+  { value: 'eight_to_30_days', label: '8–30 days ago' },
+  { value: 'one_to_six_months', label: '1–6 months ago' },
+  { value: 'seven_to_twelve_months', label: '7–12 months ago' },
+  { value: 'thirteen_to_eighteen_months', label: '13-18 months ago' },
+  { value: 'more_than_eighteen_months', label: 'More than 18 months ago' },
 ];
 
 export function TimingStep() {
@@ -23,7 +23,7 @@ export function TimingStep() {
   const handleSelect = (timing: AccidentTiming) => {
     dispatch({ type: 'SET_TIMING', payload: timing });
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
-    const needsWarning = timing === 'one_to_two_years' || timing === 'more_than_two_years';
+    const needsWarning = timing === 'thirteen_to_eighteen_months' || timing === 'more_than_eighteen_months';
     if (!needsWarning) {
       advanceTimer.current = setTimeout(() => {
         dispatch({ type: 'NEXT_STEP' });
@@ -62,14 +62,11 @@ export function TimingStep() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selected, handleContinue]);
 
-  const showWarning = selected === 'one_to_two_years' || selected === 'more_than_two_years';
+  const showWarning = selected === 'thirteen_to_eighteen_months' || selected === 'more_than_eighteen_months';
 
   return (
     <div>
       <h2 className="step-title">When did the accident happen?</h2>
-      <p className="step-subtitle">
-        Acting quickly protects your claim — recent accidents are easiest to maximize.
-      </p>
 
       <div className="options-grid">
         {TIMING_OPTIONS.map((option) => (

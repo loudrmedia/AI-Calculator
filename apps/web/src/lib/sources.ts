@@ -195,12 +195,12 @@ export const CALC_CONSTANTS = {
 
   // Timing modifiers
   TIMING_MODIFIERS: {
-    less_than_30_days: 1.0,
-    one_to_three_months: 1.0,
-    three_to_six_months: 0.95,
-    six_to_twelve_months: 0.90,
-    one_to_two_years: 0.80,
-    more_than_two_years: 0.50,
+    within_7_days: 1.0,
+    eight_to_30_days: 1.0,
+    one_to_six_months: 0.95,
+    seven_to_twelve_months: 0.90,
+    thirteen_to_eighteen_months: 0.80,
+    more_than_eighteen_months: 0.50,
   } as const,
 };
 

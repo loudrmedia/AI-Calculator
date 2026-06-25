@@ -17,13 +17,15 @@ export type InjuryCategory =
 
 export type SoftTissueInjury = 
   | 'body_aches'
-  | 'cuts_scrapes_bruises';
+  | 'cuts_scrapes_bruises'
+  | 'other';
 
 export type SubstantialInjury = 
   | 'broken_bones'
   | 'internal_bleeding'
   | 'scarring'
-  | 'memory_loss';
+  | 'memory_loss'
+  | 'other';
 
 export type CatastrophicInjury = 
   | 'surgery_required'
@@ -31,7 +33,8 @@ export type CatastrophicInjury =
   | 'organ_loss'
   | 'coma'
   | 'paralysis'
-  | 'amputation';
+  | 'amputation'
+  | 'other';
 
 export type InjurySelection = {
   softTissue: SoftTissueInjury[];
@@ -46,12 +49,12 @@ export type FaultStatus =
   | 'at_fault';
 
 export type AccidentTiming = 
-  | 'less_than_30_days'
-  | 'one_to_three_months'
-  | 'three_to_six_months'
-  | 'six_to_twelve_months'
-  | 'one_to_two_years'
-  | 'more_than_two_years';
+  | 'within_7_days'
+  | 'eight_to_30_days'
+  | 'one_to_six_months'
+  | 'seven_to_twelve_months'
+  | 'thirteen_to_eighteen_months'
+  | 'more_than_eighteen_months';
 
 export interface CalculatorInputs {
   accidentType: AccidentType;

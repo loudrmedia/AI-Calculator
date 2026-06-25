@@ -19,10 +19,6 @@ export function DescriptionStep() {
   return (
     <div>
       <h2 className="step-title">Want a stronger case review? Tell us what happened.</h2>
-      <p style={{ color: 'var(--gray-500)', marginBottom: '24px', fontSize: '14px' }}>
-        Optional — but details like injuries, treatment, and how the accident happened help
-        specialists fight for your full payout.
-      </p>
 
       <div className="input-group">
         <label htmlFor="description">What happened?</label>

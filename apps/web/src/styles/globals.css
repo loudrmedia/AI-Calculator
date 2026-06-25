@@ -73,9 +73,9 @@ body {
 }
 
 .navbar-logo-img {
-  height: 64px;
+  height: 44px;
   width: auto;
-  max-width: min(420px, 62vw);
+  max-width: min(360px, 60vw);
   display: block;
   object-fit: contain;
 }
@@ -759,7 +759,7 @@ body {
 
 /* Progress Bar */
 .progress-bar {
-  margin-bottom: 24px;
+  margin-bottom: 6px;
 }
 
 .progress-track {
@@ -796,7 +796,7 @@ body {
   font-size: 13px;
   color: var(--gray-500);
   text-align: center;
-  margin-top: 8px;
+  margin-top: 2px;
   margin-bottom: 24px;
 }
 
@@ -919,7 +919,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 44px 11px 20px;
+  padding: 8px 44px 8px 20px;
   background: white;
   border: 2px solid var(--gray-200);
   border-radius: 12px;
@@ -1804,8 +1804,8 @@ body {
 
   .navbar-logo img,
   .navbar-logo-img {
-    height: 52px;
-    max-width: min(280px, 58vw);
+    height: 34px;
+    max-width: min(230px, 58vw);
   }
 
   .cta-phone {

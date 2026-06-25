@@ -104,14 +104,6 @@ export function ContactStep() {
 
   return (
     <div>
-      <div className="estimate-ready-banner">
-        <span className="trust-check">✓</span>
-        <span>
-          <strong>Good news — your estimate is ready.</strong> See your case value instantly on
-          the next screen.
-        </span>
-      </div>
-
       <h2 className="step-title">Last step: where should we send your results?</h2>
 
       <div className="input-row">

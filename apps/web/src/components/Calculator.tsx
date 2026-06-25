@@ -60,11 +60,11 @@ export function Calculator() {
   return (
     <div className="page-wrapper">
       <Navbar />
-      
+
       <main className="main-content">
         <div className="container">
           <div className="card">
-            {!isResultsPage && (
+            {isFirstStep && (
               <div className="header">
                 <h1>See What Your Case Is Worth in 30 Seconds</h1>
                 <div className="trust-row">
@@ -72,6 +72,16 @@ export function Calculator() {
                   <span className="trust-item"><span className="trust-check">✓</span> Takes 30 Seconds</span>
                   <span className="trust-item"><span className="trust-check">✓</span> No Obligation</span>
                 </div>
+              </div>
+            )}
+
+            {state.currentStep === 'contact' && (
+              <div className="estimate-ready-banner">
+                <span className="trust-check">✓</span>
+                <span>
+                  <strong>Good news — your estimate is ready.</strong> See your case value instantly on
+                  the next screen.
+                </span>
               </div>
             )}
 
@@ -113,15 +123,6 @@ export function Calculator() {
       <Footer />
 
       <ExitIntentPopup />
-
-      {/* Sticky call bar — mobile only */}
-      <a href={CONFIG.PHONE_LINK} className="mobile-call-bar">
-        <span className="mobile-call-icon">📞</span>
-        <span className="mobile-call-text">
-          <span className="mobile-call-label">Free Case Review — Tap to Call</span>
-          <span className="mobile-call-number">{CONFIG.PHONE_NUMBER}</span>
-        </span>
-      </a>
     </div>
   );
 }

@@ -94,24 +94,24 @@ describe('Calculator Core Functions', () => {
 
   describe('getTimingModifier', () => {
     it('returns correct modifiers', () => {
-      expect(getTimingModifier('less_than_30_days')).toBe(1.0);
-      expect(getTimingModifier('one_to_three_months')).toBe(1.0);
-      expect(getTimingModifier('three_to_six_months')).toBe(0.95);
-      expect(getTimingModifier('six_to_twelve_months')).toBe(0.90);
-      expect(getTimingModifier('one_to_two_years')).toBe(0.80);
-      expect(getTimingModifier('more_than_two_years')).toBe(0.50);
+      expect(getTimingModifier('within_7_days')).toBe(1.0);
+      expect(getTimingModifier('eight_to_30_days')).toBe(1.0);
+      expect(getTimingModifier('one_to_six_months')).toBe(0.95);
+      expect(getTimingModifier('seven_to_twelve_months')).toBe(0.90);
+      expect(getTimingModifier('thirteen_to_eighteen_months')).toBe(0.80);
+      expect(getTimingModifier('more_than_eighteen_months')).toBe(0.50);
     });
   });
 
   describe('shouldShowStatuteWarning', () => {
     it('returns true for old accidents', () => {
-      expect(shouldShowStatuteWarning('one_to_two_years')).toBe(true);
-      expect(shouldShowStatuteWarning('more_than_two_years')).toBe(true);
+      expect(shouldShowStatuteWarning('thirteen_to_eighteen_months')).toBe(true);
+      expect(shouldShowStatuteWarning('more_than_eighteen_months')).toBe(true);
     });
 
     it('returns false for recent accidents', () => {
-      expect(shouldShowStatuteWarning('less_than_30_days')).toBe(false);
-      expect(shouldShowStatuteWarning('six_to_twelve_months')).toBe(false);
+      expect(shouldShowStatuteWarning('within_7_days')).toBe(false);
+      expect(shouldShowStatuteWarning('seven_to_twelve_months')).toBe(false);
     });
   });
 
@@ -210,7 +210,7 @@ describe('Full Calculation Scenarios', () => {
       noInjury: false,
     },
     faultStatus: 'not_at_fault',
-    accidentTiming: 'less_than_30_days',
+    accidentTiming: 'within_7_days',
     zipCode: '90210',
     hasPropertyDamage: false,
   };
@@ -290,7 +290,7 @@ describe('Full Calculation Scenarios', () => {
           catastrophic: [],
           noInjury: false,
         },
-        accidentTiming: 'more_than_two_years',
+        accidentTiming: 'more_than_eighteen_months',
       };
 
       const result = calculateEstimate(inputs);
@@ -338,7 +338,7 @@ describe('Input Validation', () => {
       accidentType: 'car_accident',
       injuries: { softTissue: [], substantial: [], catastrophic: [], noInjury: true },
       faultStatus: 'not_at_fault',
-      accidentTiming: 'less_than_30_days',
+      accidentTiming: 'within_7_days',
       zipCode: '90210',
     });
     expect(errors.length).toBe(0);
@@ -351,7 +351,7 @@ describe('Model Version and Citations', () => {
       accidentType: 'car_accident',
       injuries: { softTissue: ['body_aches'], substantial: [], catastrophic: [], noInjury: false },
       faultStatus: 'not_at_fault',
-      accidentTiming: 'less_than_30_days',
+      accidentTiming: 'within_7_days',
       zipCode: '90210',
       hasPropertyDamage: false,
     };
@@ -366,7 +366,7 @@ describe('Model Version and Citations', () => {
       accidentType: 'car_accident',
       injuries: { softTissue: ['body_aches'], substantial: [], catastrophic: [], noInjury: false },
       faultStatus: 'not_at_fault',
-      accidentTiming: 'less_than_30_days',
+      accidentTiming: 'within_7_days',
       zipCode: '90210',
       hasPropertyDamage: true,
     };
@@ -380,3 +380,4 @@ describe('Model Version and Citations', () => {
     });
   });
 });
+

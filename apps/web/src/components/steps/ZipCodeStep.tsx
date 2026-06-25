@@ -6,9 +6,6 @@ import { useFunnel } from '../../lib/funnel-context';
 export function ZipCodeStep() {
   const { state, dispatch } = useFunnel();
   const [zipCode, setZipCode] = useState(state.inputs.zipCode || '');
-  const [hasPropertyDamage, setHasPropertyDamage] = useState(
-    state.inputs.hasPropertyDamage !== false
-  );
   const [error, setError] = useState('');
 
   const validateZip = (zip: string) => {
@@ -28,7 +25,6 @@ export function ZipCodeStep() {
     }
 
     dispatch({ type: 'SET_ZIP_CODE', payload: zipCode });
-    dispatch({ type: 'SET_HAS_PROPERTY_DAMAGE', payload: hasPropertyDamage });
     dispatch({ type: 'NEXT_STEP' });
   };
 
@@ -38,10 +34,7 @@ export function ZipCodeStep() {
 
   return (
     <div>
-      <h2 className="step-title">Where did the accident happen?</h2>
-      <p className="step-subtitle">
-        Settlements vary a lot by state — your zip code personalizes your estimate.
-      </p>
+      <h2 className="step-title">What&apos;s your zip code?</h2>
 
       <div className="input-group">
         <label htmlFor="zipCode">Zip Code</label>
@@ -58,15 +51,6 @@ export function ZipCodeStep() {
         />
         {error && <p className="error-message">{error}</p>}
       </div>
-
-      <label className="property-damage-checkbox">
-        <input
-          type="checkbox"
-          checked={hasPropertyDamage}
-          onChange={(e) => setHasPropertyDamage(e.target.checked)}
-        />
-        <span>My vehicle was damaged (this can add to your payout)</span>
-      </label>
 
       <div className="button-row">
         <button className="btn btn-secondary" onClick={handleBack}>

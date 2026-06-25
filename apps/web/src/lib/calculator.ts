@@ -78,7 +78,7 @@ export function getTimingModifier(timing: AccidentTiming): number {
  * Check if statute of limitations warning should be shown
  */
 export function shouldShowStatuteWarning(timing: AccidentTiming): boolean {
-  return timing === 'one_to_two_years' || timing === 'more_than_two_years';
+  return timing === 'thirteen_to_eighteen_months' || timing === 'more_than_eighteen_months';
 }
 
 /**

@@ -11,16 +11,17 @@ import {
 
 type InjuryTier = 'minor' | 'serious' | 'severe' | 'none';
 
-const TIER_OPTIONS: { value: InjuryTier; icon: string; label: string; description: string }[] = [
-  { value: 'minor', icon: '🩹', label: 'Minor Injuries', description: 'Aches, pain, cuts, scrapes or bruises' },
-  { value: 'serious', icon: '🦴', label: 'Serious Injuries', description: 'Broken bones, scarring, internal injuries' },
-  { value: 'severe', icon: '🏥', label: 'Severe / Life-Changing', description: 'Surgery, brain injury, paralysis, amputation' },
-  { value: 'none', icon: '🚗', label: 'I Was Not Injured', description: 'Property damage only' },
+const TIER_OPTIONS: { value: InjuryTier; icon: string; label: string }[] = [
+  { value: 'minor', icon: '🩹', label: 'Minor Injuries' },
+  { value: 'serious', icon: '🦴', label: 'Serious Injuries' },
+  { value: 'severe', icon: '🏥', label: 'Severe / Life-Changing' },
+  { value: 'none', icon: '🚗', label: 'I Was Not Injured' },
 ];
 
 const SOFT_TISSUE_OPTIONS: { value: SoftTissueInjury; label: string }[] = [
   { value: 'body_aches', label: 'Body Aches & Pain' },
   { value: 'cuts_scrapes_bruises', label: 'Cuts, Scrapes & Bruises' },
+  { value: 'other', label: 'Other' },
 ];
 
 const SUBSTANTIAL_OPTIONS: { value: SubstantialInjury; label: string }[] = [
@@ -28,6 +29,7 @@ const SUBSTANTIAL_OPTIONS: { value: SubstantialInjury; label: string }[] = [
   { value: 'internal_bleeding', label: 'Internal Bleeding' },
   { value: 'scarring', label: 'Scarring' },
   { value: 'memory_loss', label: 'Memory Loss' },
+  { value: 'other', label: 'Other' },
 ];
 
 const CATASTROPHIC_OPTIONS: { value: CatastrophicInjury; label: string }[] = [
@@ -37,6 +39,7 @@ const CATASTROPHIC_OPTIONS: { value: CatastrophicInjury; label: string }[] = [
   { value: 'coma', label: 'Coma' },
   { value: 'paralysis', label: 'Paralysis' },
   { value: 'amputation', label: 'Amputation' },
+  { value: 'other', label: 'Other' },
 ];
 
 function deriveTier(injuries: InjurySelection): InjuryTier | null {
@@ -207,12 +210,7 @@ export function InjuriesStep() {
             onClick={() => handleTierSelect(option.value)}
           >
             <span className="icon">{option.icon}</span>
-            <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <span style={{ fontWeight: 600 }}>{option.label}</span>
-              <span style={{ fontSize: '13px', color: 'var(--gray-500)' }}>
-                {option.description}
-              </span>
-            </span>
+            <span style={{ fontWeight: 600 }}>{option.label}</span>
           </button>
         ))}
       </div>

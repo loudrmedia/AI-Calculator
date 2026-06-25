@@ -4,22 +4,10 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { FaultStatus } from '../../lib/types';
 
-const FAULT_OPTIONS: { value: FaultStatus; label: string; description: string }[] = [
-  { 
-    value: 'not_at_fault', 
-    label: 'No, it was not my fault', 
-    description: 'Someone else caused the accident' 
-  },
-  { 
-    value: 'partial_fault', 
-    label: 'I may have been partially at fault', 
-    description: 'You can often still recover compensation' 
-  },
-  { 
-    value: 'at_fault', 
-    label: 'Yes, it was my fault', 
-    description: 'Some options may still be available' 
-  },
+const FAULT_OPTIONS: { value: FaultStatus; label: string; icon: string }[] = [
+  { value: 'not_at_fault', label: 'No, it was not my fault', icon: '🙅' },
+  { value: 'partial_fault', label: "I don't know who was at fault", icon: '🤷' },
+  { value: 'at_fault', label: 'Yes, it was my fault', icon: '🙋' },
 ];
 
 export function FaultStep() {
@@ -70,9 +58,6 @@ export function FaultStep() {
   return (
     <div>
       <h2 className="step-title">Were you at fault for the accident?</h2>
-      <p className="step-subtitle">
-        Be honest — even partial fault doesn&apos;t disqualify you in most states.
-      </p>
 
       <div className="options-grid">
         {FAULT_OPTIONS.map((option) => (
@@ -80,12 +65,9 @@ export function FaultStep() {
             key={option.value}
             className={`option-button ${selected === option.value ? 'selected' : ''}`}
             onClick={() => handleSelect(option.value)}
-            style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}
           >
+            <span className="icon">{option.icon}</span>
             <span style={{ fontWeight: 600 }}>{option.label}</span>
-            <span style={{ fontSize: '13px', color: 'var(--gray-500)' }}>
-              {option.description}
-            </span>
           </button>
         ))}
       </div>
