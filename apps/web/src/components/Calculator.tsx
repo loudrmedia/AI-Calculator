@@ -8,7 +8,6 @@ import { ValueComparison } from './ValueComparison';
 import { FAQ } from './FAQ';
 import { Footer } from './Footer';
 import { Disclaimer } from './Disclaimer';
-import { SettlementRanges } from './SettlementRanges';
 import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
 import {
@@ -64,21 +63,13 @@ export function Calculator() {
       
       <main className="main-content">
         <div className="container">
-          {isFirstStep && (
-            <div className="settlement-teaser">
-              💰 Average car accident settlements range from <strong>$5,000 to $300,000+</strong>
-              {' '}— answer a few questions to see your personalized estimate.
-            </div>
-          )}
-
           <div className="card">
             {!isResultsPage && (
               <div className="header">
-                <h1>Injured in an Accident? See What Your Case Is Worth in 60 Seconds</h1>
-                <p>Insurance adjusters lowball 9 out of 10 claims. Get your real number — free, private, no obligation.</p>
+                <h1>See What Your Case Is Worth in 30 Seconds</h1>
                 <div className="trust-row">
                   <span className="trust-item"><span className="trust-check">✓</span> 100% Free</span>
-                  <span className="trust-item"><span className="trust-check">✓</span> Takes ~1 Minute</span>
+                  <span className="trust-item"><span className="trust-check">✓</span> Takes 30 Seconds</span>
                   <span className="trust-item"><span className="trust-check">✓</span> No Obligation</span>
                 </div>
               </div>
@@ -111,12 +102,6 @@ export function Calculator() {
 
           {isFirstStep && (
             <>
-              <div className="methodology-strip">
-                Our calculator applies the same <strong>multiplier method</strong> insurance
-                adjusters and attorneys use to value claims — adjusted for your injuries,
-                fault, timing, and state.
-              </div>
-              <SettlementRanges />
               <ValueComparison />
               <FAQ />
               <Disclaimer />

@@ -9,7 +9,7 @@ const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string; badge?
   { value: 'motorcycle_accident', label: 'Motorcycle Accident', icon: '🏍️' },
   { value: 'truck_accident', label: 'Truck Accident', icon: '🚛' },
   { value: 'bicycle_accident', label: 'Bicycle Accident', icon: '🚲' },
-  { value: 'other', label: 'Other Claim Type', icon: '📋' },
+  { value: 'other', label: 'Other', icon: '📋' },
 ];
 
 export function AccidentTypeStep() {
@@ -56,9 +56,6 @@ export function AccidentTypeStep() {
   return (
     <div>
       <h2 className="step-title">What type of accident were you involved in?</h2>
-      <p className="step-subtitle step-subtitle-mobile-hidden">
-        Select one to see your free estimate — takes about 1 minute.
-      </p>
 
       <div className="options-grid">
         {ACCIDENT_TYPES.map((type) => (

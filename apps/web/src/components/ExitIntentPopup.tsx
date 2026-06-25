@@ -42,7 +42,7 @@ export function ExitIntentPopup() {
         <button className="exit-popup-close" onClick={handleClose} aria-label="Close">
           ✕
         </button>
-        <h3>Wait — You&apos;re 60 Seconds Away From Your Free Estimate</h3>
+        <h3>Wait — You&apos;re 30 Seconds Away From Your Free Estimate</h3>
         <p>
           Don&apos;t leave money on the table. Most people are surprised by how much their
           case is worth.
@@ -50,7 +50,7 @@ export function ExitIntentPopup() {
         <button className="btn btn-primary exit-popup-cta" onClick={handleCta}>
           Get My Free Estimate →
         </button>
-        <p className="exit-popup-note">100% free · No obligation · Takes under 1 minute</p>
+        <p className="exit-popup-note">100% free · No obligation · Takes about 30 seconds</p>
       </div>
     </div>
   );
