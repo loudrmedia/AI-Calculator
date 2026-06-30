@@ -106,9 +106,8 @@ export function ContactStep() {
     <div>
       <h2 className="step-title">Last step: where should we send your results?</h2>
 
-      <div className="input-row">
+      <div className="contact-form">
         <div className="input-group">
-          <label htmlFor="firstName">First Name</label>
           <input
             type="text"
             id="firstName"
@@ -119,13 +118,12 @@ export function ContactStep() {
               setErrors((prev) => ({ ...prev, firstName: undefined }));
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-            placeholder="First name"
+            placeholder="First Name*"
           />
           {errors.firstName && <p className="error-message">{errors.firstName}</p>}
         </div>
 
         <div className="input-group">
-          <label htmlFor="lastName">Last Name</label>
           <input
             type="text"
             id="lastName"
@@ -135,43 +133,49 @@ export function ContactStep() {
               setErrors((prev) => ({ ...prev, lastName: undefined }));
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-            placeholder="Last name"
+            placeholder="Last Name*"
           />
           {errors.lastName && <p className="error-message">{errors.lastName}</p>}
         </div>
-      </div>
 
-      <div className="input-group">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setErrors((prev) => ({ ...prev, email: undefined }));
-          }}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          placeholder="your@email.com"
-        />
-        {errors.email && <p className="error-message">{errors.email}</p>}
-      </div>
+        <div className="input-group">
+          <div className="input-with-icon">
+            <span className="input-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-10 5L2 7" />
+              </svg>
+            </span>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+              placeholder="Email*"
+            />
+          </div>
+          {errors.email && <p className="error-message">{errors.email}</p>}
+        </div>
 
-      <div className="input-group">
-        <label htmlFor="phone">Phone (your specialist will call this number)</label>
-        <input
-          type="tel"
-          id="phone"
-          value={phone}
-          onChange={handlePhoneChange}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          placeholder="(555) 555-5555"
-        />
-        {errors.phone && <p className="error-message">{errors.phone}</p>}
+        <div className="input-group">
+          <input
+            type="tel"
+            id="phone"
+            value={phone}
+            onChange={handlePhoneChange}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            placeholder="Phone*"
+          />
+          {errors.phone && <p className="error-message">{errors.phone}</p>}
+        </div>
       </div>
 
       <p className="privacy-note">
-        🔒 Your information is secure, confidential, and never sold.
+        🔒 Secure &amp; never sold
       </p>
 
       <div className="consent-box">

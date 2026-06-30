@@ -3,6 +3,10 @@
 import React from 'react';
 
 export function ValueComparison() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="value-comparison">
       <div className="comparison-card good">
@@ -49,6 +53,12 @@ export function ValueComparison() {
             Your vehicle&apos;s diminished value after repairs is ignored
           </li>
         </ul>
+      </div>
+
+      <div className="value-comparison-cta">
+        <button type="button" className="btn btn-primary" onClick={scrollToTop}>
+          Get Your Free Estimate ↑
+        </button>
       </div>
     </div>
   );
