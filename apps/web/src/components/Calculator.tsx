@@ -68,8 +68,8 @@ export function Calculator() {
               <div className="header">
                 <h1>See What Your Case Is Worth in 30 Seconds</h1>
                 <div className="trust-row">
-                  <span className="trust-item"><span className="trust-check">✓</span> 100% Free</span>
-                  <span className="trust-item"><span className="trust-check">✓</span> Takes 30 Seconds</span>
+                  <span className="trust-item"><span className="trust-check">✓</span> Free</span>
+                  <span className="trust-item"><span className="trust-check">✓</span> 30 Seconds</span>
                   <span className="trust-item"><span className="trust-check">✓</span> No Obligation</span>
                 </div>
               </div>

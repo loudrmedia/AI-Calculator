@@ -1723,12 +1723,20 @@ body {
   }
 
   .trust-row {
-    gap: 6px 12px;
+    flex-wrap: nowrap;
+    gap: 8px;
     margin-top: 10px;
   }
 
   .trust-item {
-    font-size: 12px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .trust-check {
+    width: 15px;
+    height: 15px;
+    font-size: 9px;
   }
 
   .progress-bar {
@@ -1812,8 +1820,8 @@ body {
 
   .navbar-logo-mobile {
     display: block;
-    height: 26px;
-    max-width: min(170px, 50vw);
+    height: 38px;
+    max-width: min(190px, 52vw);
   }
 
   .cta-phone {
