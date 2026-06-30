@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
-import { formatCurrency, formatRange, getInjuryCategoryLabel } from '../../lib/calculator';
+import { formatCurrency, formatRange } from '../../lib/calculator';
 import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
 import { OfferChecker } from '../OfferChecker';
@@ -154,8 +154,7 @@ export function ResultsStep() {
           {state.contact.firstName ? `Congratulations, ${state.contact.firstName}!` : 'Congratulations!'}
         </h2>
         <p style={{ color: 'var(--gray-500)', fontSize: '14px' }}>
-          Your claim estimate is ready — based on{' '}
-          {getInjuryCategoryLabel(result.severityCategory).toLowerCase()}.
+          Your estimate is ready based on your injuries.
         </p>
       </div>
 
@@ -181,37 +180,21 @@ export function ResultsStep() {
         <>
           {/* Hero value — the payoff, front and center */}
           <div className="hero-value-card">
-            <div className="hero-value-label">Your Estimated Case Value</div>
+            <div className="hero-value-label">Your Estimated Case Value With an Attorney</div>
             <div className="hero-value-amount">{formatCurrency(animatedValue)}</div>
-            <div className="hero-value-range">
-              Range with attorney: {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
-            </div>
           </div>
 
           <div className="results-section">
-            <h3>With Attorney vs Without</h3>
-            
-            <div className="comparison-grid">
-              <div className="result-card highlight">
-                <div className="result-label">With Attorney</div>
-                <div className="result-sublabel">Average</div>
-                <div className="result-value" style={{ fontSize: '26px' }}>
-                  ✓ {formatCurrency(withAttorneyAvg)}
-                </div>
-                <div className="result-detail">
-                  Range: {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
-                </div>
-              </div>
+            <h3>Without an Attorney</h3>
 
-              <div className="result-card">
-                <div className="result-label">Without Attorney</div>
-                <div className="result-sublabel">Average</div>
-                <div className="result-value" style={{ fontSize: '26px', color: 'var(--danger)' }}>
-                  ✗ {formatCurrency(Math.round((result.withoutAttorney.low + result.withoutAttorney.high) / 2))}
-                </div>
-                <div className="result-detail">
-                  Range: {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
-                </div>
+            <div className="result-card">
+              <div className="result-label">Without Attorney</div>
+              <div className="result-sublabel">Average</div>
+              <div className="result-value" style={{ fontSize: '26px', color: 'var(--danger)' }}>
+                ✗ {formatCurrency(Math.round((result.withoutAttorney.low + result.withoutAttorney.high) / 2))}
+              </div>
+              <div className="result-detail">
+                Range: {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
               </div>
             </div>
 
