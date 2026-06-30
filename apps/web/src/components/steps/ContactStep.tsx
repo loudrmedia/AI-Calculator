@@ -174,10 +174,6 @@ export function ContactStep() {
         </div>
       </div>
 
-      <p className="privacy-note">
-        🔒 Secure &amp; never sold
-      </p>
-
       <div className="consent-box">
         <label>
           <input

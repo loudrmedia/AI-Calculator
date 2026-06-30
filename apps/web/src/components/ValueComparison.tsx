@@ -57,7 +57,7 @@ export function ValueComparison() {
 
       <div className="value-comparison-cta">
         <button type="button" className="btn btn-primary" onClick={scrollToTop}>
-          Get Your Free Estimate ↑
+          See What Your Case Is Worth ↑
         </button>
       </div>
     </div>
