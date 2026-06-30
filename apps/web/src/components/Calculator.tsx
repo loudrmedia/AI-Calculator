@@ -69,7 +69,7 @@ export function Calculator() {
                 <h1>See What Your Case Is Worth in 30 Seconds</h1>
                 <div className="trust-row">
                   <span className="trust-item"><span className="trust-check">✓</span> Free</span>
-                  <span className="trust-item"><span className="trust-check">✓</span> 30 Seconds</span>
+                  <span className="trust-item"><span className="trust-check">✓</span> Fast</span>
                   <span className="trust-item"><span className="trust-check">✓</span> No Obligation</span>
                 </div>
               </div>
@@ -90,23 +90,24 @@ export function Calculator() {
             <div key={state.currentStep} className="step-content">
               {renderStep()}
             </div>
+
+            {!isResultsPage && (
+              <div className="trust-badge-row">
+                <span className="trust-badge">🔒 256-bit Encrypted</span>
+                <span className="trust-badge-divider">•</span>
+                <span className="trust-badge">🚫 Never Shared Without Consent</span>
+              </div>
+            )}
           </div>
 
           {!isResultsPage && (
-            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <div style={{ textAlign: 'center', marginTop: '12px' }}>
               <p style={{ fontSize: '13px', color: 'var(--gray-500)' }}>
-                Prefer to talk it through? Get your free case review by phone:{' '}
+                Prefer to talk? Call{' '}
                 <a href={CONFIG.PHONE_LINK} style={{ color: 'var(--primary)', fontWeight: 500 }}>
                   {CONFIG.PHONE_NUMBER}
                 </a>
               </p>
-              <div className="trust-badge-row">
-                <span className="trust-badge">🔒 256-bit Encrypted</span>
-                <span className="trust-badge-divider">•</span>
-                <span className="trust-badge">✅ TrustedForm Certified</span>
-                <span className="trust-badge-divider">•</span>
-                <span className="trust-badge">🚫 Never Shared Without Consent</span>
-              </div>
             </div>
           )}
 

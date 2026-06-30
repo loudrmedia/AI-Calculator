@@ -18,18 +18,14 @@ export function ProgressBar() {
   const isFirstStep = currentStepIndex === 0;
 
   return (
-    <div>
-      <div className="progress-bar">
-        <div className="progress-track">
-          <div
-            className={`progress-fill ${isFirstStep ? 'progress-fill-init' : ''}`}
-            style={{ width: `${displayProgress}%` }}
-          />
-        </div>
+    <div className="progress-bar">
+      <div className="progress-track">
+        <div
+          className={`progress-fill ${isFirstStep ? 'progress-fill-init' : ''}`}
+          style={{ width: `${displayProgress}%` }}
+        />
+        <span className="progress-label">{displayProgress}%</span>
       </div>
-      <p className="progress-text">
-        {displayProgress}% complete
-      </p>
     </div>
   );
 }

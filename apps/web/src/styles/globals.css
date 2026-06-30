@@ -43,7 +43,7 @@ body {
 
 .main-content {
   flex: 1;
-  padding-top: 92px;
+  padding-top: 76px;
 }
 
 /* Navbar Styles */
@@ -62,7 +62,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -82,31 +82,6 @@ body {
 
 .navbar-logo-mobile {
   display: none;
-}
-
-.navbar-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-decoration: none;
-  transition: transform 0.2s;
-}
-
-.navbar-cta:hover {
-  transform: scale(1.02);
-}
-
-.cta-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--gray-600);
-  letter-spacing: 0.5px;
-}
-
-.cta-phone {
-  font-size: 20px;
-  font-weight: 700;
-  color: #dc2626;
 }
 
 /* Disclaimer Styles */
@@ -152,12 +127,12 @@ body {
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  padding: 32px;
+  padding: 18px 32px 32px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
 }
 
 .header h1 {
@@ -206,11 +181,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: 9px;
   color: var(--gray-400);
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 .trust-badge-divider {
@@ -763,22 +738,37 @@ body {
 
 /* Progress Bar */
 .progress-bar {
-  margin-bottom: 6px;
+  margin-bottom: 24px;
 }
 
 .progress-track {
+  position: relative;
   width: 100%;
-  height: 8px;
+  height: 12px;
   background: var(--gray-200);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--success) 0%, var(--success-light) 100%);
-  border-radius: 4px;
+  border-radius: 6px;
   transition: width 0.4s ease;
+}
+
+.progress-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--gray-700);
 }
 
 /* First-load fill animation; only applied on step 1 where the end keyframe
@@ -794,14 +784,6 @@ body {
 
 .progress-fill-init {
   animation: progressInit 0.6s ease-out forwards;
-}
-
-.progress-text {
-  font-size: 13px;
-  color: var(--gray-500);
-  text-align: center;
-  margin-top: 2px;
-  margin-bottom: 24px;
 }
 
 /* Step transition */
@@ -1709,7 +1691,7 @@ body {
 @media (max-width: 768px) {
   /* Compact above-the-fold so the first option is visible without scrolling */
   .header {
-    margin-bottom: 14px;
+    margin-bottom: 28px;
   }
 
   .header h1 {
@@ -1740,12 +1722,7 @@ body {
   }
 
   .progress-bar {
-    margin-bottom: 10px;
-  }
-
-  .progress-text {
-    margin-top: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   .step-title {
@@ -1823,19 +1800,11 @@ body {
     height: 38px;
     max-width: min(190px, 52vw);
   }
-
-  .cta-phone {
-    font-size: 16px;
-  }
-
-  .cta-label {
-    font-size: 10px;
-  }
 }
 
 @media (max-width: 480px) {
   .main-content {
-    padding-top: 84px;
+    padding-top: 66px;
   }
 
   .container {
@@ -1843,7 +1812,7 @@ body {
   }
 
   .card {
-    padding: 24px 20px;
+    padding: 14px 20px 24px;
     border-radius: 12px;
   }
 
