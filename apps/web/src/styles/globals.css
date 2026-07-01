@@ -881,17 +881,22 @@ body {
 .skip-link {
   display: block;
   margin: 16px auto 0;
-  background: none;
-  border: none;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-300);
+  border-radius: 999px;
   font-size: 14px;
-  color: var(--gray-500);
+  font-weight: 600;
+  color: var(--gray-600);
   cursor: pointer;
-  text-decoration: underline;
-  padding: 4px 8px;
+  text-decoration: none;
+  padding: 10px 20px;
+  transition: all 0.15s ease;
 }
 
 .skip-link:hover {
   color: var(--primary);
+  border-color: var(--primary);
+  background: white;
 }
 
 .options-grid {

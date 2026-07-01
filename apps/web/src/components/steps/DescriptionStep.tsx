@@ -18,7 +18,7 @@ export function DescriptionStep() {
 
   return (
     <div>
-      <h2 className="step-title">Want a stronger case review? Tell us what happened.</h2>
+      <h2 className="step-title">Want a stronger case review? Tell us what happened. (Optional)</h2>
 
       <div className="input-group">
         <label htmlFor="description">What happened?</label>
@@ -45,7 +45,7 @@ export function DescriptionStep() {
       </div>
 
       <button className="skip-link" onClick={handleContinue}>
-        Skip this step →
+        Skip This Step →
       </button>
     </div>
   );
