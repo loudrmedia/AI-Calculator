@@ -73,13 +73,69 @@ function sanitizeString(str: string | undefined, maxLength: number = MAX_STRING_
 }
 
 // Convert snake_case enum values (e.g. "not_at_fault") into readable,
-// space-separated words (e.g. "Not At Fault") for the CRM/Zapier payload.
+// space-separated words (e.g. "Not At Fault"). Used as a fallback when a
+// value isn't in an explicit label map below.
 function humanize(value: string | undefined): string {
   if (!value) return '';
   return value
     .split('_')
     .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : word))
     .join(' ');
+}
+
+// Explicit maps so the CRM/Zapier payload shows the EXACT option text the user
+// saw in the calculator (e.g. "8–30 days ago"), not a re-worded version.
+const ACCIDENT_TYPE_LABELS: Record<string, string> = {
+  car_accident: 'Car Accident',
+  motorcycle_accident: 'Motorcycle Accident',
+  truck_accident: 'Truck Accident',
+  bicycle_accident: 'Bicycle Accident',
+  other: 'Other',
+};
+
+const INJURY_LABELS: Record<string, string> = {
+  body_aches: 'Body Aches & Pain',
+  cuts_scrapes_bruises: 'Cuts, Scrapes & Bruises',
+  broken_bones: 'Broken / Fractured Bones',
+  internal_bleeding: 'Internal Bleeding',
+  scarring: 'Scarring',
+  memory_loss: 'Memory Loss',
+  surgery_required: 'Surgery Required',
+  brain_injury: 'Brain Injury',
+  organ_loss: 'Loss of Internal Organs',
+  coma: 'Coma',
+  paralysis: 'Paralysis',
+  amputation: 'Amputation',
+  other: 'Other',
+};
+
+const FAULT_LABELS: Record<string, string> = {
+  not_at_fault: 'No, it was not my fault',
+  partial_fault: "I don't know who was at fault",
+  at_fault: 'Yes, it was my fault',
+};
+
+const TIMING_LABELS: Record<string, string> = {
+  within_7_days: 'Within the last 7 days',
+  eight_to_30_days: '8–30 days ago',
+  one_to_six_months: '1–6 months ago',
+  seven_to_twelve_months: '7–12 months ago',
+  thirteen_to_eighteen_months: '13-18 months ago',
+  more_than_eighteen_months: 'More than 18 months ago',
+};
+
+// injury_severity is the overall case-value tier derived from the injuries the
+// user picked. Labeled to match the tiers shown on the injuries question.
+const SEVERITY_LABELS: Record<string, string> = {
+  none: 'No Injury',
+  soft_tissue: 'Minor Injuries',
+  substantial: 'Serious Injuries',
+  catastrophic: 'Severe / Life-Changing',
+};
+
+function labelFor(map: Record<string, string>, value: string | undefined): string {
+  if (!value) return '';
+  return map[value] ?? humanize(value);
 }
 
 function validatePayload(payload: unknown): { valid: boolean; errors: string[] } {
@@ -133,11 +189,11 @@ function transformForZapier(payload: LeadPayload): Record<string, unknown> {
     email: sanitizeString(payload.contact.email),
     phone: sanitizeString(payload.contact.phone),
     
-    accident_type: humanize(payload.inputs.accidentType),
-    injuries: allInjuries.map(humanize).join(', ') || (injuries.noInjury ? 'None' : ''),
-    injury_severity: humanize(payload.result.severityCategory),
-    fault_status: humanize(payload.inputs.faultStatus),
-    accident_timing: humanize(payload.inputs.accidentTiming),
+    accident_type: labelFor(ACCIDENT_TYPE_LABELS, payload.inputs.accidentType),
+    injuries: allInjuries.map((i) => labelFor(INJURY_LABELS, i)).join(', ') || (injuries.noInjury ? 'No Injury' : ''),
+    injury_severity: labelFor(SEVERITY_LABELS, payload.result.severityCategory),
+    fault_status: labelFor(FAULT_LABELS, payload.inputs.faultStatus),
+    accident_timing: labelFor(TIMING_LABELS, payload.inputs.accidentTiming),
     zip_code: payload.inputs.zipCode,
     has_property_damage: payload.inputs.hasPropertyDamage,
     accident_description: sanitizeString(payload.inputs.accidentDescription, MAX_DESCRIPTION_LENGTH),
