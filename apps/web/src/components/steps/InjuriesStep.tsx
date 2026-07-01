@@ -15,7 +15,6 @@ const TIER_OPTIONS: { value: InjuryTier; icon: string; label: string }[] = [
   { value: 'minor', icon: '🩹', label: 'Minor Injuries' },
   { value: 'serious', icon: '🦴', label: 'Serious Injuries' },
   { value: 'severe', icon: '🏥', label: 'Severe / Life-Changing' },
-  { value: 'none', icon: '🚗', label: 'I Was Not Injured' },
 ];
 
 const SOFT_TISSUE_OPTIONS: { value: SoftTissueInjury; label: string }[] = [

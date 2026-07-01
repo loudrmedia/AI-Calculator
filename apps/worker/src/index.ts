@@ -72,6 +72,16 @@ function sanitizeString(str: string | undefined, maxLength: number = MAX_STRING_
   return str.slice(0, maxLength).replace(/[<>]/g, '');
 }
 
+// Convert snake_case enum values (e.g. "not_at_fault") into readable,
+// space-separated words (e.g. "Not At Fault") for the CRM/Zapier payload.
+function humanize(value: string | undefined): string {
+  if (!value) return '';
+  return value
+    .split('_')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+    .join(' ');
+}
+
 function validatePayload(payload: unknown): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
@@ -123,11 +133,11 @@ function transformForZapier(payload: LeadPayload): Record<string, unknown> {
     email: sanitizeString(payload.contact.email),
     phone: sanitizeString(payload.contact.phone),
     
-    accident_type: payload.inputs.accidentType,
-    injuries: allInjuries.join(', ') || (injuries.noInjury ? 'none' : ''),
-    injury_severity: payload.result.severityCategory,
-    fault_status: payload.inputs.faultStatus,
-    accident_timing: payload.inputs.accidentTiming,
+    accident_type: humanize(payload.inputs.accidentType),
+    injuries: allInjuries.map(humanize).join(', ') || (injuries.noInjury ? 'None' : ''),
+    injury_severity: humanize(payload.result.severityCategory),
+    fault_status: humanize(payload.inputs.faultStatus),
+    accident_timing: humanize(payload.inputs.accidentTiming),
     zip_code: payload.inputs.zipCode,
     has_property_damage: payload.inputs.hasPropertyDamage,
     accident_description: sanitizeString(payload.inputs.accidentDescription, MAX_DESCRIPTION_LENGTH),
