@@ -7,6 +7,7 @@ import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
 import { OfferChecker } from '../OfferChecker';
 import { CONFIG } from '../../lib/config';
+import { getTrackingParams } from '../../lib/tracking';
 
 const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
 const PHONE_LINK = CONFIG.PHONE_LINK;
@@ -87,6 +88,7 @@ export function ResultsStep() {
     setSubmitError(null);
 
     try {
+      const tracking = getTrackingParams();
       const payload = {
         inputs: state.inputs,
         contact: state.contact,
@@ -96,7 +98,20 @@ export function ResultsStep() {
           severityCategory: result.severityCategory,
           modelVersion: result.modelVersion,
         },
-        utmParams: getUtmParams(),
+        utmParams: {
+          utm_source: tracking.utm_source,
+          utm_medium: tracking.utm_medium,
+          utm_campaign: tracking.utm_campaign,
+          utm_content: tracking.utm_content,
+          utm_term: tracking.utm_term,
+        },
+        tracking: {
+          gclid: tracking.gclid,
+          wbraid: tracking.wbraid,
+          gbraid: tracking.gbraid,
+          landingPageUrl: tracking.landingPageUrl,
+          referrer: tracking.referrer,
+        },
         trustedFormCertUrl: getTrustedFormCertUrl(),
         submittedAt: new Date().toISOString(),
       };
@@ -119,18 +134,6 @@ export function ResultsStep() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const getUtmParams = () => {
-    if (typeof window === 'undefined') return {};
-    const params = new URLSearchParams(window.location.search);
-    return {
-      utm_source: params.get('utm_source') || undefined,
-      utm_medium: params.get('utm_medium') || undefined,
-      utm_campaign: params.get('utm_campaign') || undefined,
-      utm_content: params.get('utm_content') || undefined,
-      utm_term: params.get('utm_term') || undefined,
-    };
   };
 
   if (!result) {

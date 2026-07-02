@@ -42,6 +42,13 @@ interface LeadPayload {
     utm_content?: string;
     utm_term?: string;
   };
+  tracking?: {
+    gclid?: string;
+    wbraid?: string;
+    gbraid?: string;
+    landingPageUrl?: string;
+    referrer?: string;
+  };
   trustedFormCertUrl?: string;
   submittedAt: string;
 }
@@ -157,7 +164,11 @@ function validatePayload(payload: unknown): { valid: boolean; errors: string[] }
   return { valid: errors.length === 0, errors };
 }
 
-function transformForZapier(payload: LeadPayload): Record<string, unknown> {
+function transformForZapier(
+  payload: LeadPayload,
+  ipAddress: string,
+  userAgent: string
+): Record<string, unknown> {
   const injuries = payload.inputs.injuries;
   const allInjuries = [
     ...injuries.softTissue,
@@ -196,6 +207,15 @@ function transformForZapier(payload: LeadPayload): Record<string, unknown> {
     utm_campaign: payload.utmParams?.utm_campaign || '',
     utm_content: payload.utmParams?.utm_content || '',
     utm_term: payload.utmParams?.utm_term || '',
+
+    gclid: sanitizeString(payload.tracking?.gclid),
+    wbraid: sanitizeString(payload.tracking?.wbraid),
+    gbraid: sanitizeString(payload.tracking?.gbraid),
+    landing_page_url: sanitizeString(payload.tracking?.landingPageUrl),
+    referrer: sanitizeString(payload.tracking?.referrer),
+
+    ip_address: sanitizeString(ipAddress),
+    user_agent: sanitizeString(userAgent),
     
     trusted_form_cert_url: payload.trustedFormCertUrl || '',
     
@@ -233,7 +253,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const zapierPayload = transformForZapier(body as LeadPayload);
+    const ipAddress =
+      (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() ||
+      request.headers.get('x-real-ip') ||
+      '';
+    const userAgent = request.headers.get('user-agent') || '';
+
+    const zapierPayload = transformForZapier(body as LeadPayload, ipAddress, userAgent);
     const payloadString = JSON.stringify(zapierPayload);
 
     const headers: Record<string, string> = {

@@ -10,6 +10,7 @@ import { Footer } from './Footer';
 import { Disclaimer } from './Disclaimer';
 import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
+import { captureTrackingParams } from '../lib/tracking';
 import {
   AccidentTypeStep,
   InjuriesStep,
@@ -24,6 +25,12 @@ import {
 
 export function Calculator() {
   const { state } = useFunnel();
+
+  // Capture marketing attribution (UTMs, gclid, etc.) as soon as the app loads,
+  // while the original landing URL params are still present
+  useEffect(() => {
+    captureTrackingParams();
+  }, []);
 
   // Always bring the user back to the top of the form when the step changes,
   // so the next question is immediately visible
