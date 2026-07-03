@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 
-const CONSENT_TEXT = `By clicking "GET RESULTS," you expressly consent to receive calls and text messages for marketing purposes using automated technology. You agree that we may contact you at any time, including before 8am or after 9pm local time. Consent is not a condition of purchase. You agree to our Privacy Policy and Terms of Use.`;
+const CONSENT_TEXT = `By checking this box, you expressly consent to receive calls and text messages for marketing purposes from 1800theLaw2 using automated technology, including artificial/pre-recorded voice and AI generative voice. You agree that we may contact you anytime, including before 8am or after 9pm local time. Consent is not a condition of purchase. You agree to the use of electronic signatures.`;
 
 type ContactErrors = {
   firstName?: string;
@@ -185,12 +185,11 @@ export function ContactStep() {
             }}
           />
           <span>
-            By clicking &quot;GET RESULTS,&quot; you expressly consent to receive calls and text 
-            messages for marketing purposes using automated technology. You agree that we may 
-            contact you at any time, including before 8am or after 9pm local time. Consent is 
-            not a condition of purchase. You agree to our{' '}
-            <a href="/privacy" target="_blank">Privacy Policy</a> and{' '}
-            <a href="/terms" target="_blank">Terms of Use</a>.
+            By checking this box, you expressly consent to receive calls and text messages for 
+            marketing purposes from 1800theLaw2 using automated technology, including 
+            artificial/pre-recorded voice and AI generative voice. You agree that we may contact 
+            you anytime, including before 8am or after 9pm local time. Consent is not a condition 
+            of purchase. You agree to the use of electronic signatures.
           </span>
         </label>
         {errors.consent && (
