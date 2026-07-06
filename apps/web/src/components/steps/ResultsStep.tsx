@@ -7,7 +7,7 @@ import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
 import { OfferChecker } from '../OfferChecker';
 import { CONFIG } from '../../lib/config';
-import { getTrackingParams } from '../../lib/tracking';
+import { getTrackingParams, trackLeadConversion } from '../../lib/tracking';
 
 const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
 const PHONE_LINK = CONFIG.PHONE_LINK;
@@ -56,6 +56,16 @@ export function ResultsStep() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result, submitted]);
+
+  // Reaching the results screen means the visitor completed the entire funnel.
+  // Fire the GTM conversion signal here — this is the single entry point to
+  // this screen, so it can only ever fire for a completed lead.
+  useEffect(() => {
+    if (result) {
+      trackLeadConversion({ value: withAttorneyAvg, currency: 'USD' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
 
   const getTrustedFormCertUrl = (): string | undefined => {
     if (typeof window === 'undefined') return undefined;

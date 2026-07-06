@@ -69,3 +69,45 @@ export function getTrackingParams(): TrackingParams {
   }
   return readFromUrl();
 }
+
+declare global {
+  interface Window {
+    dataLayer?: Record<string, unknown>[];
+  }
+}
+
+const CONVERSION_FIRED_KEY = 'lead_conversion_fired';
+
+/**
+ * Pushes the `lead_conversion` event into GTM's dataLayer when a visitor
+ * completes the funnel and reaches the results screen.
+ *
+ * Fires at most once per session (guarded via sessionStorage) so a page
+ * refresh or back/forward navigation on the results screen can't double-count
+ * the conversion. `virtualPagePath` lets GTM/GA treat this as a `/thankyou`
+ * pageview even though the browser URL never actually changes.
+ */
+export function trackLeadConversion(data: Record<string, unknown> = {}): void {
+  if (typeof window === 'undefined') return;
+
+  let alreadyFired = false;
+  try {
+    alreadyFired = sessionStorage.getItem(CONVERSION_FIRED_KEY) === '1';
+  } catch {
+    // sessionStorage unavailable — fall through and fire anyway
+  }
+  if (alreadyFired) return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: 'lead_conversion',
+    virtualPagePath: '/thankyou',
+    ...data,
+  });
+
+  try {
+    sessionStorage.setItem(CONVERSION_FIRED_KEY, '1');
+  } catch {
+    // ignore — worst case the event could fire again on refresh
+  }
+}
