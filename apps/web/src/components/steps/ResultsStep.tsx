@@ -62,7 +62,14 @@ export function ResultsStep() {
   // this screen, so it can only ever fire for a completed lead.
   useEffect(() => {
     if (result) {
-      trackLeadConversion({ value: withAttorneyAvg, currency: 'USD' });
+      trackLeadConversion({
+        value: withAttorneyAvg,
+        firstName: state.contact.firstName,
+        lastName: state.contact.lastName,
+        email: state.contact.email,
+        phone: state.contact.phone,
+        zipCode: state.inputs.zipCode,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
