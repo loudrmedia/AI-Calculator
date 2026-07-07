@@ -62,12 +62,15 @@ export function ResultsStep() {
   // this screen, so it can only ever fire for a completed lead.
   useEffect(() => {
     if (result) {
+      // Normalize phone to E.164 (+1XXXXXXXXXX) for Google Enhanced Conversions
+      const digits = (state.contact.phone || '').replace(/\D/g, '');
+      const phoneE164 = digits ? `+1${digits.slice(-10)}` : undefined;
+
       trackLeadConversion({
-        value: withAttorneyAvg,
         firstName: state.contact.firstName,
         lastName: state.contact.lastName,
         email: state.contact.email,
-        phone: state.contact.phone,
+        phone: phoneE164,
         zipCode: state.inputs.zipCode,
       });
     }
