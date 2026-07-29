@@ -68,6 +68,13 @@ export default function RootLayout({
           }}
         />
 
+        {/* CallRail - CA dynamic number insertion / call tracking */}
+        <Script
+          id="callrail"
+          src="https://cdn.callrail.com/companies/895949722/4dd3fb9f002950678b7f/12/swap.js"
+          strategy="afterInteractive"
+        />
+
         {/* Hidden form for TrustedForm to inject certificate URL */}
         <form id="trustedform-container" style={{ display: 'none' }} aria-hidden="true">
           <input type="hidden" name="xxTrustedFormCertUrl" id="xxTrustedFormCertUrl" />
