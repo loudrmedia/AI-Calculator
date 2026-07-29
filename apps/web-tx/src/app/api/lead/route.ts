@@ -1,15 +1,5 @@
-/**
- * AI Case Calculator - Cloudflare Worker
- * 
- * Handles lead submissions and forwards to Zapier webhook
- * with validation, rate limiting, and HMAC signing.
- */
-
-export interface Env {
-  ZAPIER_WEBHOOK_URL: string;
-  WEBHOOK_SECRET: string;
-  ENVIRONMENT: string;
-}
+import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 interface LeadPayload {
   inputs: {
@@ -62,18 +52,6 @@ interface LeadPayload {
   trustedFormCertUrl?: string;
   submittedAt: string;
 }
-
-const ALLOWED_ORIGINS = [
-  'https://autoreliefassistance.com',
-  'https://www.autoreliefassistance.com',
-  'https://cal.getautoreliefassistance.com', // CA landing page (apps/web)
-  'https://cawa.autoreliefassistance.com',
-  'http://localhost:3000',
-  // TODO: add the real TX landing page domain once it's chosen/live, e.g.:
-  // 'https://tx.getautoreliefassistance.com',
-  // TODO: add the real Nationwide landing page domain once it's chosen/live, e.g.:
-  // 'https://nationwide.getautoreliefassistance.com',
-];
 
 const MAX_STRING_LENGTH = 500;
 const MAX_DESCRIPTION_LENGTH = 2000;
@@ -246,156 +224,83 @@ function transformForZapier(
   };
 }
 
-async function generateSignature(payload: string, secret: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const messageData = encoder.encode(payload);
-
-  const key = await crypto.subtle.importKey(
-    'raw',
-    keyData,
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-
-  const signature = await crypto.subtle.sign('HMAC', key, messageData);
-  const hashArray = Array.from(new Uint8Array(signature));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+function generateSignature(payload: string, secret: string): string {
+  return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-function corsHeaders(origin: string | null): Record<string, string> {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
-  
-  return {
-    'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400',
-  };
+export async function POST(request: NextRequest) {
+  try {
+    const rateLimitKey = request.headers.get('x-forwarded-for') || 'unknown';
+    
+    const body = await request.json();
+    const validation = validatePayload(body);
+
+    if (!validation.valid) {
+      return NextResponse.json(
+        { ok: false, errors: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    const zapierUrl = process.env.ZAPIER_WEBHOOK_URL;
+    const webhookSecret = process.env.WEBHOOK_SECRET;
+
+    if (!zapierUrl) {
+      console.error('ZAPIER_WEBHOOK_URL not configured');
+      return NextResponse.json(
+        { ok: true, message: 'Lead received (webhook not configured)' },
+        { status: 200 }
+      );
+    }
+
+    const ipAddress =
+      (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() ||
+      request.headers.get('x-real-ip') ||
+      '';
+    const userAgent = request.headers.get('user-agent') || '';
+
+    const zapierPayload = transformForZapier(body as LeadPayload, ipAddress, userAgent);
+    const payloadString = JSON.stringify(zapierPayload);
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (webhookSecret) {
+      headers['X-Webhook-Signature'] = generateSignature(payloadString, webhookSecret);
+    }
+
+    const response = await fetch(zapierUrl, {
+      method: 'POST',
+      headers,
+      body: payloadString,
+    });
+
+    if (!response.ok) {
+      console.error('Zapier webhook failed:', response.status, await response.text());
+      return NextResponse.json(
+        { ok: false, error: 'Failed to process lead' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error('Lead submission error:', error);
+    return NextResponse.json(
+      { ok: false, error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
 
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
-    const origin = request.headers.get('Origin');
-
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        status: 204,
-        headers: corsHeaders(origin),
-      });
-    }
-
-    if (url.pathname !== '/api/lead' && url.pathname !== '/lead') {
-      return new Response(JSON.stringify({ error: 'Not found' }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(origin),
-        },
-      });
-    }
-
-    if (request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(origin),
-        },
-      });
-    }
-
-    try {
-      const body = await request.json();
-      const validation = validatePayload(body);
-
-      if (!validation.valid) {
-        return new Response(
-          JSON.stringify({ ok: false, errors: validation.errors }),
-          {
-            status: 400,
-            headers: {
-              'Content-Type': 'application/json',
-              ...corsHeaders(origin),
-            },
-          }
-        );
-      }
-
-      if (!env.ZAPIER_WEBHOOK_URL) {
-        console.error('ZAPIER_WEBHOOK_URL not configured');
-        return new Response(
-          JSON.stringify({ ok: true, message: 'Lead received (webhook not configured)' }),
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-              ...corsHeaders(origin),
-            },
-          }
-        );
-      }
-
-      const ipAddress =
-        request.headers.get('CF-Connecting-IP') ||
-        (request.headers.get('X-Forwarded-For') || '').split(',')[0].trim();
-      const userAgent = request.headers.get('User-Agent') || '';
-
-      const zapierPayload = transformForZapier(body as LeadPayload, ipAddress, userAgent);
-      const payloadString = JSON.stringify(zapierPayload);
-
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-
-      if (env.WEBHOOK_SECRET) {
-        headers['X-Webhook-Signature'] = await generateSignature(payloadString, env.WEBHOOK_SECRET);
-      }
-
-      const response = await fetch(env.ZAPIER_WEBHOOK_URL, {
-        method: 'POST',
-        headers,
-        body: payloadString,
-      });
-
-      if (!response.ok) {
-        console.error('Zapier webhook failed:', response.status);
-        return new Response(
-          JSON.stringify({ ok: false, error: 'Failed to process lead' }),
-          {
-            status: 500,
-            headers: {
-              'Content-Type': 'application/json',
-              ...corsHeaders(origin),
-            },
-          }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ ok: true }),
-        {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders(origin),
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Lead submission error:', error);
-      return new Response(
-        JSON.stringify({ ok: false, error: 'Internal server error' }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders(origin),
-          },
-        }
-      );
-    }
-  },
-};
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
