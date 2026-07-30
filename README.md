@@ -42,8 +42,7 @@ A deterministic, source-cited personal injury case value estimator with a Better
 
 `apps/web`, `apps/web-tx`, and `apps/web-nationwide` are **independent copies** of the
 same calculator app. This is intentional: each one can be edited on its own (different
-attorney/disclaimer copy, phone number, branding) without affecting the others. They
-share nothing at runtime except the Cloudflare Worker API (`apps/worker`).
+attorney/disclaimer copy, phone number, branding) without affecting the others.
 
 - To change something in the CA version only → edit files under `apps/web`.
 - To change something in the TX version only → edit files under `apps/web-tx`.
@@ -51,15 +50,33 @@ share nothing at runtime except the Cloudflare Worker API (`apps/worker`).
 - A fix that should apply to all three (e.g. a calculator math bug) currently has to be
   applied to all three folders by hand, since they don't share code.
 
-**Before launching `web-tx` or `web-nationwide`:** search each app for `TODO(TX)` /
-`TODO(Nationwide)` comments (currently in `src/components/Disclaimer.tsx` and
-`src/lib/config.ts`) and fill in the real attorney sponsor disclosure and phone number.
-They were seeded with CA placeholder content and must not go live as-is.
+Each app is a separate Cloudflare Pages project on its own domain, and each posts leads
+to its own deployed Cloudflare Worker (so each market can use a different Zapier webhook):
 
-Each app deploys as its **own Cloudflare Pages project** with its own custom domain
-(see Deployment below), and the Worker's `ALLOWED_ORIGINS` list
-(`apps/worker/src/index.ts`) must include each domain or lead submissions from that
-site will be blocked by CORS.
+| Market | App folder | Domain | Worker |
+|---|---|---|---|
+| CA | `apps/web` | `cal.getautoreliefassistance.com` | `ai-calculator-api` |
+| TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` | `ai-calculator-tx` |
+| Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` | `ai-calculator-nationwide` |
+
+Each app's worker URL is set per Pages project via the `NEXT_PUBLIC_WORKER_URL`
+environment variable, and each worker's `ALLOWED_ORIGINS` must contain its own site's
+domain or lead submissions are blocked by CORS.
+
+Each worker has its own folder: `apps/worker` (CA), `apps/worker-tx`, and
+`apps/worker-nationwide`. Like the web apps, they are independent copies.
+
+`apps/worker-tx` and `apps/worker-nationwide` were reconstructed from the CA worker to
+match the already-deployed TX and Nationwide workers, with their `name` and
+`ALLOWED_ORIGINS` verified against live CORS behavior. They have not been diffed against
+the deployed source, so **confirm against the live worker in the Cloudflare dashboard
+before running `wrangler deploy` from either folder**, in case they drifted after
+deployment.
+
+**Outstanding for `web-tx` and `web-nationwide`:** both are live but still contain
+`TODO(TX)` / `TODO(Nationwide)` placeholders in `src/components/Disclaimer.tsx` and
+`src/lib/config.ts` — the attorney sponsor disclosure and the intake phone number are
+still CA content and need replacing.
 
 ## Getting Started
 
@@ -99,14 +116,14 @@ npm test
 
 ### Cloudflare Pages
 
-Create **one Cloudflare Pages project per landing page**, all pointing at this same
+There is **one Cloudflare Pages project per landing page**, all pointing at this same
 repo but with a different root directory:
 
-| Landing page | Root directory | Custom domain (example) |
+| Landing page | Root directory | Domain |
 |---|---|---|
-| CA (live) | `apps/web` | `cal.getautoreliefassistance.com` |
-| TX | `apps/web-tx` | e.g. `tx.getautoreliefassistance.com` |
-| Nationwide | `apps/web-nationwide` | e.g. `nationwide.getautoreliefassistance.com` |
+| CA | `apps/web` | `cal.getautoreliefassistance.com` |
+| TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` |
+| Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` |
 
 For each project:
 
@@ -116,14 +133,17 @@ For each project:
    - Build output: `out`
    - Root directory: `apps/web` / `apps/web-tx` / `apps/web-nationwide`
 3. Add environment variables in Cloudflare dashboard:
-   - `ZAPIER_WEBHOOK_URL`
-   - `WEBHOOK_SECRET`
-4. Attach the project's custom domain, then add that domain to `ALLOWED_ORIGINS` in
-   `apps/worker/src/index.ts` and redeploy the worker.
+   - `NEXT_PUBLIC_WORKER_URL` — the market's worker endpoint. This is baked in at build
+     time; without it the static export falls back to `/api/lead`, which does not exist
+     in production and silently breaks lead submission.
+4. Attach the project's custom domain, then add that domain to `ALLOWED_ORIGINS` in that
+   market's worker and redeploy the worker.
 
-### Cloudflare Worker (Alternative)
+### Cloudflare Workers
 
-If using the standalone worker:
+Each market has its own worker folder (`apps/worker`, `apps/worker-tx`,
+`apps/worker-nationwide`) holding its own secrets, so each can post to a different
+Zapier webhook. Deploy from the folder for that market:
 
 ```bash
 cd apps/worker

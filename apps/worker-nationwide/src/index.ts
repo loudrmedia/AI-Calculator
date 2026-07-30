@@ -63,14 +63,14 @@ interface LeadPayload {
   submittedAt: string;
 }
 
-// This worker (ai-calculator-api) serves the CA landing page only. TX and
-// Nationwide each call their own deployed worker, so their domains belong in
-// that worker's allowlist rather than here.
+// This worker (ai-calculator-nationwide) serves the Nationwide landing page.
 const ALLOWED_ORIGINS = [
   'https://autoreliefassistance.com',
   'https://www.autoreliefassistance.com',
-  'https://cal.getautoreliefassistance.com', // CA landing page (apps/web)
+  'https://cal.getautoreliefassistance.com',
   'https://cawa.autoreliefassistance.com',
+  'https://txcal.myautoreliefassistance.com',
+  'https://nwcal.myautoreliefassistance.com', // Nationwide landing page (apps/web-nationwide)
   'http://localhost:3000',
 ];
 
