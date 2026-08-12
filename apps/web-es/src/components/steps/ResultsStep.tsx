@@ -1,0 +1,336 @@
+'use client';
+
+import React, { useEffect, useRef, useState } from 'react';
+import { useFunnel } from '../../lib/funnel-context';
+import { formatCurrency, formatRange } from '../../lib/calculator';
+import { CitationRenderer } from '../CitationRenderer';
+import { Disclaimer } from '../Disclaimer';
+import { OfferChecker } from '../OfferChecker';
+import { CONFIG } from '../../lib/config';
+import { getTrackingParams, trackLeadConversion } from '../../lib/tracking';
+
+const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
+const PHONE_LINK = CONFIG.PHONE_LINK;
+
+// Animates a number counting up to its target for a rewarding reveal
+function useCountUp(target: number, durationMs = 1200) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (target <= 0) {
+      setValue(target);
+      return;
+    }
+    let frame: number;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(target * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [target, durationMs]);
+
+  return value;
+}
+
+export function ResultsStep() {
+  const { state } = useFunnel();
+  const result = state.result;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  // Synchronous guard against duplicate submissions (e.g. StrictMode double-effect)
+  const submitAttempted = useRef(false);
+
+  const withAttorneyAvg = result
+    ? Math.round((result.withAttorney.grossLow + result.withAttorney.grossHigh) / 2)
+    : 0;
+  const animatedValue = useCountUp(withAttorneyAvg);
+
+  useEffect(() => {
+    if (result && !submitted) {
+      submitLead();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, submitted]);
+
+  const getTrustedFormCertUrl = (): string | undefined => {
+    if (typeof window === 'undefined') return undefined;
+    
+    // Try multiple methods to get TrustedForm certificate URL
+    // Method 1: Our explicit input by ID
+    const inputById = document.getElementById('xxTrustedFormCertUrl') as HTMLInputElement;
+    if (inputById?.value) return inputById.value;
+    
+    // Method 2: Hidden input field by name (TrustedForm may create its own)
+    const inputByName = document.querySelector<HTMLInputElement>('input[name="xxTrustedFormCertUrl"]');
+    if (inputByName?.value) return inputByName.value;
+    
+    // Method 3: TrustedForm's auto-generated ID pattern
+    const inputByPattern = document.getElementById('xxTrustedFormCertUrl_0') as HTMLInputElement;
+    if (inputByPattern?.value) return inputByPattern.value;
+    
+    // Method 4: Window object (some TrustedForm versions)
+    const win = window as typeof window & { TrustedForm?: { certUrl?: string } };
+    if (win.TrustedForm?.certUrl) return win.TrustedForm.certUrl;
+    
+    return undefined;
+  };
+
+  const submitLead = async () => {
+    if (!result || submitted || submitAttempted.current) return;
+    submitAttempted.current = true;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const tracking = getTrackingParams();
+      const payload = {
+        inputs: state.inputs,
+        contact: state.contact,
+        result: {
+          withoutAttorney: result.withoutAttorney,
+          withAttorney: result.withAttorney,
+          severityCategory: result.severityCategory,
+          modelVersion: result.modelVersion,
+        },
+        utmParams: {
+          utm_source: tracking.utm_source,
+          utm_medium: tracking.utm_medium,
+          utm_campaign: tracking.utm_campaign,
+          utm_content: tracking.utm_content,
+          utm_term: tracking.utm_term,
+        },
+        tracking: {
+          gclid: tracking.gclid,
+          wbraid: tracking.wbraid,
+          gbraid: tracking.gbraid,
+          fbclid: tracking.fbclid,
+          landingPageUrl: tracking.landingPageUrl,
+          referrer: tracking.referrer,
+        },
+        trustedFormCertUrl: getTrustedFormCertUrl(),
+        submittedAt: new Date().toISOString(),
+      };
+
+      const response = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        console.error('Lead submission failed');
+      } else {
+        // Count the conversion only once the lead has actually been recorded,
+        // so a failed submission can't inflate ad platform reporting.
+        // Phone is normalized to E.164 (+1XXXXXXXXXX) for Google Enhanced Conversions.
+        const digits = (state.contact.phone || '').replace(/\D/g, '');
+        trackLeadConversion({
+          firstName: state.contact.firstName,
+          lastName: state.contact.lastName,
+          email: state.contact.email,
+          phone: digits ? `+1${digits.slice(-10)}` : undefined,
+          zipCode: state.inputs.zipCode,
+        });
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Lead submission error:', error);
+      setSubmitError('No pudimos guardar su información. Por favor intente de nuevo.');
+      submitAttempted.current = false; // allow manual retry
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!result) {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px' }}>
+        <div className="loading-spinner" style={{ borderTopColor: 'var(--primary)', borderColor: 'var(--gray-200)' }} />
+        <p style={{ marginTop: '16px', color: 'var(--gray-500)' }}>Calculando su estimado...</p>
+      </div>
+    );
+  }
+
+  const hasInjuries = result.severityCategory !== 'none';
+  const showWarning = result.showStatuteWarning;
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      {/* Personalized success moment */}
+      <div className="results-success-header">
+        <div className="results-success-icon">✓</div>
+        <h2 className="step-title" style={{ marginBottom: '4px' }}>
+          {state.contact.firstName ? `¡Felicidades, ${state.contact.firstName}!` : '¡Felicidades!'}
+        </h2>
+        <p style={{ color: 'var(--gray-500)', fontSize: '14px' }}>
+          Su estimado está listo, basado en sus lesiones.
+        </p>
+      </div>
+
+      {showWarning && (
+        <div className="disclaimer-box warning" style={{ marginBottom: '24px', textAlign: 'left' }}>
+          <h4>⚠️ Aviso Urgente</h4>
+          <p>
+            La mayoría de los estados imponen un plazo de prescripción de 2 a 3 años para los 
+            reclamos por lesiones personales. Según la fecha de su accidente, debería consultar 
+            con un abogado lo antes posible.
+          </p>
+        </div>
+      )}
+
+      {!hasInjuries && !state.inputs.hasPropertyDamage ? (
+        <div className="result-card" style={{ textAlign: 'center' }}>
+          <p style={{ color: 'var(--gray-600)' }}>
+            Según sus respuestas (sin lesiones y sin daños materiales), es posible que no 
+            exista un reclamo indemnizable. Sin embargo, si usted cree que sufrió daños, le 
+            recomendamos consultar con un abogado.
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Hero value — the payoff, front and center */}
+          <div className="hero-value-card">
+            <div className="hero-value-label">Valor Estimado de su Caso Con un Abogado</div>
+            <div className="hero-value-amount">{formatCurrency(animatedValue)}</div>
+          </div>
+
+          <div className="results-section">
+            <h3>Sin un Abogado</h3>
+
+            <div className="result-card">
+              <div className="result-label">Sin Abogado</div>
+              <div className="result-sublabel">Promedio</div>
+              <div className="result-value" style={{ fontSize: '26px', color: 'var(--danger)' }}>
+                ✗ {formatCurrency(Math.round((result.withoutAttorney.low + result.withoutAttorney.high) / 2))}
+              </div>
+              <div className="result-detail">
+                Rango: {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
+              </div>
+            </div>
+
+            <p style={{ 
+              textAlign: 'center', 
+              fontSize: '13px', 
+              color: 'var(--gray-600)', 
+              marginTop: '16px',
+              padding: '12px',
+              background: '#f0fdf4',
+              borderRadius: '8px'
+            }}>
+              Con un abogado, usted podría recuperar{' '}
+              <strong>
+                +{formatCurrency(result.withAttorney.netLow - result.withoutAttorney.high)} a{' '}
+                +{formatCurrency(result.withAttorney.netHigh - result.withoutAttorney.low)} más
+              </strong>{' '}
+              — incluso después de los honorarios.
+            </p>
+          </div>
+
+          <OfferChecker result={result} />
+        </>
+      )}
+
+      {/* Primary CTA — directly after the value, before any legal content */}
+      <div className="results-cta-section">
+        <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--gray-900)', marginBottom: '8px' }}>
+          Asegure su Revisión de Caso Gratuita
+        </h3>
+        <p style={{ fontSize: '14px', color: 'var(--gray-600)', marginBottom: '16px' }}>
+          Los especialistas están revisando su caso ahora mismo. Llamar es la forma más rápida
+          de proteger el valor de su reclamo.
+        </p>
+
+        <a 
+          href={PHONE_LINK} 
+          className="btn btn-primary call-pulse"
+          style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '8px',
+            textDecoration: 'none',
+            padding: '16px 32px',
+            fontSize: '18px',
+          }}
+        >
+          📞 Llame Ahora: {PHONE_NUMBER}
+        </a>
+        
+        <p style={{ fontSize: '12px', color: 'var(--gray-400)', marginTop: '12px' }}>
+          Consulta gratis • Sin compromiso • Sin honorarios a menos que gane
+        </p>
+      </div>
+
+      {/* Expectation setting — primes the lead to answer the call */}
+      <div className="next-steps">
+        <h3>Qué Sigue Ahora</h3>
+        <ol>
+          <li>
+            <span className="next-step-num">1</span>
+            <span>
+              <strong>Su caso está siendo revisado.</strong> Ya recibimos su información
+              y confirmamos su estimado.
+            </span>
+          </li>
+          <li>
+            <span className="next-step-num">2</span>
+            <span>
+              <strong>Espere una llamada en breve</strong> al <strong>{state.contact.phone}</strong>.
+              Contestar rápido mantiene su caso avanzando.
+            </span>
+          </li>
+          <li>
+            <span className="next-step-num">3</span>
+            <span>
+              <strong>Reciba su plan de acción.</strong> Un especialista le explicará exactamente
+              cómo obtener el valor total de su reclamo.
+            </span>
+          </li>
+        </ol>
+      </div>
+
+      <div className="disclaimer-box" style={{ textAlign: 'left' }}>
+        <h4>📋 Aviso Importante</h4>
+        <ul>
+          {result.disclaimers.filter(d => !d.includes('URGENTE')).map((disclaimer, index) => (
+            <li key={index} style={{ marginBottom: '8px' }}>{disclaimer}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Data sources - smaller and less prominent */}
+      <div className="data-sources-compact">
+        <CitationRenderer citations={result.citations} showFullDetails={false} />
+      </div>
+
+      {submitError && (
+        <div className="disclaimer-box warning" style={{ marginTop: '16px' }}>
+          <p>{submitError}</p>
+          <button 
+            className="btn btn-secondary" 
+            onClick={submitLead}
+            disabled={isSubmitting}
+            style={{ marginTop: '8px' }}
+          >
+            {isSubmitting ? 'Intentando...' : 'Reintentar'}
+          </button>
+        </div>
+      )}
+
+      {/* Disclaimer */}
+      <Disclaimer />
+
+      <div className="footer-links">
+        <a href="/privacy">Política de Privacidad</a>
+        <a href="/terms">Términos de Uso</a>
+        <a href="/sources">Fuentes de Datos</a>
+      </div>
+    </div>
+  );
+}
