@@ -57,26 +57,6 @@ export function ResultsStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result, submitted]);
 
-  // Reaching the results screen means the visitor completed the entire funnel.
-  // Fire the GTM conversion signal here — this is the single entry point to
-  // this screen, so it can only ever fire for a completed lead.
-  useEffect(() => {
-    if (result) {
-      // Normalize phone to E.164 (+1XXXXXXXXXX) for Google Enhanced Conversions
-      const digits = (state.contact.phone || '').replace(/\D/g, '');
-      const phoneE164 = digits ? `+1${digits.slice(-10)}` : undefined;
-
-      trackLeadConversion({
-        firstName: state.contact.firstName,
-        lastName: state.contact.lastName,
-        email: state.contact.email,
-        phone: phoneE164,
-        zipCode: state.inputs.zipCode,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [result]);
-
   const getTrustedFormCertUrl = (): string | undefined => {
     if (typeof window === 'undefined') return undefined;
     
@@ -145,6 +125,18 @@ export function ResultsStep() {
 
       if (!response.ok) {
         console.error('Lead submission failed');
+      } else {
+        // Count the conversion only once the lead has actually been recorded,
+        // so a failed submission can't inflate ad platform reporting.
+        // Phone is normalized to E.164 (+1XXXXXXXXXX) for Google Enhanced Conversions.
+        const digits = (state.contact.phone || '').replace(/\D/g, '');
+        trackLeadConversion({
+          firstName: state.contact.firstName,
+          lastName: state.contact.lastName,
+          email: state.contact.email,
+          phone: digits ? `+1${digits.slice(-10)}` : undefined,
+          zipCode: state.inputs.zipCode,
+        });
       }
 
       setSubmitted(true);
