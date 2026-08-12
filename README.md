@@ -102,9 +102,13 @@ Before it can take live traffic:
   supplies different wording, update both `CONSENT_TEXT` and the visible checkbox label so
   the stored text matches what the user actually saw. The attorney advertising disclaimer
   in `src/components/Disclaimer.tsx` is client-supplied Spanish copy and is final.
-- **Domain.** Not assigned yet. `apps/worker-es` currently allowlists
-  `escal.myautoreliefassistance.com`, guessed from the `txcal`/`nwcal` naming pattern —
-  correct it in `ALLOWED_ORIGINS` before deploying or CORS will block every lead.
+- **Domain.** Not created yet, so `ai-calculator-es` has deliberately **not** been deployed.
+  `apps/worker-es` currently allowlists `escal.myautoreliefassistance.com`, guessed from the
+  `txcal`/`nwcal` naming pattern — replace it in `ALLOWED_ORIGINS` with the real domain
+  before the first deploy or CORS will block every lead.
+- **Worker secrets.** Spanish leads go to the **same Zapier webhook as the CA site**, so set
+  `ZAPIER_WEBHOOK_URL` and `WEBHOOK_SECRET` to the CA worker's values when deploying.
+  Without them the worker is live but fails on every submission.
 - **Phone number.** Inherited from CA (`TODO` in `src/lib/config.ts`). Decide whether
   Spanish calls route to a Spanish-language intake line and whether they need their own
   CallRail company for separate attribution.
