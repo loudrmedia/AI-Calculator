@@ -149,6 +149,30 @@ function labelFor(map: Record<string, string>, value: string | undefined): strin
   return map[value] ?? humanize(value);
 }
 
+// Intake qualification, derived here rather than on the client so every market
+// applies the same rule and it can't be skipped by a tampered payload. A lead
+// is disqualified if the accident was their own fault (no third party to
+// recover from) or happened over 18 months ago (statute of limitations has
+// likely run).
+const DISQUALIFYING_FAULT = 'at_fault';
+const DISQUALIFYING_TIMING = 'more_than_eighteen_months';
+
+function getQualification(inputs: LeadPayload['inputs']): { status: string; reason: string } {
+  const reasons: string[] = [];
+
+  if (inputs.faultStatus === DISQUALIFYING_FAULT) {
+    reasons.push('At fault for the accident');
+  }
+  if (inputs.accidentTiming === DISQUALIFYING_TIMING) {
+    reasons.push('Accident more than 18 months ago');
+  }
+
+  return {
+    status: reasons.length > 0 ? 'Disqualified' : 'Qualified',
+    reason: reasons.join('; '),
+  };
+}
+
 function validatePayload(payload: unknown): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
@@ -197,12 +221,16 @@ function transformForZapier(
     ...injuries.substantial,
     ...injuries.catastrophic,
   ];
+  const qualification = getQualification(payload.inputs);
 
   return {
     first_name: sanitizeString(payload.contact.firstName),
     last_name: sanitizeString(payload.contact.lastName),
     email: sanitizeString(payload.contact.email),
     phone: sanitizeString(payload.contact.phone),
+
+    qualification_status: qualification.status,
+    disqualification_reason: qualification.reason,
     
     accident_type: labelFor(ACCIDENT_TYPE_LABELS, payload.inputs.accidentType),
     injuries: allInjuries.map((i) => labelFor(INJURY_LABELS, i)).join(', ') || (injuries.noInjury ? 'No Injury' : ''),

@@ -37,6 +37,8 @@ curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/ \
     "last_name": "User",
     "email": "test@example.com",
     "phone": "(555) 555-5555",
+    "qualification_status": "Qualified",
+    "disqualification_reason": "",
     "accident_type": "car_accident",
     "injuries": "body_aches, broken_bones",
     "injury_severity": "substantial",
@@ -72,6 +74,9 @@ curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/ \
   "last_name": "string (required)",
   "email": "string (required, valid email)",
   "phone": "string (required, 10+ digits)",
+
+  "qualification_status": "Qualified | Disqualified",
+  "disqualification_reason": "string (empty when Qualified; '; '-joined when multiple)",
   
   "accident_type": "car_accident | motorcycle_accident | truck_accident | bicycle_accident | other",
   "injuries": "string (comma-separated list or 'none')",
@@ -114,6 +119,8 @@ Create these custom fields in GHL before setting up the Zapier mapping:
 
 | Field Name | Field ID (suggested) | Type | Description |
 |------------|---------------------|------|-------------|
+| Qualification Status | `qualification_status` | Dropdown | Qualified/Disqualified |
+| Disqualification Reason | `disqualification_reason` | Text | Why the lead was disqualified |
 | Accident Type | `accident_type` | Dropdown | Type of accident |
 | Injuries | `injuries` | Text | Comma-separated injury list |
 | Injury Severity | `injury_severity` | Dropdown | none/soft_tissue/substantial/catastrophic |
@@ -155,6 +162,8 @@ Create these custom fields in GHL before setting up the Zapier mapping:
 | Phone | `phone` |
 | Address - Postal Code | `zip_code` |
 | Tags | See tagging logic below |
+| Custom: qualification_status | `qualification_status` |
+| Custom: disqualification_reason | `disqualification_reason` |
 | Custom: accident_type | `accident_type` |
 | Custom: injuries | `injuries` |
 | Custom: injury_severity | `injury_severity` |
@@ -176,6 +185,7 @@ Use a **Formatter** step to create dynamic tags:
 
 **Tag Logic:**
 - Always add: `ai_calculator_lead`
+- Add based on qualification: `{{qualification_status}}` (`Qualified` / `Disqualified`)
 - Add based on severity: `severity_{{injury_severity}}`
 - Add based on timing: `timing_{{accident_timing}}`
 - Add based on fault: `fault_{{fault_status}}`
