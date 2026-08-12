@@ -73,10 +73,9 @@ the deployed source, so **confirm against the live worker in the Cloudflare dash
 before running `wrangler deploy` from either folder**, in case they drifted after
 deployment.
 
-**Outstanding for `web-tx` and `web-nationwide`:** both are live but still contain
-`TODO(TX)` / `TODO(Nationwide)` placeholders in `src/components/Disclaimer.tsx` and
-`src/lib/config.ts` — the attorney sponsor disclosure and the intake phone number are
-still CA content and need replacing.
+**Outstanding for `web-tx` and `web-nationwide`:** both still use the CA intake number
+(`TODO(TX)` / `TODO(Nationwide)` in `src/lib/config.ts`). Since all three sites share one
+CallRail company, calls from every market attribute to the same CallRail account.
 
 ## Getting Started
 

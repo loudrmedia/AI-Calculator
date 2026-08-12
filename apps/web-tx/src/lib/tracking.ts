@@ -3,7 +3,7 @@
 /**
  * Marketing attribution capture.
  *
- * UTM tags and ad click IDs (gclid/wbraid/gbraid) arrive as URL query params on
+ * UTM tags and ad click IDs (gclid/wbraid/gbraid/fbclid) arrive as URL query params on
  * the landing page. We capture them (plus the landing URL and referrer) on the
  * FIRST page load and persist them in sessionStorage, so they survive refreshes
  * and any in-session navigation and are still available at final submit.
@@ -20,6 +20,7 @@ export interface TrackingParams {
   gclid?: string;
   wbraid?: string;
   gbraid?: string;
+  fbclid?: string;
   landingPageUrl?: string;
   referrer?: string;
 }
@@ -33,6 +34,7 @@ const URL_KEYS: (keyof TrackingParams)[] = [
   'gclid',
   'wbraid',
   'gbraid',
+  'fbclid',
 ];
 
 function readFromUrl(): TrackingParams {
@@ -73,6 +75,7 @@ export function getTrackingParams(): TrackingParams {
 declare global {
   interface Window {
     dataLayer?: Record<string, unknown>[];
+    fbq?: (...args: unknown[]) => void;
   }
 }
 
@@ -128,13 +131,19 @@ export function trackLeadConversion(data: Record<string, unknown> = {}): void {
   }
   if (alreadyFired) return;
 
+  const conversionId = getOrCreateConversionId();
+
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: 'lead_conversion',
     virtualPagePath: '/thankyou',
-    conversionId: getOrCreateConversionId(),
+    conversionId,
     ...data,
   });
+
+  // Meta's equivalent conversion event. Sharing `conversionId` as the eventID
+  // lets a future Conversions API call be deduplicated against this one.
+  window.fbq?.('track', 'Lead', {}, { eventID: conversionId });
 
   try {
     sessionStorage.setItem(CONVERSION_FIRED_KEY, '1');

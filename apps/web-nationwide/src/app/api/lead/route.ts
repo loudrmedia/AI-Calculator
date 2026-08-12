@@ -46,6 +46,7 @@ interface LeadPayload {
     gclid?: string;
     wbraid?: string;
     gbraid?: string;
+    fbclid?: string;
     landingPageUrl?: string;
     referrer?: string;
   };
@@ -211,6 +212,7 @@ function transformForZapier(
     gclid: sanitizeString(payload.tracking?.gclid),
     wbraid: sanitizeString(payload.tracking?.wbraid),
     gbraid: sanitizeString(payload.tracking?.gbraid),
+    fbclid: sanitizeString(payload.tracking?.fbclid),
     landing_page_url: sanitizeString(payload.tracking?.landingPageUrl),
     referrer: sanitizeString(payload.tracking?.referrer),
 

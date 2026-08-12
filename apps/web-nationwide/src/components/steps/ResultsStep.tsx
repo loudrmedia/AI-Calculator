@@ -129,6 +129,7 @@ export function ResultsStep() {
           gclid: tracking.gclid,
           wbraid: tracking.wbraid,
           gbraid: tracking.gbraid,
+          fbclid: tracking.fbclid,
           landingPageUrl: tracking.landingPageUrl,
           referrer: tracking.referrer,
         },
