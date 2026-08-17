@@ -31,6 +31,9 @@ A deterministic, source-cited personal injury case value estimator with a Better
 │   ├── web-es/                 # Next.js frontend - Spanish landing page
 │   │                           # (copy of apps/web with all copy translated;
 │   │                           #  consent + legal pages await legal review)
+│   ├── web-ara/                # Next.js frontend - ARA-branded landing page
+│   │                           # (same calculator, reskinned to match the
+│   │                           #  autoreliefassistance.com design)
 │   └── worker/                 # Cloudflare Worker (standalone API, one per market)
 │       ├── src/index.ts
 │       ├── wrangler.toml
@@ -41,17 +44,18 @@ A deterministic, source-cited personal injury case value estimator with a Better
 └── README.md
 ```
 
-### Multiple landing pages (CA / TX / Nationwide / Spanish)
+### Multiple landing pages (CA / TX / Nationwide / Spanish / ARA)
 
-`apps/web`, `apps/web-tx`, `apps/web-nationwide`, and `apps/web-es` are **independent
-copies** of the same calculator app. This is intentional: each one can be edited on its own
-(different attorney/disclaimer copy, phone number, language, branding) without affecting
-the others.
+`apps/web`, `apps/web-tx`, `apps/web-nationwide`, `apps/web-es`, and `apps/web-ara` are
+**independent copies** of the same calculator app. This is intentional: each one can be
+edited on its own (different attorney/disclaimer copy, phone number, language, branding)
+without affecting the others.
 
 - To change something in the CA version only → edit files under `apps/web`.
 - To change something in the TX version only → edit files under `apps/web-tx`.
 - To change something in the Nationwide version only → edit files under `apps/web-nationwide`.
 - To change something in the Spanish version only → edit files under `apps/web-es`.
+- To change something in the ARA-branded version only → edit files under `apps/web-ara`.
 - A fix that should apply everywhere (e.g. a calculator math bug) currently has to be
   applied to each folder by hand, since they don't share code. Note that `apps/web-es` has
   translated copy, so a copy change there needs a Spanish equivalent rather than a
@@ -66,14 +70,15 @@ to its own deployed Cloudflare Worker (so each market can use a different Zapier
 | TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` | `ai-calculator-tx` |
 | Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` | `ai-calculator-nationwide` |
 | Spanish | `apps/web-es` | _not yet assigned_ | `ai-calculator-es` (not yet deployed) |
+| ARA | `apps/web-ara` | _not yet assigned_ | `ai-calculator-ara` (not yet deployed) |
 
 Each app's worker URL is set per Pages project via the `NEXT_PUBLIC_WORKER_URL`
 environment variable, and each worker's `ALLOWED_ORIGINS` must contain its own site's
 domain or lead submissions are blocked by CORS.
 
 Each worker has its own folder: `apps/worker` (CA), `apps/worker-tx`,
-`apps/worker-nationwide`, and `apps/worker-es`. Like the web apps, they are independent
-copies.
+`apps/worker-nationwide`, `apps/worker-es`, and `apps/worker-ara`. Like the web apps, they
+are independent copies.
 
 `apps/worker-tx` and `apps/worker-nationwide` were reconstructed from the CA worker to
 match the already-deployed TX and Nationwide workers, with their `name` and
@@ -114,6 +119,46 @@ Before it can take live traffic:
   CallRail company for separate attribution.
 - **Headline.** Uses the nationwide-style `Víctimas de Accidentes:` with no state prefix.
   Add one in `src/components/Calculator.tsx` if the Spanish site targets a single state.
+
+### ARA-branded site (`apps/web-ara` / `apps/worker-ara`)
+
+The same calculator — identical questions, calculator logic, steps and results maths — with
+the visual design rebuilt to match the Auto Relief Assistance landing page at
+`wagoogle.autoreliefassistance.com/home-ara`.
+
+**For Cloudflare Pages, the root directory is `apps/web-ara`.** Build command `npm run build`,
+build output `out`, same as every other market.
+
+How the reskin is structured, so it stays maintainable:
+
+- All visual changes live in `src/styles/ara-theme.css`, imported after `globals.css` in
+  `src/app/layout.tsx`. The eight funnel step components were **not** modified — the gold
+  action bar and navy option buttons are CSS overrides on the existing classes. Removing
+  that one import returns the app to the base theme.
+- `ara-theme.css` re-darkens every panel on the results screen. Those panels have light
+  backgrounds in `globals.css`, so anything added to the results page must have its
+  background overridden there too, not just its text colour, or it renders invisible.
+- New sections are `Settlements.tsx`, `PracticeAreas.tsx` and `CallNowBand.tsx`. Page
+  images live in `public/ara/`.
+
+Before it can take live traffic:
+
+- **Domain.** Not created yet, so `ai-calculator-ara` has deliberately **not** been deployed.
+  Add the real domain to `ALLOWED_ORIGINS` in `apps/worker-ara/src/index.ts` before the
+  first deploy or CORS will block every lead.
+- **Worker secrets.** Set `ZAPIER_WEBHOOK_URL` and `WEBHOOK_SECRET` when deploying, or the
+  worker is live but fails on every submission.
+- **Tracking IDs are shared with the CA site.** Same GTM container, Meta Pixel, CallRail
+  company and Clarity project. ARA traffic is therefore indistinguishable from CA traffic
+  in all four dashboards — split them before running separate campaigns against this page.
+- **Legal.** The Recent Settlements figures in `src/components/Settlements.tsx` and the
+  `$20,000 – $250,000` hero headline in `src/components/Calculator.tsx` are specific
+  monetary claims in attorney advertising and need sign-off. The footer disclaimer and the
+  results-page disclaimer (`src/components/Disclaimer.tsx`) are currently **different
+  texts**, and the footer's privacy/terms links point at the GoHighLevel pages while the
+  results page links to this app's own `/privacy` and `/terms`.
+- **Phone number.** Inherited from CA in `src/lib/config.ts`; CallRail DNI swaps it at
+  runtime, so confirm the swap targets cover the new domain.
 
 ## Getting Started
 
@@ -162,6 +207,7 @@ repo but with a different root directory:
 | TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` |
 | Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` |
 | Spanish | `apps/web-es` | _not yet assigned_ |
+| ARA | `apps/web-ara` | _not yet assigned_ |
 
 For each project:
 
@@ -169,7 +215,8 @@ For each project:
 2. Set build settings:
    - Build command: `npm run build`
    - Build output: `out`
-   - Root directory: `apps/web` / `apps/web-tx` / `apps/web-nationwide` / `apps/web-es`
+   - Root directory: `apps/web` / `apps/web-tx` / `apps/web-nationwide` / `apps/web-es` /
+     `apps/web-ara`
 3. Add environment variables in Cloudflare dashboard:
    - `NEXT_PUBLIC_WORKER_URL` — the market's worker endpoint. This is baked in at build
      time; without it the static export falls back to `/api/lead`, which does not exist
@@ -180,8 +227,8 @@ For each project:
 ### Cloudflare Workers
 
 Each market has its own worker folder (`apps/worker`, `apps/worker-tx`,
-`apps/worker-nationwide`, `apps/worker-es`) holding its own secrets, so each can post to a
-different Zapier webhook. Deploy from the folder for that market:
+`apps/worker-nationwide`, `apps/worker-es`, `apps/worker-ara`) holding its own secrets, so
+each can post to a different Zapier webhook. Deploy from the folder for that market:
 
 ```bash
 cd apps/worker

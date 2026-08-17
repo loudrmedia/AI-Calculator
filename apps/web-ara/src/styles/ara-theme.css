@@ -1,0 +1,1061 @@
+/* ============================================================
+   ARA THEME
+   Reskin of the calculator to match the Auto Relief Assistance
+   landing page. Everything here is presentation only — the funnel
+   markup, questions and calculator logic are untouched, so this
+   file can be dropped to fall back to the base theme.
+   ============================================================ */
+
+/* Funnel option buttons are the one control users touch on every step, so their
+   colour lives here on its own. Swap these values to retheme the whole
+   question flow without touching anything else. Navy keeps gold free to mean
+   "advance" in the action bar. */
+:root {
+  --option-bg: #22304e;
+  --option-bg-hover: #2e3f65;
+  --option-text: #ffffff;
+}
+
+html,
+body {
+  background: #ffffff;
+  color: var(--navy);
+}
+
+/* ---------- Navbar: white bar, centred logo ---------- */
+
+.navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e9edf3;
+  box-shadow: none;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-logo-img {
+  height: 62px;
+  width: auto;
+}
+
+.main-content {
+  padding-top: 84px;
+}
+
+/* ---------- Hero: headline left, funnel card right ---------- */
+
+.ara-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  padding: 40px 0 24px;
+}
+
+.ara-prefer-call {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.ara-prefer-call a {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.ara-hero-copy {
+  padding-top: 24px;
+  text-align: center;
+}
+
+.ara-hero-copy h1 {
+  margin: 0;
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.18;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+}
+
+.ara-hero-copy h1 span {
+  display: block;
+}
+
+.ara-hero-alert {
+  color: var(--orange);
+}
+
+.ara-hero-amount {
+  color: var(--green);
+}
+
+.ara-awards {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 32px auto 0;
+}
+
+/* ---------- Funnel card ---------- */
+
+.ara-hero-form .card,
+.ara-funnel .card {
+  background: #ffffff;
+  border: 1px solid #e9edf3;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(27, 38, 63, 0.1);
+  padding: 28px 28px 0;
+  overflow: hidden;
+}
+
+.step-title {
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.45;
+}
+
+.step-subtitle {
+  text-align: center;
+  color: #5c6780;
+  font-size: 13px;
+}
+
+/* Gold stacked option buttons */
+
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  background: var(--option-bg);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--option-text);
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(27, 38, 63, 0.2);
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.option-button:hover {
+  background: var(--option-bg-hover);
+  box-shadow: 0 4px 10px rgba(27, 38, 63, 0.28);
+  transform: none;
+}
+
+/* Gold marks the option you actually chose, so the choice reads instantly
+   against the navy stack. */
+.option-button.selected {
+  background: var(--gold);
+  border-color: var(--gold-dark);
+  color: var(--navy);
+}
+
+.option-button.selected::after {
+  content: none;
+}
+
+.option-button .icon {
+  font-size: 15px;
+}
+
+.option-highlighted {
+  background: var(--option-bg);
+}
+
+.option-badge {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.option-button.selected .option-badge {
+  background: rgba(27, 38, 63, 0.15);
+  color: var(--navy);
+}
+
+/* Chips are multi-select, so they stay outlined until picked — a filled
+   default would read as already-chosen. */
+
+.chip {
+  background: #ffffff;
+  border: 1px solid #c8d0de;
+  color: var(--navy);
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.chip:hover {
+  background: #f2f5fa;
+  border-color: var(--navy);
+}
+
+.chip.selected {
+  background: var(--gold);
+  border-color: var(--gold-dark);
+  color: var(--navy);
+}
+
+/* Gold action bar pinned to the bottom of the card. Back sits hard left,
+   Continue hard right — the base sheet stretches .btn with flex:1, which has
+   to be reset or the two buttons fill the bar and collide. */
+
+/* globals.css stacks this row with flex-direction:column under 480px, so the
+   direction has to be declared here or the buttons pile up on narrow screens. */
+.button-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px -28px 0;
+  padding: 13px 20px;
+  background: var(--gold);
+  border-top: 1px solid var(--gold-dark);
+}
+
+/* A lone Continue (step 1 has no Back) still belongs on the right. */
+.button-row > .btn-primary:only-child {
+  margin-left: auto;
+}
+
+.button-row .btn {
+  flex: 0 0 auto;
+  min-width: 116px;
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  border-radius: 4px;
+  padding: 11px 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.button-row .btn-primary {
+  background: var(--navy);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 3px rgba(27, 38, 63, 0.3);
+}
+
+.button-row .btn-primary:hover:not(:disabled) {
+  background: var(--navy-deep);
+  color: #ffffff;
+  transform: none;
+  box-shadow: 0 3px 8px rgba(27, 38, 63, 0.35);
+}
+
+.button-row .btn-primary:disabled {
+  background: rgba(27, 38, 63, 0.22);
+  color: rgba(27, 38, 63, 0.5);
+  box-shadow: none;
+}
+
+.button-row .btn-secondary {
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--navy);
+  border: 1px solid rgba(27, 38, 63, 0.25);
+  box-shadow: none;
+}
+
+.button-row .btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.skip-link {
+  color: #5c6780;
+}
+
+/* Progress + trust strip */
+
+.progress-fill {
+  background: var(--gold);
+}
+
+.progress-label {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.trust-badge-row {
+  padding-bottom: 18px;
+}
+
+.trust-badge {
+  color: #5c6780;
+  font-size: 11px;
+}
+
+.estimate-ready-banner {
+  background: #fff8e6;
+  border: 1px solid var(--gold);
+  color: var(--navy);
+}
+
+.estimate-ready-banner .trust-check {
+  color: var(--green-dark);
+}
+
+/* Form inputs */
+
+.contact-form .input-group input,
+.input-group textarea,
+.offer-checker-input input {
+  border-radius: 4px;
+  border: 1px solid #d3dae6;
+  font-family: 'Open Sans', var(--font-sans);
+}
+
+.contact-form .input-group input:focus,
+.input-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(224, 175, 52, 0.25);
+}
+
+/* ============================================================
+   Recent settlements
+   ============================================================ */
+
+.ara-settlements {
+  background: #f5f6f8;
+  padding: 40px 0 52px;
+}
+
+/* .container carries its own 24px vertical padding, which doubles up with the
+   section padding and opens a large gap between bands. */
+.ara-settlements > .container,
+.ara-practice-heading > .container,
+.ara-practice-band > .container {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* The hero column sits directly above the settlements band. */
+.page-wrapper:not(.ara-results-page) .main-content > .container {
+  padding-bottom: 12px;
+}
+
+.ara-section-title {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-style: italic;
+  font-size: 34px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--navy);
+  margin: 0 0 10px;
+  letter-spacing: -0.4px;
+}
+
+.ara-section-subtitle {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  text-align: center;
+  color: var(--navy);
+  margin: 0 0 32px;
+}
+
+.ara-settlement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.ara-settlement-card {
+  background: var(--navy);
+  border: 1px solid #2c3a5c;
+  border-radius: 8px;
+  padding: 20px 16px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(27, 38, 63, 0.18);
+}
+
+.ara-settlement-label {
+  display: block;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.ara-settlement-amount {
+  display: block;
+  color: var(--green);
+  font-size: 30px;
+  font-weight: 800;
+  margin: 6px 0 8px;
+}
+
+.ara-settlement-desc {
+  display: block;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Practice areas
+   ============================================================ */
+
+.ara-practice-heading {
+  background: #ffffff;
+  padding: 48px 0 28px;
+  text-align: center;
+}
+
+.ara-practice-heading h2 {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 34px;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+
+.ara-practice-heading p {
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 0;
+}
+
+.ara-practice-band {
+  background: var(--gold);
+  padding: 34px 0 38px;
+}
+
+.ara-practice-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 28px 16px;
+}
+
+.ara-practice-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.ara-practice-item img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+}
+
+.ara-practice-item span {
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--navy);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   Call-now band
+   ============================================================ */
+
+.ara-call-band {
+  background: var(--navy);
+  padding: 44px 20px 50px;
+  text-align: center;
+}
+
+.ara-call-band h2 {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 27px;
+  color: #ffffff;
+  margin: 0 auto 24px;
+  max-width: 620px;
+  line-height: 1.35;
+}
+
+.ara-call-btn {
+  display: inline-block;
+  background: var(--green);
+  color: #ffffff;
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  font-size: 19px;
+  padding: 15px 42px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.ara-call-btn:hover {
+  background: var(--green-dark);
+}
+
+/* ============================================================
+   FAQ — kept from the calculator, restyled to the ARA language
+   ============================================================ */
+
+/* Rendered as a full-width band rather than the base sheet's floating card, so
+   the card chrome comes off and the contents get their own max width. */
+.faq-section {
+  background: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
+  margin-top: 0;
+  padding: 46px 16px 52px;
+}
+
+.faq-section > * {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-section h2 {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 30px;
+  color: var(--navy);
+}
+
+.faq-item {
+  border: 1px solid #e2e7ef;
+  border-radius: 6px;
+}
+
+.faq-item.open {
+  border-color: var(--gold);
+}
+
+.faq-question {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.faq-icon {
+  color: var(--gold-dark);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+
+.site-footer {
+  background: var(--navy);
+  border-top: none;
+}
+
+.footer-cta p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-phone {
+  color: var(--green);
+}
+
+.footer-phone:hover {
+  color: var(--green);
+}
+
+.footer-links-row a {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.footer-links-row .divider {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-address p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ara-footer-logo {
+  display: block;
+  height: 66px;
+  width: auto;
+  margin: 0 auto 14px;
+}
+
+/* Disclaimer sitting on the navy footer */
+
+.ara-footer-disclaimer .page-disclaimer,
+.ara-footer-disclaimer {
+  background: transparent;
+  border: none;
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ara-footer-disclaimer p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.ara-footer-disclaimer a {
+  color: var(--gold);
+}
+
+.ara-footer-disclaimer strong {
+  color: #ffffff;
+}
+
+/* ============================================================
+   RESULTS PAGE — black ARA "check your phone" treatment
+   ============================================================ */
+
+.ara-results-page {
+  background: var(--ara-black);
+}
+
+.ara-results-page .main-content {
+  background: var(--ara-black);
+}
+
+.ara-results-hero {
+  text-align: center;
+  padding: 46px 0 8px;
+}
+
+.ara-results-hero h1 {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 40px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 14px;
+}
+
+.ara-results-hero p {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #ffffff;
+  margin: 0 auto;
+  max-width: 720px;
+}
+
+.ara-results-hero .ara-highlight {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+.ara-callout {
+  border: 2px solid var(--gold);
+  background: transparent;
+  padding: 22px 26px;
+  margin: 28px auto 0;
+  max-width: 780px;
+}
+
+.ara-callout p {
+  color: #ffffff;
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 0 18px;
+}
+
+.ara-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.ara-divider {
+  border: none;
+  border-top: 3px dashed var(--gold);
+  max-width: 780px;
+  margin: 34px auto;
+}
+
+.ara-results-cta {
+  text-align: center;
+  padding-bottom: 44px;
+}
+
+.ara-results-cta h2 {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 28px;
+  color: #ffffff;
+  margin: 0 0 6px;
+}
+
+.ara-results-cta .ara-get-started {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 26px;
+  color: #ffffff;
+  margin: 0 0 20px;
+}
+
+.ara-results-cta .ara-chevron {
+  color: var(--gold);
+}
+
+.ara-estimate-heading {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  font-size: 26px;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 18px;
+}
+
+/* The estimate itself, restyled for the black canvas.
+
+   Every panel below has a LIGHT background in globals.css (white, --gray-50,
+   --gray-100, #fef3c7 ...). On this page each one has to be re-darkened AND
+   have its text re-coloured together — overriding only the text is what turned
+   the legal disclaimer into white-on-#f5f5f5 and made it unreadable. If you add
+   anything to the results screen, check its base background here too. */
+
+.ara-results-page .results-success-header,
+.ara-results-page .next-steps,
+.ara-results-page .results-cta-section {
+  background: transparent;
+}
+
+.ara-results-page .hero-value-card {
+  background: linear-gradient(135deg, #16203a 0%, #1b263f 100%);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+}
+
+.ara-results-page .hero-value-label {
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+}
+
+.ara-results-page .hero-value-amount {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.ara-results-page .results-section {
+  background: transparent;
+}
+
+.ara-results-page .results-section h3 {
+  color: #ffffff;
+}
+
+.ara-results-page .result-card {
+  background: #11182b;
+  border: 1px solid #2c3a5c;
+  border-radius: 8px;
+}
+
+.ara-results-page .result-label {
+  color: #ffffff;
+}
+
+.ara-results-page .result-sublabel,
+.ara-results-page .result-detail {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ara-results-page .next-steps h3 {
+  color: #ffffff;
+}
+
+.ara-results-page .next-steps li,
+.ara-results-page .next-steps li strong {
+  color: #ffffff;
+}
+
+.ara-results-page .next-step-num {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.ara-results-page .disclaimer-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ara-results-page .disclaimer-box h4,
+.ara-results-page .disclaimer-box li,
+.ara-results-page .disclaimer-box p,
+.ara-results-page .disclaimer-box strong {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ara-results-page .disclaimer-box.warning {
+  background: rgba(224, 175, 52, 0.12);
+  border-color: var(--gold);
+}
+
+.ara-results-page .disclaimer-box.warning h4 {
+  color: var(--gold);
+}
+
+/* Sources block stays, inverted for the dark canvas */
+
+.ara-results-page .data-sources-compact .citations-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ara-results-page .data-sources-compact .citations-header h4 {
+  color: #ffffff;
+}
+
+.ara-results-page .data-sources-compact .citations-intro,
+.ara-results-page .data-sources-compact .model-version {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ara-results-page .data-sources-compact .citation-link {
+  color: var(--gold);
+}
+
+.ara-results-page .data-sources-compact .citation-number,
+.ara-results-page .data-sources-compact .citation-detail {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ara-results-page .data-sources-compact .citation-name {
+  color: #ffffff;
+}
+
+.ara-results-page .data-sources-compact .external-icon {
+  stroke: var(--gold);
+  fill: var(--gold);
+}
+
+/* Offer checker */
+
+.ara-results-page .offer-checker {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.28);
+}
+
+.ara-results-page .offer-checker h3,
+.ara-results-page .offer-checker > p {
+  color: #ffffff;
+}
+
+.ara-results-page .offer-dollar {
+  color: var(--navy);
+}
+
+/* Base .btn-primary is a navy gradient, which disappears on this panel. */
+.ara-results-page .offer-check-btn {
+  background: var(--gold);
+  color: var(--navy);
+  box-shadow: none;
+}
+
+.ara-results-page .offer-check-btn:hover:not(:disabled) {
+  background: var(--gold-bright);
+  color: var(--navy);
+}
+
+.ara-results-page .offer-verdict.low {
+  background: rgba(233, 61, 61, 0.15);
+  border-color: rgba(233, 61, 61, 0.55);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ara-results-page .offer-verdict.low strong,
+.ara-results-page .offer-verdict.low a {
+  color: #ff8a8a;
+}
+
+.ara-results-page .offer-verdict.fair {
+  background: rgba(224, 175, 52, 0.15);
+  border-color: rgba(224, 175, 52, 0.55);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ara-results-page .offer-verdict.fair strong {
+  color: var(--gold);
+}
+
+.ara-results-page .offer-verdict.strong {
+  background: rgba(55, 202, 55, 0.15);
+  border-color: rgba(55, 202, 55, 0.55);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.ara-results-page .offer-verdict.strong strong {
+  color: var(--green);
+}
+
+/* Legal disclaimer — base background is --gray-100 (#f5f5f5), so it must be
+   re-darkened here or the light text renders invisible. */
+
+.ara-results-page .page-disclaimer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ara-results-page .page-disclaimer p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ara-results-page .page-disclaimer strong {
+  color: #ffffff;
+}
+
+.ara-results-page .page-disclaimer a {
+  color: var(--gold);
+}
+
+/* Retry button shown if the lead submission failed */
+
+.ara-results-page .btn-secondary {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.ara-results-page .btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.ara-results-page .error-message {
+  color: #ff8a8a;
+}
+
+.ara-results-page .footer-links a {
+  color: var(--gold);
+}
+
+.ara-results-page .footer-links a:hover {
+  color: var(--gold-bright);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .ara-hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 24px 0 36px;
+  }
+
+  .ara-hero-copy {
+    padding-top: 0;
+  }
+
+  .ara-hero-copy h1 {
+    font-size: 29px;
+  }
+
+  .ara-practice-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .ara-settlement-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ara-section-title {
+    font-size: 25px;
+  }
+
+  .ara-practice-heading h2 {
+    font-size: 25px;
+  }
+
+  .ara-results-hero h1 {
+    font-size: 29px;
+  }
+
+  .ara-results-hero p {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 560px) {
+  .navbar-logo-img {
+    height: 50px;
+  }
+
+  .main-content {
+    padding-top: 72px;
+  }
+
+  .ara-settlement-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ara-practice-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ara-hero-copy h1 {
+    font-size: 25px;
+  }
+
+  .ara-call-band h2 {
+    font-size: 21px;
+  }
+
+  .button-row {
+    flex-direction: row;
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 10px;
+  }
+
+  .button-row .btn {
+    min-width: 0;
+    padding: 11px 14px;
+    font-size: 12px;
+  }
+
+  .ara-hero-form .card,
+  .ara-funnel .card {
+    padding: 20px 18px 0;
+  }
+}
