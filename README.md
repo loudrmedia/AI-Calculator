@@ -70,7 +70,7 @@ to its own deployed Cloudflare Worker (so each market can use a different Zapier
 | TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` | `ai-calculator-tx` |
 | Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` | `ai-calculator-nationwide` |
 | Spanish | `apps/web-es` | _not yet assigned_ | `ai-calculator-es` (not yet deployed) |
-| ARA | `apps/web-ara` | _not yet assigned_ | `ai-calculator-ara` (not yet deployed) |
+| ARA | `apps/web-ara` | `calc.myautoreliefassistance.com` | `ai-calculator-web-ara` |
 
 Each app's worker URL is set per Pages project via the `NEXT_PUBLIC_WORKER_URL`
 environment variable, and each worker's `ALLOWED_ORIGINS` must contain its own site's
@@ -126,8 +126,17 @@ The same calculator — identical questions, calculator logic, steps and results
 the visual design rebuilt to match the Auto Relief Assistance landing page at
 `wagoogle.autoreliefassistance.com/home-ara`.
 
+Live at `calc.myautoreliefassistance.com`, posting leads to the `ai-calculator-web-ara`
+worker.
+
 **For Cloudflare Pages, the root directory is `apps/web-ara`.** Build command `npm run build`,
 build output `out`, same as every other market.
+
+**Worker naming is the odd one out here.** The folder is `apps/worker-ara` but the deployed
+worker is `ai-calculator-web-ara`, because the Pages project's `NEXT_PUBLIC_WORKER_URL` was
+already built against `https://ai-calculator-web-ara.getloud.workers.dev/api/lead`. The
+`name` in `wrangler.toml` matches the deployed worker deliberately — changing it creates a
+second worker and leaves the live site posting at the old one.
 
 How the reskin is structured, so it stays maintainable:
 
@@ -141,13 +150,11 @@ How the reskin is structured, so it stays maintainable:
 - New sections are `Settlements.tsx`, `PracticeAreas.tsx` and `CallNowBand.tsx`. Page
   images live in `public/ara/`.
 
-Before it can take live traffic:
+Still outstanding:
 
-- **Domain.** Not created yet, so `ai-calculator-ara` has deliberately **not** been deployed.
-  Add the real domain to `ALLOWED_ORIGINS` in `apps/worker-ara/src/index.ts` before the
-  first deploy or CORS will block every lead.
-- **Worker secrets.** Set `ZAPIER_WEBHOOK_URL` and `WEBHOOK_SECRET` when deploying, or the
-  worker is live but fails on every submission.
+- **`WEBHOOK_SECRET` is not set** on `ai-calculator-web-ara` (only `ZAPIER_WEBHOOK_URL` is).
+  The worker treats it as optional and simply omits the `X-Webhook-Signature` header, so
+  leads still deliver — set it via `wrangler secret put` if Zapier should verify signatures.
 - **Tracking IDs are shared with the CA site.** Same GTM container, Meta Pixel, CallRail
   company and Clarity project. ARA traffic is therefore indistinguishable from CA traffic
   in all four dashboards — split them before running separate campaigns against this page.
@@ -207,7 +214,7 @@ repo but with a different root directory:
 | TX | `apps/web-tx` | `txcal.myautoreliefassistance.com` |
 | Nationwide | `apps/web-nationwide` | `nwcal.myautoreliefassistance.com` |
 | Spanish | `apps/web-es` | _not yet assigned_ |
-| ARA | `apps/web-ara` | _not yet assigned_ |
+| ARA | `apps/web-ara` | `calc.myautoreliefassistance.com` |
 
 For each project:
 

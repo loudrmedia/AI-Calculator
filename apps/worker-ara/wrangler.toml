@@ -1,4 +1,7 @@
-name = "ai-calculator-ara"
+# Must stay in sync with NEXT_PUBLIC_WORKER_URL on the Pages project, which the
+# live site has baked in as ai-calculator-web-ara.getloud.workers.dev. Renaming
+# this deploys a *new* worker and silently leaves the site pointing at the old one.
+name = "ai-calculator-web-ara"
 main = "src/index.ts"
 compatibility_date = "2024-05-12"
 

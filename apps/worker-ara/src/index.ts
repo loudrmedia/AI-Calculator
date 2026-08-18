@@ -64,15 +64,20 @@ interface LeadPayload {
   submittedAt: string;
 }
 
-// This worker (ai-calculator-ara) serves the ARA-styled landing page.
+// This worker (ai-calculator-web-ara) serves the ARA-styled landing page at
+// calc.myautoreliefassistance.com.
+// Note: corsHeaders() falls back to ALLOWED_ORIGINS[0] for anything not listed
+// here, so a missing domain doesn't fail loudly — the browser just blocks the
+// POST and the lead is lost. This site's own domain must stay in this list.
 const ALLOWED_ORIGINS = [
+  'https://calc.myautoreliefassistance.com',
   'https://autoreliefassistance.com',
   'https://www.autoreliefassistance.com',
   'https://cal.getautoreliefassistance.com',
   'https://cawa.autoreliefassistance.com',
   'https://wagoogle.autoreliefassistance.com',
-  // TODO: add this site's own domain once it exists, or CORS will block leads.
   'http://localhost:3000',
+  'http://localhost:3010',
 ];
 
 const MAX_STRING_LENGTH = 500;
