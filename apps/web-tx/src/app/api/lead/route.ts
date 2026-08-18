@@ -54,6 +54,9 @@ interface LeadPayload {
   submittedAt: string;
 }
 
+// Mirrors SITE_ID in this market's worker so local runs tag leads the same way.
+const SITE_ID = 'TX';
+
 const MAX_STRING_LENGTH = 500;
 const MAX_DESCRIPTION_LENGTH = 2000;
 
@@ -251,6 +254,7 @@ function transformForZapier(
     
     submitted_at: payload.submittedAt,
     source: 'ai_case_calculator',
+    site_id: SITE_ID,
   };
 }
 

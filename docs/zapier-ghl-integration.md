@@ -37,6 +37,7 @@ curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/ \
     "last_name": "User",
     "email": "test@example.com",
     "phone": "(555) 555-5555",
+    "site_id": "ARA",
     "qualification_status": "Qualified",
     "disqualification_reason": "",
     "accident_type": "car_accident",
@@ -74,6 +75,8 @@ curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/ \
   "last_name": "string (required)",
   "email": "string (required, valid email)",
   "phone": "string (required, 10+ digits)",
+
+  "site_id": "CA | TX | NATIONWIDE | ES | ARA",
 
   "qualification_status": "Qualified | Disqualified",
   "disqualification_reason": "string (empty when Qualified; '; '-joined when multiple)",
@@ -119,6 +122,7 @@ Create these custom fields in GHL before setting up the Zapier mapping:
 
 | Field Name | Field ID (suggested) | Type | Description |
 |------------|---------------------|------|-------------|
+| Site | `site_id` | Dropdown | Which landing page produced the lead |
 | Qualification Status | `qualification_status` | Dropdown | Qualified/Disqualified |
 | Disqualification Reason | `disqualification_reason` | Text | Why the lead was disqualified |
 | Accident Type | `accident_type` | Dropdown | Type of accident |
@@ -162,6 +166,7 @@ Create these custom fields in GHL before setting up the Zapier mapping:
 | Phone | `phone` |
 | Address - Postal Code | `zip_code` |
 | Tags | See tagging logic below |
+| Custom: site_id | `site_id` |
 | Custom: qualification_status | `qualification_status` |
 | Custom: disqualification_reason | `disqualification_reason` |
 | Custom: accident_type | `accident_type` |
@@ -185,6 +190,8 @@ Use a **Formatter** step to create dynamic tags:
 
 **Tag Logic:**
 - Always add: `ai_calculator_lead`
+- Add based on originating site: `site_{{site_id}}` (`site_CA`, `site_TX`, `site_NATIONWIDE`,
+  `site_ES`, `site_ARA`)
 - Add based on qualification: `{{qualification_status}}` (`Qualified` / `Disqualified`)
 - Add based on severity: `severity_{{injury_severity}}`
 - Add based on timing: `timing_{{accident_timing}}`

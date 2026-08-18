@@ -76,6 +76,11 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
+// Identifies which landing page produced this lead. Each market runs its own
+// worker, so this is set server-side rather than sent by the client, where it
+// could be spoofed or lost. Must stay unique across the markets.
+const SITE_ID = 'ES';
+
 const MAX_STRING_LENGTH = 500;
 const MAX_DESCRIPTION_LENGTH = 2000;
 
@@ -273,6 +278,7 @@ function transformForZapier(
     
     submitted_at: payload.submittedAt,
     source: 'ai_case_calculator',
+    site_id: SITE_ID,
   };
 }
 
