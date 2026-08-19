@@ -125,7 +125,6 @@ export type FunnelStep =
   | 'fault'
   | 'timing'
   | 'zip_code'
-  | 'description'
   | 'contact'
   | 'results';
 

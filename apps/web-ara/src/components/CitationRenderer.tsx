@@ -9,6 +9,16 @@ interface CitationRendererProps {
 export function CitationRenderer({ citations, showFullDetails = false }: CitationRendererProps) {
   if (citations.length === 0) return null;
 
+  // A source cited for two different figures is two entries. The compact view
+  // hides figureUsed, so those render as identical rows and read as a bug —
+  // collapse them there. The detailed view keeps every entry, since the figure
+  // is what tells them apart.
+  const visible = showFullDetails
+    ? citations
+    : citations.filter(
+        (c, i) => citations.findIndex((other) => other.sourceId === c.sourceId) === i
+      );
+
   return (
     <div className="citations-container">
       <div className="citations-header">
@@ -24,7 +34,7 @@ export function CitationRenderer({ citations, showFullDetails = false }: Citatio
       </p>
 
       <ul className="citations-list">
-        {citations.map((citation, index) => (
+        {visible.map((citation, index) => (
           <li key={`${citation.sourceId}-${index}`} className="citation-item">
             <a 
               href={citation.url} 
@@ -45,39 +55,51 @@ export function CitationRenderer({ citations, showFullDetails = false }: Citatio
         ))}
       </ul>
 
+      {/* Styled for the dark results canvas, which is the only place this block
+          renders. These are scoped styled-jsx rules and therefore outrank the
+          theme sheet, so the colours have to live here rather than in
+          ara-theme.css — overriding them from outside silently loses. */}
       <style jsx>{`
         .citations-container {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.16);
           border-radius: 8px;
-          padding: 16px 20px;
+          padding: 20px 22px;
           margin-top: 24px;
           font-size: 14px;
+          text-align: left;
         }
 
         .citations-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 4px 16px;
+          padding-bottom: 12px;
+          margin-bottom: 12px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .citations-header h4 {
           margin: 0;
-          font-size: 14px;
-          font-weight: 600;
-          color: #334155;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          color: #ffffff;
         }
 
         .model-version {
-          font-size: 12px;
-          color: #64748b;
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.5);
         }
 
         .citations-intro {
-          color: #64748b;
-          margin: 0 0 12px 0;
+          color: rgba(255, 255, 255, 0.62);
+          margin: 0 0 14px 0;
           font-size: 13px;
+          line-height: 1.5;
         }
 
         .citations-list {
@@ -86,10 +108,10 @@ export function CitationRenderer({ citations, showFullDetails = false }: Citatio
           margin: 0;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 8px 24px;
+          gap: 10px 24px;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 560px) {
           .citations-list {
             grid-template-columns: 1fr;
           }
@@ -104,35 +126,36 @@ export function CitationRenderer({ citations, showFullDetails = false }: Citatio
         .citation-link {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          color: #2563eb;
+          gap: 7px;
+          color: #e0af34;
           text-decoration: none;
           transition: color 0.2s;
         }
 
         .citation-link:hover {
-          color: #1d4ed8;
+          color: #f2c65a;
           text-decoration: underline;
         }
 
         .citation-number {
-          font-weight: 500;
-          color: #64748b;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.45);
           font-size: 12px;
         }
 
         .citation-name {
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .external-icon {
-          opacity: 0.6;
+          opacity: 0.85;
+          flex-shrink: 0;
         }
 
         .citation-detail {
           font-size: 12px;
-          color: #64748b;
-          padding-left: 24px;
+          color: rgba(255, 255, 255, 0.55);
+          padding-left: 26px;
         }
       `}</style>
     </div>

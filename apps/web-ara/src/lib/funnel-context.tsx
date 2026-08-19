@@ -17,7 +17,6 @@ const STEPS: FunnelStep[] = [
   'fault',
   'timing',
   'zip_code',
-  'description',
   'contact',
   'results',
 ];
@@ -28,7 +27,6 @@ const STEP_LABELS: Record<FunnelStep, string> = {
   fault: 'Fault',
   timing: 'Timing',
   zip_code: 'Location',
-  description: 'Details',
   contact: 'Contact',
   results: 'Results',
 };
@@ -40,7 +38,6 @@ type Action =
   | { type: 'SET_TIMING'; payload: CalculatorInputs['accidentTiming'] }
   | { type: 'SET_ZIP_CODE'; payload: string }
   | { type: 'SET_HAS_PROPERTY_DAMAGE'; payload: boolean }
-  | { type: 'SET_DESCRIPTION'; payload: string }
   | { type: 'SET_FIRST_NAME'; payload: string }
   | { type: 'SET_LAST_NAME'; payload: string }
   | { type: 'SET_EMAIL'; payload: string }
@@ -101,11 +98,6 @@ function reducer(state: FunnelState, action: Action): FunnelState {
       return {
         ...state,
         inputs: { ...state.inputs, hasPropertyDamage: action.payload },
-      };
-    case 'SET_DESCRIPTION':
-      return {
-        ...state,
-        inputs: { ...state.inputs, accidentDescription: action.payload },
       };
     case 'SET_FIRST_NAME':
       return {

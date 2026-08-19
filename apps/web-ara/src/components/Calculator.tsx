@@ -18,7 +18,6 @@ import {
   FaultStep,
   TimingStep,
   ZipCodeStep,
-  DescriptionStep,
   ContactStep,
   ResultsStep,
 } from './steps';
@@ -30,7 +29,7 @@ const NAVBAR_OFFSET = 96;
 export function Calculator() {
   const { state } = useFunnel();
   const funnelRef = useRef<HTMLDivElement>(null);
-  const isInitialRender = useRef(true);
+  const lastScrolledStep = useRef(state.currentStep);
 
   // Capture marketing attribution (UTMs, gclid, etc.) as soon as the app loads,
   // while the original landing URL params are still present
@@ -41,12 +40,14 @@ export function Calculator() {
   // Bring the next question into view when the step changes. We scroll to the
   // funnel card rather than the top of the page, otherwise answering a question
   // throws the user back up past the hero and they have to scroll down again.
-  // Skipped on first render so landing on the page doesn't jump past the hero.
+  //
+  // Comparing the step itself rather than flipping a "first render" flag is what
+  // keeps this from firing on load: Strict Mode invokes effects twice, and a
+  // flag is already spent by the second pass, which scrolled the single-column
+  // layout straight past the headline.
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
+    if (lastScrolledStep.current === state.currentStep) return;
+    lastScrolledStep.current = state.currentStep;
 
     const card = funnelRef.current;
     if (!card) {
@@ -70,8 +71,6 @@ export function Calculator() {
         return <TimingStep />;
       case 'zip_code':
         return <ZipCodeStep />;
-      case 'description':
-        return <DescriptionStep />;
       case 'contact':
         return <ContactStep />;
       case 'results':
@@ -118,9 +117,9 @@ export function Calculator() {
       </div>
 
       <div className="trust-badge-row">
-        <span className="trust-badge">🔒 256-bit Encrypted</span>
+        <span className="trust-badge">256-bit Encrypted</span>
         <span className="trust-badge-divider">•</span>
-        <span className="trust-badge">🚫 Never Shared Without Consent</span>
+        <span className="trust-badge">Never Shared Without Consent</span>
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ export function TimingStep() {
 
       {showWarning && (
         <div className="disclaimer-box warning" style={{ marginTop: '16px' }}>
-          <h4>⚠️ Your Window May Be Closing</h4>
+          <h4>Your Window May Be Closing</h4>
           <p>
             Most states only allow 2-3 years to file a personal injury claim. You may still
             qualify — but finish your estimate now and speak with a specialist before your

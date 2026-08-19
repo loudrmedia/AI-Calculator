@@ -2,47 +2,31 @@
 
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
-import { 
-  SoftTissueInjury, 
-  SubstantialInjury, 
-  CatastrophicInjury,
-  InjurySelection 
-} from '../../lib/types';
+import { InjurySelection } from '../../lib/types';
 
-type InjuryTier = 'minor' | 'serious' | 'severe' | 'none';
+type InjuryTier = 'minor' | 'serious' | 'severe';
 
-const TIER_OPTIONS: { value: InjuryTier; icon: string; label: string }[] = [
-  { value: 'minor', icon: '🩹', label: 'Minor Injuries' },
-  { value: 'serious', icon: '🦴', label: 'Serious Injuries' },
-  { value: 'severe', icon: '🏥', label: 'Severe / Life-Changing' },
-];
-
-const SOFT_TISSUE_OPTIONS: { value: SoftTissueInjury; label: string }[] = [
-  { value: 'body_aches', label: 'Body Aches & Pain' },
-  { value: 'cuts_scrapes_bruises', label: 'Cuts, Scrapes & Bruises' },
-  { value: 'other', label: 'Other' },
-];
-
-const SUBSTANTIAL_OPTIONS: { value: SubstantialInjury; label: string }[] = [
-  { value: 'broken_bones', label: 'Broken / Fractured Bones' },
-  { value: 'internal_bleeding', label: 'Internal Bleeding' },
-  { value: 'scarring', label: 'Scarring' },
-  { value: 'memory_loss', label: 'Memory Loss' },
-  { value: 'other', label: 'Other' },
-];
-
-const CATASTROPHIC_OPTIONS: { value: CatastrophicInjury; label: string }[] = [
-  { value: 'surgery_required', label: 'Surgery Required' },
-  { value: 'brain_injury', label: 'Brain Injury' },
-  { value: 'organ_loss', label: 'Loss of Internal Organs' },
-  { value: 'coma', label: 'Coma' },
-  { value: 'paralysis', label: 'Paralysis' },
-  { value: 'amputation', label: 'Amputation' },
-  { value: 'other', label: 'Other' },
+// One tap answers the question. The summary spells out what each tier covers so
+// the claimant can self-select without a second panel of checkboxes.
+const TIER_OPTIONS: { value: InjuryTier; label: string; summary: string }[] = [
+  {
+    value: 'minor',
+    label: 'Minor Injuries',
+    summary: 'Body aches and pain, cuts, scrapes or bruises',
+  },
+  {
+    value: 'serious',
+    label: 'Serious Injuries',
+    summary: 'Broken or fractured bones, internal bleeding, scarring, memory loss',
+  },
+  {
+    value: 'severe',
+    label: 'Severe / Life-Changing',
+    summary: 'Surgery, brain injury, organ loss, coma, paralysis, amputation',
+  },
 ];
 
 function deriveTier(injuries: InjurySelection): InjuryTier | null {
-  if (injuries.noInjury) return 'none';
   if (injuries.catastrophic.length > 0) return 'severe';
   if (injuries.substantial.length > 0) return 'serious';
   if (injuries.softTissue.length > 0) return 'minor';
@@ -56,79 +40,41 @@ const EMPTY_INJURIES: InjurySelection = {
   noInjury: false,
 };
 
+// The estimate reads severity off whichever list is non-empty, so the chosen
+// tier is recorded as an unspecified injury in that list. It stays 'other'
+// rather than a named injury because the claimant never named one.
+function injuriesForTier(tier: InjuryTier): InjurySelection {
+  return {
+    ...EMPTY_INJURIES,
+    softTissue: tier === 'minor' ? ['other'] : [],
+    substantial: tier === 'serious' ? ['other'] : [],
+    catastrophic: tier === 'severe' ? ['other'] : [],
+  };
+}
+
 export function InjuriesStep() {
   const { state, dispatch } = useFunnel();
   const injuries = state.inputs.injuries || EMPTY_INJURIES;
   const [tier, setTier] = useState<InjuryTier | null>(() => deriveTier(injuries));
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const chipSectionRef = useRef<HTMLDivElement>(null);
-  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const updateInjuries = (newInjuries: InjurySelection) => {
-    dispatch({ type: 'SET_INJURIES', payload: newInjuries });
-  };
-
-  // Picking a tier clears other tiers; "not injured" auto-advances
   const handleTierSelect = (newTier: InjuryTier) => {
     setTier(newTier);
+    dispatch({ type: 'SET_INJURIES', payload: injuriesForTier(newTier) });
+
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
-
-    if (newTier === 'none') {
-      updateInjuries({ ...EMPTY_INJURIES, noInjury: true });
-      advanceTimer.current = setTimeout(() => {
-        dispatch({ type: 'NEXT_STEP' });
-      }, 300);
-      return;
-    }
-
-    updateInjuries({
-      softTissue: newTier === 'minor' ? injuries.softTissue : [],
-      substantial: newTier === 'serious' ? injuries.substantial : [],
-      catastrophic: newTier === 'severe' ? injuries.catastrophic : [],
-      noInjury: false,
-    });
-
-    // Scroll the newly revealed injury options into view (chips render below
-    // the fold on mobile); small delay lets React commit the chip section first
-    if (scrollTimer.current) clearTimeout(scrollTimer.current);
-    scrollTimer.current = setTimeout(() => {
-      chipSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    advanceTimer.current = setTimeout(() => {
+      dispatch({ type: 'NEXT_STEP' });
+    }, 300);
   };
 
   useEffect(() => {
     return () => {
       if (advanceTimer.current) clearTimeout(advanceTimer.current);
-      if (scrollTimer.current) clearTimeout(scrollTimer.current);
     };
   }, []);
 
-  const toggleSoftTissue = (injury: SoftTissueInjury) => {
-    const updated = injuries.softTissue.includes(injury)
-      ? injuries.softTissue.filter((i) => i !== injury)
-      : [...injuries.softTissue, injury];
-    updateInjuries({ ...injuries, softTissue: updated, noInjury: false });
-  };
-
-  const toggleSubstantial = (injury: SubstantialInjury) => {
-    const updated = injuries.substantial.includes(injury)
-      ? injuries.substantial.filter((i) => i !== injury)
-      : [...injuries.substantial, injury];
-    updateInjuries({ ...injuries, substantial: updated, noInjury: false });
-  };
-
-  const toggleCatastrophic = (injury: CatastrophicInjury) => {
-    const updated = injuries.catastrophic.includes(injury)
-      ? injuries.catastrophic.filter((i) => i !== injury)
-      : [...injuries.catastrophic, injury];
-    updateInjuries({ ...injuries, catastrophic: updated, noInjury: false });
-  };
-
-  const hasSelection =
-    injuries.noInjury ||
-    injuries.softTissue.length > 0 ||
-    injuries.substantial.length > 0 ||
-    injuries.catastrophic.length > 0;
+  const hasSelection = tier !== null;
 
   const handleContinue = useCallback(() => {
     if (hasSelection) {
@@ -155,45 +101,6 @@ export function InjuriesStep() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hasSelection, handleContinue]);
 
-  const renderChips = () => {
-    if (tier === 'minor') {
-      return SOFT_TISSUE_OPTIONS.map((option) => (
-        <button
-          key={option.value}
-          className={`chip ${injuries.softTissue.includes(option.value) ? 'selected' : ''}`}
-          onClick={() => toggleSoftTissue(option.value)}
-        >
-          {option.label}
-        </button>
-      ));
-    }
-    if (tier === 'serious') {
-      return SUBSTANTIAL_OPTIONS.map((option) => (
-        <button
-          key={option.value}
-          className={`chip ${injuries.substantial.includes(option.value) ? 'selected' : ''}`}
-          onClick={() => toggleSubstantial(option.value)}
-        >
-          {option.label}
-        </button>
-      ));
-    }
-    if (tier === 'severe') {
-      return CATASTROPHIC_OPTIONS.map((option) => (
-        <button
-          key={option.value}
-          className={`chip ${injuries.catastrophic.includes(option.value) ? 'selected' : ''}`}
-          onClick={() => toggleCatastrophic(option.value)}
-        >
-          {option.label}
-        </button>
-      ));
-    }
-    return null;
-  };
-
-  const showChips = tier !== null && tier !== 'none';
-
   return (
     <div>
       <h2 className="step-title">How badly were you injured?</h2>
@@ -205,23 +112,14 @@ export function InjuriesStep() {
         {TIER_OPTIONS.map((option) => (
           <button
             key={option.value}
-            className={`option-button ${tier === option.value ? 'selected' : ''}`}
+            className={`option-button injury-tier ${tier === option.value ? 'selected' : ''}`}
             onClick={() => handleTierSelect(option.value)}
           >
-            <span className="icon">{option.icon}</span>
-            <span style={{ fontWeight: 600 }}>{option.label}</span>
+            <span className="injury-tier-label">{option.label}</span>
+            <span className="injury-tier-summary">{option.summary}</span>
           </button>
         ))}
       </div>
-
-      {showChips && (
-        <div className="chip-section" ref={chipSectionRef}>
-          <p className="chip-section-label">
-            Select everything that applies — each one can increase your estimate.
-          </p>
-          <div className="chip-grid">{renderChips()}</div>
-        </div>
-      )}
 
       <div className="button-row">
         <button className="btn btn-secondary" onClick={handleBack}>

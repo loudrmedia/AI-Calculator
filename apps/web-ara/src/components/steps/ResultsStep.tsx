@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
-import { formatCurrency, formatRange } from '../../lib/calculator';
+import { formatRange } from '../../lib/calculator';
 import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
 import { OfferChecker } from '../OfferChecker';
@@ -12,30 +12,6 @@ import { getTrackingParams, trackLeadConversion } from '../../lib/tracking';
 const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
 const PHONE_LINK = CONFIG.PHONE_LINK;
 
-// Animates a number counting up to its target for a rewarding reveal
-function useCountUp(target: number, durationMs = 1200) {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (target <= 0) {
-      setValue(target);
-      return;
-    }
-    let frame: number;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const progress = Math.min((now - start) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(target * eased));
-      if (progress < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [target, durationMs]);
-
-  return value;
-}
-
 export function ResultsStep() {
   const { state } = useFunnel();
   const result = state.result;
@@ -44,11 +20,6 @@ export function ResultsStep() {
   const [submitted, setSubmitted] = useState(false);
   // Synchronous guard against duplicate submissions (e.g. StrictMode double-effect)
   const submitAttempted = useRef(false);
-
-  const withAttorneyAvg = result
-    ? Math.round((result.withAttorney.grossLow + result.withAttorney.grossHigh) / 2)
-    : 0;
-  const animatedValue = useCountUp(withAttorneyAvg);
 
   useEffect(() => {
     if (result && !submitted) {
@@ -210,10 +181,14 @@ export function ResultsStep() {
               : 'Here is your case estimate'}
           </h2>
 
-          {/* Hero value — the payoff, front and center */}
+          {/* Hero value — the payoff, front and center. Shown as a range rather
+              than a single figure: the estimate is a band, and quoting one
+              number reads as a promise of that exact amount. */}
           <div className="hero-value-card">
             <div className="hero-value-label">Your Estimated Case Value With an Attorney</div>
-            <div className="hero-value-amount">{formatCurrency(animatedValue)}</div>
+            <div className="hero-value-amount">
+              {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
+            </div>
           </div>
 
           <div className="results-section">
@@ -221,32 +196,12 @@ export function ResultsStep() {
 
             <div className="result-card">
               <div className="result-label">Without Attorney</div>
-              <div className="result-sublabel">Average</div>
-              <div className="result-value" style={{ fontSize: '26px', color: 'var(--danger)' }}>
-                ✗ {formatCurrency(Math.round((result.withoutAttorney.low + result.withoutAttorney.high) / 2))}
-              </div>
-              <div className="result-detail">
-                Range: {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
+              <div className="result-sublabel">Estimated range</div>
+              <div className="result-value" style={{ fontSize: '24px', color: 'var(--danger)' }}>
+                {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
               </div>
             </div>
 
-            <p style={{
-              textAlign: 'center',
-              fontSize: '13px',
-              color: '#ffffff',
-              marginTop: '16px',
-              padding: '12px',
-              background: 'rgba(55, 202, 55, 0.14)',
-              border: '1px solid rgba(55, 202, 55, 0.45)',
-              borderRadius: '8px'
-            }}>
-              With an attorney, you could recover{' '}
-              <strong>
-                +{formatCurrency(result.withAttorney.netLow - result.withoutAttorney.high)} to{' '}
-                +{formatCurrency(result.withAttorney.netHigh - result.withoutAttorney.low)} more
-              </strong>{' '}
-              — even after fees.
-            </p>
           </div>
 
           <OfferChecker result={result} />
@@ -330,7 +285,7 @@ export function ResultsStep() {
       {/* Disclaimer */}
       <Disclaimer />
 
-      <img className="ara-footer-logo" src="/ara/logo.png" alt="Auto Relief Assistance" />
+      <img className="ara-footer-logo" src="/logo-wide.png" alt="Auto Relief Assistance" />
 
       <div className="footer-links">
         <a href="/privacy">Privacy Policy</a>

@@ -36,23 +36,41 @@ body {
   align-items: center;
 }
 
-.navbar-logo-img {
-  height: 62px;
+/* Only the desktop lockup is resized here — globals.css swaps in the stacked
+   mobile logo at its own breakpoint and sizes it there. */
+.navbar-logo-desktop {
+  height: 46px;
   width: auto;
+  max-width: min(420px, 70vw);
 }
 
 .main-content {
   padding-top: 84px;
 }
 
+/* The base sheet caps .container at 640px, which is right for a single-column
+   calculator but crushes this layout — the two-column hero and the marketing
+   bands were being folded into half that width each. Reading-width surfaces
+   (results, privacy, terms, FAQ) deliberately keep the narrow base width. */
+.page-wrapper:not(.ara-results-page) .main-content > .container,
+.ara-settlements > .container,
+.ara-practice-heading > .container,
+.ara-practice-band > .container {
+  max-width: 1140px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
 /* ---------- Hero: headline left, funnel card right ---------- */
 
+/* The card is held at a fixed width so it keeps its proportions on wide
+   monitors and the headline absorbs the remaining space instead. */
 .ara-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: start;
-  padding: 40px 0 24px;
+  grid-template-columns: minmax(0, 1fr) 430px;
+  gap: 56px;
+  align-items: center;
+  padding: 44px 0 28px;
 }
 
 .ara-prefer-call {
@@ -181,24 +199,61 @@ body {
   font-size: 15px;
 }
 
+/* Injury tiers carry a summary line, so they stack left-aligned instead of
+   centring a single label like the other option buttons. */
+.option-button.injury-tier {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  padding: 11px 16px;
+  text-align: left;
+}
+
+.injury-tier-label {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.injury-tier-summary {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.option-button.injury-tier.selected .injury-tier-summary {
+  color: rgba(27, 38, 63, 0.75);
+}
+
 .option-highlighted {
   background: var(--option-bg);
 }
 
+/* The base sheet floats this badge above the button at top:-10px, where it
+   collides with the question title. It sits inside the button instead. */
 .option-badge {
-  background: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  bottom: auto;
+  transform: translateY(-50%);
+  background: var(--gold);
+  color: var(--navy);
   font-size: 10px;
-  font-weight: 700;
-  padding: 2px 7px;
+  font-weight: 800;
+  padding: 3px 8px;
   border-radius: 999px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
+/* On a gold (selected) button the gold pill would vanish, so it inverts. */
 .option-button.selected .option-badge {
-  background: rgba(27, 38, 63, 0.15);
-  color: var(--navy);
+  background: var(--navy);
+  color: #ffffff;
+  box-shadow: none;
 }
 
 /* Chips are multi-select, so they stay outlined until picked — a filled
@@ -606,11 +661,22 @@ body {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Despite the .png extension these logo files are JPEGs, so they carry an
+   opaque white background rather than transparency. That rules out knocking the
+   artwork out to white — the filter just paints the whole rectangle. Instead it
+   sits on a deliberate white plate, which reads as intentional on the navy
+   footer and the black results page. A real transparent asset would let this
+   drop back to a plain image. */
 .ara-footer-logo {
   display: block;
-  height: 66px;
+  height: 34px;
   width: auto;
-  margin: 0 auto 14px;
+  max-width: 260px;
+  margin: 0 auto 18px;
+  background: #ffffff;
+  padding: 9px 16px;
+  border-radius: 6px;
+  box-sizing: content-box;
 }
 
 /* Disclaimer sitting on the navy footer */
@@ -769,9 +835,18 @@ body {
   font-weight: 700;
 }
 
+/* A range string is far wider than the single figure this was sized for. */
 .ara-results-page .hero-value-amount {
   color: var(--green);
   font-weight: 800;
+  font-size: 34px;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .ara-results-page .hero-value-amount {
+    font-size: 24px;
+  }
 }
 
 .ara-results-page .results-section {
@@ -832,39 +907,9 @@ body {
   color: var(--gold);
 }
 
-/* Sources block stays, inverted for the dark canvas */
-
-.ara-results-page .data-sources-compact .citations-container {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.ara-results-page .data-sources-compact .citations-header h4 {
-  color: #ffffff;
-}
-
-.ara-results-page .data-sources-compact .citations-intro,
-.ara-results-page .data-sources-compact .model-version {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.ara-results-page .data-sources-compact .citation-link {
-  color: var(--gold);
-}
-
-.ara-results-page .data-sources-compact .citation-number,
-.ara-results-page .data-sources-compact .citation-detail {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.ara-results-page .data-sources-compact .citation-name {
-  color: #ffffff;
-}
-
-.ara-results-page .data-sources-compact .external-icon {
-  stroke: var(--gold);
-  fill: var(--gold);
-}
+/* The sources block styles itself for this canvas from inside
+   CitationRenderer — its styled-jsx rules are scoped and outrank anything
+   declared here, so don't try to re-colour it from this file. */
 
 /* Offer checker */
 
@@ -974,11 +1019,13 @@ body {
    Responsive
    ============================================================ */
 
-@media (max-width: 900px) {
+/* The hero drops to one column well before the other bands do: below this the
+   headline column gets too narrow to hold a 40px line. */
+@media (max-width: 1000px) {
   .ara-hero {
     grid-template-columns: 1fr;
     gap: 28px;
-    padding: 24px 0 36px;
+    padding: 24px 0 32px;
   }
 
   .ara-hero-copy {
@@ -986,9 +1033,18 @@ body {
   }
 
   .ara-hero-copy h1 {
-    font-size: 29px;
+    font-size: 30px;
   }
 
+  /* Stop the funnel card stretching the full width of a tablet. */
+  .ara-hero-form {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 900px) {
   .ara-practice-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1015,10 +1071,6 @@ body {
 }
 
 @media (max-width: 560px) {
-  .navbar-logo-img {
-    height: 50px;
-  }
-
   .main-content {
     padding-top: 72px;
   }

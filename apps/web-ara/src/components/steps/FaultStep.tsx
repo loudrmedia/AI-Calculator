@@ -4,10 +4,10 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { FaultStatus } from '../../lib/types';
 
-const FAULT_OPTIONS: { value: FaultStatus; label: string; icon: string }[] = [
-  { value: 'not_at_fault', label: 'No, it was not my fault', icon: '🙅' },
-  { value: 'partial_fault', label: "I don't know who was at fault", icon: '🤷' },
-  { value: 'at_fault', label: 'Yes, it was my fault', icon: '🙋' },
+const FAULT_OPTIONS: { value: FaultStatus; label: string }[] = [
+  { value: 'not_at_fault', label: 'No, it was not my fault' },
+  { value: 'partial_fault', label: "I don't know who was at fault" },
+  { value: 'at_fault', label: 'Yes, it was my fault' },
 ];
 
 export function FaultStep() {
@@ -66,7 +66,6 @@ export function FaultStep() {
             className={`option-button ${selected === option.value ? 'selected' : ''}`}
             onClick={() => handleSelect(option.value)}
           >
-            <span className="icon">{option.icon}</span>
             <span style={{ fontWeight: 600 }}>{option.label}</span>
           </button>
         ))}

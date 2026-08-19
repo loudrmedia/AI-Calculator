@@ -38,7 +38,7 @@ export function Footer() {
           </p>
         </div>
 
-        <img className="ara-footer-logo" src="/ara/logo.png" alt="Auto Relief Assistance" />
+        <img className="ara-footer-logo" src="/logo-wide.png" alt="Auto Relief Assistance" />
 
         <div className="footer-links-row">
           <a

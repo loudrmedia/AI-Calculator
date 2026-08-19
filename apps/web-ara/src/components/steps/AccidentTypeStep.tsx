@@ -4,12 +4,12 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { useFunnel } from '../../lib/funnel-context';
 import { AccidentType } from '../../lib/types';
 
-const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string; badge?: string }[] = [
-  { value: 'car_accident', label: 'Car Accident', icon: '🚗', badge: 'Most common' },
-  { value: 'motorcycle_accident', label: 'Motorcycle Accident', icon: '🏍️' },
-  { value: 'truck_accident', label: 'Truck Accident', icon: '🚛' },
-  { value: 'bicycle_accident', label: 'Bicycle Accident', icon: '🚲' },
-  { value: 'other', label: 'Other', icon: '📋' },
+const ACCIDENT_TYPES: { value: AccidentType; label: string; badge?: string }[] = [
+  { value: 'car_accident', label: 'Car Accident', badge: 'Most common' },
+  { value: 'motorcycle_accident', label: 'Motorcycle Accident' },
+  { value: 'truck_accident', label: 'Truck Accident' },
+  { value: 'bicycle_accident', label: 'Bicycle Accident' },
+  { value: 'other', label: 'Other' },
 ];
 
 export function AccidentTypeStep() {
@@ -64,7 +64,6 @@ export function AccidentTypeStep() {
             className={`option-button ${type.badge ? 'option-highlighted' : ''} ${selected === type.value ? 'selected' : ''}`}
             onClick={() => handleSelect(type.value)}
           >
-            <span className="icon">{type.icon}</span>
             <span>{type.label}</span>
             {type.badge && <span className="option-badge">{type.badge}</span>}
           </button>

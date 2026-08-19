@@ -7,7 +7,8 @@ export function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <a href="/" className="navbar-logo">
-          <img src="/ara/logo.png" alt="Auto Relief Assistance" className="navbar-logo-img" />
+          <img src="/logo-wide.png" alt="Auto Relief Assistance" className="navbar-logo-img navbar-logo-desktop" />
+          <img src="/logo-mobile.png" alt="Auto Relief Assistance" className="navbar-logo-img navbar-logo-mobile" />
         </a>
       </div>
     </nav>
