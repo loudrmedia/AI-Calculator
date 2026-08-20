@@ -45,8 +45,17 @@ body {
   max-width: min(420px, 70vw);
 }
 
+/* Clears the fixed navbar, which is 71px tall with the wide logo and 59px once
+   globals.css swaps in the stacked mobile one at 768px. Anything more than the
+   navbar height is dead space under it. */
 .main-content {
   padding-top: 84px;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 62px;
+  }
 }
 
 /* The base sheet caps .container at 640px, which is right for a single-column
@@ -185,6 +194,7 @@ body {
 .options-grid {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
   min-width: 0;
 }
@@ -197,7 +207,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 9px;
-  width: 100%;
+  /* Capped rather than full-bleed: at full card width these read as stretched
+     bars, and the cap keeps them the same size across every step. */
+  width: min(100%, 320px);
   min-width: 0;
   max-width: 100%;
   min-height: 38px;
@@ -1094,7 +1106,7 @@ body {
       'awards';
     grid-template-rows: auto;
     row-gap: 28px;
-    padding: 24px 0 32px;
+    padding: 10px 0 32px;
   }
 
   .ara-hero-copy {
@@ -1153,10 +1165,6 @@ body {
 }
 
 @media (max-width: 560px) {
-  .main-content {
-    padding-top: 72px;
-  }
-
   /* Two and three across on a phone, so the type has to come down with them
      to keep the amounts and the longer labels on their own lines. */
   .ara-settlement-grid {
@@ -1198,7 +1206,7 @@ body {
   }
 
   .ara-hero-copy h1 {
-    font-size: 25px;
+    font-size: 28px;
   }
 
   .ara-call-band h2 {
@@ -1237,5 +1245,13 @@ body {
   .injury-tier-summary {
     font-size: 11px;
     line-height: 1.25;
+  }
+}
+
+/* The larger mobile headline costs an extra wrapped line on the narrowest
+   handsets, so it steps back down there. */
+@media (max-width: 380px) {
+  .ara-hero-copy h1 {
+    font-size: 25px;
   }
 }
