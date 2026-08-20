@@ -130,7 +130,7 @@ export function InjuriesStep() {
           onClick={handleContinue}
           disabled={!hasSelection}
         >
-          Continue »
+          →
         </button>
       </div>
     </div>

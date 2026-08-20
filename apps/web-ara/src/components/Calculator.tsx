@@ -117,11 +117,19 @@ export function Calculator() {
       </div>
 
       <div className="trust-badge-row">
-        <span className="trust-badge">256-bit Encrypted</span>
+        <span className="trust-badge">🔒 256-bit Encrypted</span>
         <span className="trust-badge-divider">•</span>
-        <span className="trust-badge">Never Shared Without Consent</span>
+        <span className="trust-badge">🛡️ Never Shared Without Consent</span>
       </div>
     </div>
+  );
+
+  const awardsImage = (
+    <img
+      className="ara-awards"
+      src="/ara/awards.png"
+      alt="10 Best Attorney Client Satisfaction, Best Lawyers Law Firm of the Year 2020, Top 25 Motor Vehicle Trial Lawyers"
+    />
   );
 
   return (
@@ -138,15 +146,11 @@ export function Calculator() {
                 <span className="ara-hero-amount">$20,000 - $250,000.</span>
                 <span>Get your case assessed quickly.</span>
               </h1>
-              <img
-                className="ara-awards"
-                src="/ara/awards.png"
-                alt="10 Best Attorney Client Satisfaction, Best Lawyers Law Firm of the Year 2020, Top 25 Motor Vehicle Trial Lawyers"
-              />
             </div>
 
             <div className="ara-hero-form" ref={funnelRef}>
               {funnelCard}
+              {awardsImage}
             </div>
           </div>
 

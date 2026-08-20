@@ -207,7 +207,7 @@ export function ContactStep() {
           className="btn btn-primary"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          style={{ background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
         >
           {isSubmitting ? (
             <>
@@ -215,7 +215,7 @@ export function ContactStep() {
               Processing...
             </>
           ) : (
-            'GET MY RESULTS »'
+            '→'
           )}
         </button>
       </div>

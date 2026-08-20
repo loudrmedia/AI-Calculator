@@ -117,7 +117,7 @@ body {
   width: 100%;
   max-width: 420px;
   height: auto;
-  margin: 32px auto 0;
+  margin: 24px auto 0;
 }
 
 /* ---------- Funnel card ---------- */
@@ -304,35 +304,40 @@ body {
 
 .button-row .btn {
   flex: 0 0 auto;
-  min-width: 116px;
+  min-width: 80px;
   font-family: 'Open Sans', var(--font-sans);
   font-weight: 700;
   font-size: 13px;
   line-height: 1.2;
   border-radius: 4px;
-  padding: 11px 20px;
+  padding: 9px 16px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
 .button-row .btn-primary {
-  background: var(--navy);
-  color: #ffffff;
+  background: transparent;
+  color: var(--gold);
   border: none;
-  box-shadow: 0 1px 3px rgba(27, 38, 63, 0.3);
+  box-shadow: none;
+  font-size: 24px;
+  padding: 8px 12px;
+  text-transform: none;
+  letter-spacing: 0;
+  min-width: 40px;
 }
 
 .button-row .btn-primary:hover:not(:disabled) {
-  background: var(--navy-deep);
-  color: #ffffff;
+  background: transparent;
+  color: var(--gold-bright);
   transform: none;
-  box-shadow: 0 3px 8px rgba(27, 38, 63, 0.35);
+  box-shadow: none;
 }
 
 .button-row .btn-primary:disabled {
-  background: rgba(27, 38, 63, 0.22);
-  color: rgba(27, 38, 63, 0.5);
+  background: transparent;
+  color: rgba(224, 175, 52, 0.3);
   box-shadow: none;
 }
 
@@ -443,7 +448,7 @@ body {
 
 .ara-settlement-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 22px;
 }
 
@@ -513,7 +518,7 @@ body {
 
 .ara-practice-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px 16px;
 }
 
@@ -1109,5 +1114,13 @@ body {
   .ara-hero-form .card,
   .ara-funnel .card {
     padding: 20px 18px 0;
+  }
+
+  .injury-tier-summary {
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

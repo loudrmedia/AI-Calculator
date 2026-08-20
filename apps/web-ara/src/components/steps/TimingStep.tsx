@@ -100,7 +100,7 @@ export function TimingStep() {
           onClick={handleContinue}
           disabled={!selected}
         >
-          Continue »
+          →
         </button>
       </div>
     </div>

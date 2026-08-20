@@ -80,7 +80,7 @@ export function FaultStep() {
           onClick={handleContinue}
           disabled={!selected}
         >
-          Continue »
+          →
         </button>
       </div>
     </div>
