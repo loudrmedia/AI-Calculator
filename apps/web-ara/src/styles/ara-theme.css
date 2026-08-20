@@ -131,7 +131,11 @@ body {
   text-align: center;
 }
 
-.ara-hero-copy h1 {
+/* The payout figure sits outside the h1 so the heading is just the headline,
+   but it stays visually part of it, so it shares the headline's type at every
+   breakpoint. */
+.ara-hero-copy h1,
+.ara-hero-copy .ara-hero-proof {
   margin: 0;
   font-family: 'Open Sans', var(--font-sans);
   font-weight: 800;
@@ -141,8 +145,16 @@ body {
   letter-spacing: -0.5px;
 }
 
-.ara-hero-copy h1 span {
+.ara-hero-copy h1 span,
+.ara-hero-copy .ara-hero-proof span {
   display: block;
+}
+
+.ara-hero-subtitle {
+  margin: 10px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gray-600);
 }
 
 .ara-hero-alert {
@@ -1117,7 +1129,8 @@ body {
     margin-top: 0;
   }
 
-  .ara-hero-copy h1 {
+  .ara-hero-copy h1,
+  .ara-hero-copy .ara-hero-proof {
     font-size: 30px;
   }
 
@@ -1205,8 +1218,13 @@ body {
     letter-spacing: 0.2px;
   }
 
-  .ara-hero-copy h1 {
+  .ara-hero-copy h1,
+  .ara-hero-copy .ara-hero-proof {
     font-size: 28px;
+  }
+
+  .ara-hero-subtitle {
+    font-size: 15px;
   }
 
   .ara-call-band h2 {
@@ -1251,7 +1269,8 @@ body {
 /* The larger mobile headline costs an extra wrapped line on the narrowest
    handsets, so it steps back down there. */
 @media (max-width: 380px) {
-  .ara-hero-copy h1 {
+  .ara-hero-copy h1,
+  .ara-hero-copy .ara-hero-proof {
     font-size: 25px;
   }
 }
