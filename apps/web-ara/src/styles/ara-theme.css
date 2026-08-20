@@ -117,7 +117,7 @@ body {
   width: 100%;
   max-width: 420px;
   height: auto;
-  margin: 32px auto 0;
+  margin: 24px auto 0;
 }
 
 /* ---------- Funnel card ---------- */
@@ -368,8 +368,7 @@ body {
 }
 
 .trust-badge-row {
-  padding: 18px 0;
-  text-align: center;
+  padding-bottom: 18px;
 }
 
 .trust-badge {
@@ -449,7 +448,7 @@ body {
 
 .ara-settlement-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 22px;
 }
 
@@ -519,7 +518,7 @@ body {
 
 .ara-practice-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px 16px;
 }
 
@@ -1115,5 +1114,13 @@ body {
   .ara-hero-form .card,
   .ara-funnel .card {
     padding: 20px 18px 0;
+  }
+
+  .injury-tier-summary {
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
