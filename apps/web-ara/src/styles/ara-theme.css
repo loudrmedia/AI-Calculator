@@ -149,8 +149,13 @@ body {
   color: var(--orange);
 }
 
-.ara-hero-amount {
-  color: var(--green);
+.ara-hero-sub {
+  margin: 12px 0 0;
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--green-dark);
 }
 
 .ara-awards {
@@ -1121,6 +1126,11 @@ body {
     font-size: 30px;
   }
 
+  .ara-hero-sub {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
   /* Stop the funnel card stretching the full width of a tablet. */
   .ara-hero-form {
     width: 100%;
@@ -1207,6 +1217,11 @@ body {
 
   .ara-hero-copy h1 {
     font-size: 28px;
+  }
+
+  .ara-hero-sub {
+    font-size: 16px;
+    margin-top: 8px;
   }
 
   .ara-call-band h2 {
