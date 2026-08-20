@@ -210,10 +210,10 @@ export function ContactStep() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
         >
           {isSubmitting ? (
-            <>
+            <span className="btn-busy">
               <span className="loading-spinner" />
               Processing...
-            </>
+            </span>
           ) : (
             '→'
           )}

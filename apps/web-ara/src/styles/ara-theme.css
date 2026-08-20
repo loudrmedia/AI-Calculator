@@ -64,13 +64,36 @@ body {
 /* ---------- Hero: headline left, funnel card right ---------- */
 
 /* The card is held at a fixed width so it keeps its proportions on wide
-   monitors and the headline absorbs the remaining space instead. */
+   monitors and the headline absorbs the remaining space instead.
+   
+   The awards sit in the left column under the headline, which is what keeps
+   the two columns roughly the same height. Placing them after the form
+   instead leaves the headline alone in a much shorter column, and any
+   vertical centring then drops it into the middle of a tall row with a large
+   gap above it. */
 .ara-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 430px;
-  gap: 56px;
-  align-items: center;
+  grid-template-areas:
+    'copy form'
+    'awards form';
+  grid-template-rows: auto 1fr;
+  column-gap: 56px;
+  row-gap: 0;
+  align-items: start;
   padding: 44px 0 28px;
+}
+
+.ara-hero-copy {
+  grid-area: copy;
+}
+
+.ara-hero-form {
+  grid-area: form;
+}
+
+.ara-hero .ara-awards {
+  grid-area: awards;
 }
 
 .ara-prefer-call {
@@ -316,29 +339,44 @@ body {
   white-space: nowrap;
 }
 
+/* The arrow sits directly on the gold strip, so it has to be navy — gold on
+   gold reads as an empty bar. */
 .button-row .btn-primary {
   background: transparent;
-  color: var(--gold);
+  color: var(--navy);
   border: none;
   box-shadow: none;
-  font-size: 24px;
-  padding: 8px 12px;
+  font-size: 28px;
+  line-height: 1;
+  padding: 4px 10px;
   text-transform: none;
   letter-spacing: 0;
-  min-width: 40px;
+  min-width: 44px;
 }
 
 .button-row .btn-primary:hover:not(:disabled) {
   background: transparent;
-  color: var(--gold-bright);
-  transform: none;
+  color: var(--navy-deep);
+  transform: translateX(2px);
   box-shadow: none;
 }
 
 .button-row .btn-primary:disabled {
   background: transparent;
-  color: rgba(224, 175, 52, 0.3);
+  color: rgba(27, 38, 63, 0.35);
   box-shadow: none;
+}
+
+/* The button is sized for a single arrow glyph, so the submitting state has
+   to drop back to label-sized text. */
+.button-row .btn-primary .btn-busy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .button-row .btn-secondary {
@@ -448,7 +486,7 @@ body {
 
 .ara-settlement-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
 
@@ -518,7 +556,7 @@ body {
 
 .ara-practice-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 28px 16px;
 }
 
@@ -1027,14 +1065,25 @@ body {
 /* The hero drops to one column well before the other bands do: below this the
    headline column gets too narrow to hold a 40px line. */
 @media (max-width: 1000px) {
+  /* Stacked, with the form directly under the headline so the first question
+     is reachable without scrolling past the awards. */
   .ara-hero {
     grid-template-columns: 1fr;
-    gap: 28px;
+    grid-template-areas:
+      'copy'
+      'form'
+      'awards';
+    grid-template-rows: auto;
+    row-gap: 28px;
     padding: 24px 0 32px;
   }
 
   .ara-hero-copy {
     padding-top: 0;
+  }
+
+  .ara-hero .ara-awards {
+    margin-top: 0;
   }
 
   .ara-hero-copy h1 {
@@ -1080,12 +1129,44 @@ body {
     padding-top: 72px;
   }
 
+  /* Two and three across on a phone, so the type has to come down with them
+     to keep the amounts and the longer labels on their own lines. */
   .ara-settlement-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .ara-settlement-card {
+    padding: 14px 8px;
+  }
+
+  .ara-settlement-label {
+    font-size: 10px;
+    letter-spacing: 0.4px;
+  }
+
+  .ara-settlement-amount {
+    font-size: 20px;
+    margin: 4px 0 6px;
+  }
+
+  .ara-settlement-desc {
+    font-size: 10px;
+    line-height: 1.3;
   }
 
   .ara-practice-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 10px;
+  }
+
+  .ara-practice-item img {
+    height: 34px;
+  }
+
+  .ara-practice-item span {
+    font-size: 9px;
+    letter-spacing: 0.2px;
   }
 
   .ara-hero-copy h1 {
@@ -1109,6 +1190,14 @@ body {
     min-width: 0;
     padding: 11px 14px;
     font-size: 12px;
+  }
+
+  /* Declared after .button-row .btn, which has equal specificity, so the
+     arrow keeps its own size instead of shrinking to the Back button's. */
+  .button-row .btn-primary {
+    font-size: 26px;
+    padding: 4px 10px;
+    min-width: 40px;
   }
 
   .ara-hero-form .card,

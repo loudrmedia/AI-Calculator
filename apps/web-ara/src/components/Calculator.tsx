@@ -124,14 +124,6 @@ export function Calculator() {
     </div>
   );
 
-  const awardsImage = (
-    <img
-      className="ara-awards"
-      src="/ara/awards.png"
-      alt="10 Best Attorney Client Satisfaction, Best Lawyers Law Firm of the Year 2020, Top 25 Motor Vehicle Trial Lawyers"
-    />
-  );
-
   return (
     <div className="page-wrapper">
       <Navbar />
@@ -150,8 +142,17 @@ export function Calculator() {
 
             <div className="ara-hero-form" ref={funnelRef}>
               {funnelCard}
-              {awardsImage}
             </div>
+
+            {/* A direct child of the hero grid rather than nested in either
+                column, so the layout can place it per breakpoint: beneath the
+                headline on desktop, where it balances the two columns, and
+                after the form on mobile, so the questions stay near the top. */}
+            <img
+              className="ara-awards"
+              src="/ara/awards.png"
+              alt="10 Best Attorney Client Satisfaction, Best Lawyers Law Firm of the Year 2020, Top 25 Motor Vehicle Trial Lawyers"
+            />
           </div>
 
           <p className="ara-prefer-call">

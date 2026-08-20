@@ -7,7 +7,7 @@ const SETTLEMENTS: { amount: string; description: string }[] = [
   { amount: '$1,400,000', description: 'Wrongful death settlement' },
   { amount: '$1,250,000', description: 'Motorcycle accident settlement' },
   { amount: '$600,000', description: 'Truck accident injury settlement' },
-  { amount: '$300,000', description: 'Pedestrian accident with disputed liabilty' },
+  { amount: '$300,000', description: 'Pedestrian accident with disputed liability' },
   { amount: '$150,000', description: 'Car accident neck injury settlement' },
   { amount: '$90,000', description: 'Slip and fall injury settlement' },
   { amount: '$70,000', description: 'Rear-end collision settlement' },
