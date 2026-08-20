@@ -4,12 +4,15 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: 'Free AI Case Calculator | Estimate Your Claim Value',
-  description: 'Instantly determine the potential value of your personal injury claim. Get a free, no-obligation estimate based on your accident details.',
-  keywords: 'car accident calculator, personal injury estimate, claim value calculator, accident settlement calculator',
+  title: 'Free AI Case Calculator | Estimate Your California Claim Value',
+  description:
+    'See what your California accident claim could be worth in 30 seconds. Free, no-obligation estimate based on published claim data.',
+  keywords:
+    'california car accident calculator, personal injury estimate, claim value calculator, accident settlement calculator',
   openGraph: {
-    title: 'Free AI Case Calculator',
-    description: 'Instantly determine the potential value of your personal injury claim.',
+    title: 'Free AI Case Calculator | California Accident Claims',
+    description:
+      'See what your California accident claim could be worth in 30 seconds.',
     type: 'website',
   },
 };

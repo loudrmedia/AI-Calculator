@@ -132,11 +132,14 @@ export function Calculator() {
         <div className="container">
           <div className="ara-hero">
             <div className="ara-hero-copy">
+              {/* Problem, then outcome, then proof — the structure that tests
+                  best on legal PPC pages, and the same promise the other four
+                  markets lead with. */}
               <h1>
-                <span className="ara-hero-alert">Don&apos;t Waste Time!</span>
-                <span>Average Payout for a California Accident is</span>
-                <span className="ara-hero-amount">$20,000 - $250,000.</span>
-                <span>Get your case assessed quickly.</span>
+                <span className="ara-hero-alert">Injured in a California Accident?</span>
+                <span>See What Your Case Is Worth in 30 Seconds</span>
+                <span className="ara-hero-amount">$20,000 - $250,000</span>
+                <span>average payout</span>
               </h1>
             </div>
 
