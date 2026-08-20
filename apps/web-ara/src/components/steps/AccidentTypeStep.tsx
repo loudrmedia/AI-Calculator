@@ -5,7 +5,7 @@ import { useFunnel } from '../../lib/funnel-context';
 import { AccidentType } from '../../lib/types';
 
 const ACCIDENT_TYPES: { value: AccidentType; label: string; badge?: string }[] = [
-  { value: 'car_accident', label: 'Car Accident', badge: 'Most common' },
+  { value: 'car_accident', label: 'Car Accident' },
   { value: 'motorcycle_accident', label: 'Motorcycle Accident' },
   { value: 'truck_accident', label: 'Truck Accident' },
   { value: 'bicycle_accident', label: 'Bicycle Accident' },
@@ -76,7 +76,7 @@ export function AccidentTypeStep() {
           onClick={handleContinue}
           disabled={!selected}
         >
-          Continue »
+          →
         </button>
       </div>
     </div>

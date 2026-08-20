@@ -57,7 +57,7 @@ export function ZipCodeStep() {
           ← Back
         </button>
         <button className="btn btn-primary" onClick={handleContinue}>
-          Continue »
+          →
         </button>
       </div>
     </div>

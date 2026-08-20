@@ -115,12 +115,14 @@ export function Calculator() {
       <div key={state.currentStep} className="step-content">
         {renderStep()}
       </div>
+    </div>
+  );
 
-      <div className="trust-badge-row">
-        <span className="trust-badge">256-bit Encrypted</span>
-        <span className="trust-badge-divider">•</span>
-        <span className="trust-badge">Never Shared Without Consent</span>
-      </div>
+  const trustBadges = (
+    <div className="trust-badge-row">
+      <span className="trust-badge">256-bit Encrypted</span>
+      <span className="trust-badge-divider">•</span>
+      <span className="trust-badge">Never Shared Without Consent</span>
     </div>
   );
 
@@ -147,6 +149,7 @@ export function Calculator() {
 
             <div className="ara-hero-form" ref={funnelRef}>
               {funnelCard}
+              {trustBadges}
             </div>
           </div>
 
