@@ -81,7 +81,7 @@ curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_HOOK_ID/ \
   "qualification_status": "Qualified | Disqualified",
   "disqualification_reason": "string (empty when Qualified; '; '-joined when multiple)",
   
-  "accident_type": "car_accident | motorcycle_accident | truck_accident | bicycle_accident | other",
+  "accident_type": "car_accident | motorcycle_accident | truck_accident | bicycle_accident | pedestrian_accident | other",
   "injuries": "string (comma-separated list or 'none')",
   "injury_severity": "none | soft_tissue | substantial | catastrophic",
   "fault_status": "not_at_fault | partial_fault | at_fault",
