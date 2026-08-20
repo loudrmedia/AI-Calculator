@@ -7,22 +7,24 @@ import { InjurySelection } from '../../lib/types';
 type InjuryTier = 'minor' | 'serious' | 'severe';
 
 // One tap answers the question. The summary spells out what each tier covers so
-// the claimant can self-select without a second panel of checkboxes.
+// the claimant can self-select without a second panel of checkboxes. Each one
+// has to hold a single line on the narrowest phone, so keep them to roughly
+// this length — the styling clips rather than wraps.
 const TIER_OPTIONS: { value: InjuryTier; label: string; summary: string }[] = [
   {
     value: 'minor',
     label: 'Minor Injuries',
-    summary: 'Body aches and pain, cuts, scrapes or bruises',
+    summary: 'Aches, cuts, scrapes or bruises',
   },
   {
     value: 'serious',
     label: 'Serious Injuries',
-    summary: 'Broken or fractured bones, internal bleeding, scarring, memory loss',
+    summary: 'Broken bones, internal bleeding',
   },
   {
     value: 'severe',
     label: 'Severe / Life-Changing',
-    summary: 'Surgery, brain injury, organ loss, coma, paralysis, amputation',
+    summary: 'Surgery, brain injury, paralysis',
   },
 ];
 
@@ -122,15 +124,16 @@ export function InjuriesStep() {
       </div>
 
       <div className="button-row">
-        <button className="btn btn-secondary" onClick={handleBack}>
-          ← Back
+        <button className="btn btn-secondary" onClick={handleBack} aria-label="Back">
+          «
         </button>
         <button
           className="btn btn-primary"
           onClick={handleContinue}
           disabled={!hasSelection}
+          aria-label="Continue"
         >
-          →
+          »
         </button>
       </div>
     </div>

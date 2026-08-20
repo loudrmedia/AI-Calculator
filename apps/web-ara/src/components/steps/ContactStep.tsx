@@ -200,13 +200,19 @@ export function ContactStep() {
       </div>
 
       <div className="button-row">
-        <button className="btn btn-secondary" onClick={handleBack} disabled={isSubmitting}>
-          ← Back
+        <button
+          className="btn btn-secondary"
+          onClick={handleBack}
+          disabled={isSubmitting}
+          aria-label="Back"
+        >
+          «
         </button>
         <button
           className="btn btn-primary"
           onClick={handleSubmit}
           disabled={isSubmitting}
+          aria-label="Submit"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
         >
           {isSubmitting ? (
@@ -215,7 +221,7 @@ export function ContactStep() {
               Processing...
             </span>
           ) : (
-            '→'
+            '»'
           )}
         </button>
       </div>

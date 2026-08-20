@@ -8,12 +8,13 @@
 
 /* Funnel option buttons are the one control users touch on every step, so their
    colour lives here on its own. Swap these values to retheme the whole
-   question flow without touching anything else. Navy keeps gold free to mean
-   "advance" in the action bar. */
+   question flow without touching anything else. Because the options and the
+   action bar are both gold, the selected state inverts to navy rather than
+   filling with gold. */
 :root {
-  --option-bg: #22304e;
-  --option-bg-hover: #2e3f65;
-  --option-text: #ffffff;
+  --option-bg: #e0af34;
+  --option-bg-hover: #f0bd3f;
+  --option-text: #1b263f;
 }
 
 html,
@@ -88,8 +89,16 @@ body {
   grid-area: copy;
 }
 
+/* minmax(0, …) on the tracks and min-width:0 on the items stop a wide piece of
+   content inside the card from forcing the whole grid — and with it the page —
+   wider than the viewport. */
 .ara-hero-form {
   grid-area: form;
+  min-width: 0;
+}
+
+.ara-hero-copy {
+  min-width: 0;
 }
 
 .ara-hero .ara-awards {
@@ -176,19 +185,25 @@ body {
 .options-grid {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
 }
 
+/* min-width:0 is load-bearing: without it a flex item refuses to shrink below
+   its content, so any non-wrapping label widens the card, the hero track and
+   ultimately the page instead of being clipped. */
 .option-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   width: 100%;
-  min-height: 46px;
-  padding: 12px 16px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 38px;
+  padding: 9px 14px;
   background: var(--option-bg);
-  border: 1px solid transparent;
+  border: 1px solid var(--gold-dark);
   border-radius: 5px;
   color: var(--option-text);
   font-family: 'Open Sans', var(--font-sans);
@@ -206,12 +221,12 @@ body {
   transform: none;
 }
 
-/* Gold marks the option you actually chose, so the choice reads instantly
-   against the navy stack. */
+/* Navy marks the option you actually chose, so the choice reads instantly
+   against the gold stack. */
 .option-button.selected {
-  background: var(--gold);
-  border-color: var(--gold-dark);
-  color: var(--navy);
+  background: var(--navy);
+  border-color: var(--navy-deep);
+  color: #ffffff;
 }
 
 .option-button.selected::after {
@@ -228,25 +243,33 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 3px;
-  padding: 11px 16px;
+  gap: 1px;
+  padding: 8px 14px;
   text-align: left;
 }
 
 .injury-tier-label {
   font-weight: 700;
   line-height: 1.25;
+  max-width: 100%;
 }
 
+/* The summary is written short enough to sit on one line; it is held to one
+   line here and clipped rather than allowed to widen the card. */
 .injury-tier-summary {
   font-size: 12px;
   font-weight: 400;
   line-height: 1.35;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(27, 38, 63, 0.72);
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .option-button.injury-tier.selected .injury-tier-summary {
-  color: rgba(27, 38, 63, 0.75);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .option-highlighted {
@@ -261,8 +284,8 @@ body {
   right: 10px;
   bottom: auto;
   transform: translateY(-50%);
-  background: var(--gold);
-  color: var(--navy);
+  background: var(--navy);
+  color: #ffffff;
   font-size: 10px;
   font-weight: 800;
   padding: 3px 8px;
@@ -272,10 +295,10 @@ body {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* On a gold (selected) button the gold pill would vanish, so it inverts. */
+/* On a navy (selected) button the navy pill would vanish, so it inverts. */
 .option-button.selected .option-badge {
-  background: var(--navy);
-  color: #ffffff;
+  background: var(--gold);
+  color: var(--navy);
   box-shadow: none;
 }
 
@@ -339,19 +362,20 @@ body {
   white-space: nowrap;
 }
 
-/* The arrow sits directly on the gold strip, so it has to be navy — gold on
-   gold reads as an empty bar. */
-.button-row .btn-primary {
+/* Both chevrons sit directly on the gold strip, so they have to be navy —
+   gold on gold reads as an empty bar. */
+.button-row .btn-primary,
+.button-row .btn-secondary {
   background: transparent;
   color: var(--navy);
   border: none;
   box-shadow: none;
-  font-size: 28px;
+  font-size: 34px;
   line-height: 1;
-  padding: 4px 10px;
+  padding: 0 12px;
   text-transform: none;
   letter-spacing: 0;
-  min-width: 44px;
+  min-width: 48px;
 }
 
 .button-row .btn-primary:hover:not(:disabled) {
@@ -359,6 +383,12 @@ body {
   color: var(--navy-deep);
   transform: translateX(2px);
   box-shadow: none;
+}
+
+.button-row .btn-secondary:hover:not(:disabled) {
+  background: transparent;
+  color: var(--navy-deep);
+  transform: translateX(-2px);
 }
 
 .button-row .btn-primary:disabled {
@@ -377,17 +407,6 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.button-row .btn-secondary {
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--navy);
-  border: 1px solid rgba(27, 38, 63, 0.25);
-  box-shadow: none;
-}
-
-.button-row .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.9);
 }
 
 .skip-link {
@@ -1068,7 +1087,7 @@ body {
   /* Stacked, with the form directly under the headline so the first question
      is reachable without scrolling past the awards. */
   .ara-hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'copy'
       'form'
@@ -1105,6 +1124,15 @@ body {
 
   .ara-settlement-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Nine cards in two columns leave an orphan on the last row. Leading with
+     the largest settlement across the top absorbs it and puts the best number
+     first. */
+  .ara-settlement-card:first-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 58%);
   }
 
   .ara-section-title {
@@ -1193,11 +1221,12 @@ body {
   }
 
   /* Declared after .button-row .btn, which has equal specificity, so the
-     arrow keeps its own size instead of shrinking to the Back button's. */
-  .button-row .btn-primary {
-    font-size: 26px;
-    padding: 4px 10px;
-    min-width: 40px;
+     chevrons keep their own size instead of shrinking to the label size. */
+  .button-row .btn-primary,
+  .button-row .btn-secondary {
+    font-size: 32px;
+    padding: 0 10px;
+    min-width: 44px;
   }
 
   .ara-hero-form .card,
@@ -1206,10 +1235,7 @@ body {
   }
 
   .injury-tier-summary {
-    font-size: 10px;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 11px;
+    line-height: 1.25;
   }
 }

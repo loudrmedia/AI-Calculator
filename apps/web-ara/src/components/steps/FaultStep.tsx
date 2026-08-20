@@ -72,15 +72,16 @@ export function FaultStep() {
       </div>
 
       <div className="button-row">
-        <button className="btn btn-secondary" onClick={handleBack}>
-          ← Back
+        <button className="btn btn-secondary" onClick={handleBack} aria-label="Back">
+          «
         </button>
         <button
           className="btn btn-primary"
           onClick={handleContinue}
           disabled={!selected}
+          aria-label="Continue"
         >
-          →
+          »
         </button>
       </div>
     </div>

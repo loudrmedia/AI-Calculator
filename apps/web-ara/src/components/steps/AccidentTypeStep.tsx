@@ -75,8 +75,9 @@ export function AccidentTypeStep() {
           className="btn btn-primary"
           onClick={handleContinue}
           disabled={!selected}
+          aria-label="Continue"
         >
-          →
+          »
         </button>
       </div>
     </div>
