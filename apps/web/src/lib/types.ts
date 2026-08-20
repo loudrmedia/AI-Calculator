@@ -7,6 +7,7 @@ export type AccidentType =
   | 'motorcycle_accident'
   | 'truck_accident'
   | 'bicycle_accident'
+  | 'pedestrian_accident'
   | 'other';
 
 export type InjuryCategory = 

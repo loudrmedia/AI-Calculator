@@ -9,6 +9,7 @@ const ACCIDENT_TYPES: { value: AccidentType; label: string; icon: string; badge?
   { value: 'motorcycle_accident', label: 'Motorcycle Accident', icon: '🏍️' },
   { value: 'truck_accident', label: 'Truck Accident', icon: '🚛' },
   { value: 'bicycle_accident', label: 'Bicycle Accident', icon: '🚲' },
+  { value: 'pedestrian_accident', label: 'Pedestrian Accident', icon: '🚶' },
   { value: 'other', label: 'Other', icon: '📋' },
 ];
 

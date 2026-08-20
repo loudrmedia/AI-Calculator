@@ -9,6 +9,7 @@ const ACCIDENT_TYPES: { value: AccidentType; label: string; badge?: string }[] =
   { value: 'motorcycle_accident', label: 'Motorcycle Accident' },
   { value: 'truck_accident', label: 'Truck Accident' },
   { value: 'bicycle_accident', label: 'Bicycle Accident' },
+  { value: 'pedestrian_accident', label: 'Pedestrian Accident' },
   { value: 'other', label: 'Other' },
 ];
 

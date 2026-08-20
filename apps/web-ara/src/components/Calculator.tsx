@@ -138,10 +138,15 @@ export function Calculator() {
               <h1>
                 <span className="ara-hero-alert">Free AI Case Calculator</span>
                 <span>Injured in a California Accident?</span>
-                <span>See What Your Case Is Worth in 30 Seconds</span>
+                <span>See What Your Case Could Be Worth</span>
+              </h1>
+
+              <p className="ara-hero-subtitle">Only takes 30 seconds</p>
+
+              <p className="ara-hero-proof">
                 <span className="ara-hero-amount">$20,000 - $250,000</span>
                 <span>average payout</span>
-              </h1>
+              </p>
             </div>
 
             <div className="ara-hero-form" ref={funnelRef}>
