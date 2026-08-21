@@ -1,22 +1,11 @@
 'use client';
 
 import React from 'react';
-import { CONFIG } from '../lib/config';
-
-const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
-const PHONE_LINK = CONFIG.PHONE_LINK;
 
 export function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-container">
-        <div className="footer-cta">
-          <p>Call Now and Speak Directly with a Case Analyst Today.</p>
-          <a href={PHONE_LINK} className="ara-call-btn">
-            {PHONE_NUMBER}
-          </a>
-        </div>
-
         <div className="ara-footer-disclaimer">
           <p>
             Dramatized scenes, symbols, figures, or testimonials are illustrative, not based on

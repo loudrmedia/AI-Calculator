@@ -152,23 +152,26 @@ export function ResultsStep() {
                 : 'Here is your case estimate'}
             </h2>
 
-            {/* Shown as a range rather than a single figure: the estimate is a
-                band, and quoting one number reads as a promise of that amount. */}
-            <div className="hero-value-card">
-              <div className="hero-value-label">Your Estimated Case Value With an Attorney</div>
-              <div className="hero-value-amount">
-                {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
+            {/* Both figures are ranges rather than single numbers: the estimate
+                is a band, and quoting one number reads as a promise of that
+                amount. The representation figure leads on size and colour so
+                the comparison is legible at a glance. */}
+            <div className="ara-value-grid">
+              <div className="ara-value-card ara-value-card--primary">
+                <div className="ara-value-tag">Your Estimated Case Value</div>
+                <div className="ara-value-amount">
+                  {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
+                </div>
+                <div className="ara-value-note">Estimated range for claims like yours</div>
               </div>
-            </div>
 
-            <div className="results-section">
-              <h3>Without an Attorney</h3>
-
-              <div className="result-card">
-                <div className="result-label">Without Attorney</div>
-                <div className="result-sublabel">Estimated range</div>
-                <div className="result-value" style={{ fontSize: '24px', color: 'var(--danger)' }}>
+              <div className="ara-value-card ara-value-card--secondary">
+                <div className="ara-value-tag">Typical Insurance Offer</div>
+                <div className="ara-value-amount">
                   {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
+                </div>
+                <div className="ara-value-note">
+                  What insurers commonly pay when a claim is settled directly
                 </div>
               </div>
             </div>

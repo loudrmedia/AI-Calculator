@@ -23,6 +23,18 @@ body {
   color: var(--navy);
 }
 
+/* Chromium refuses to start a text selection inside a form control, so the
+   option labels, the injury summaries and the FAQ questions could not be
+   highlighted or copied even though nothing in the CSS disabled it. The arrow
+   buttons are left alone — there is no copy in them worth selecting, and
+   keeping them unselectable avoids a highlight flash on double tap. */
+.option-button,
+.option-button span,
+.faq-question {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 /* ---------- Navbar: white bar, centred logo ---------- */
 
 .navbar {
@@ -762,9 +774,13 @@ body {
    Footer
    ============================================================ */
 
+/* The base sheet leaves 48px above the footer. With the call band now sitting
+   directly on top of it, that gap read as a white stripe between two navy
+   sections. */
 .site-footer {
   background: var(--navy);
   border-top: none;
+  margin-top: 0;
 }
 
 .footer-cta p {
@@ -964,54 +980,112 @@ body {
   background: transparent;
 }
 
-.ara-results-page .hero-value-card {
-  background: linear-gradient(135deg, #16203a 0%, #1b263f 100%);
+/* Estimate comparison. The results column is held at reading width, which is
+   too narrow to sit two currency ranges side by side without the figures
+   colliding with the card edges, so they stack: the claim value takes the full
+   width and the insurer figure sits beneath it, smaller and unframed. Both
+   figures are ranges, so the hierarchy comes from size and colour rather than
+   from one number being longer than the other. */
+.ara-value-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.ara-value-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 22px 24px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.ara-value-card--primary {
+  background: rgba(224, 175, 52, 0.09);
   border: 2px solid var(--gold);
-  border-radius: 8px;
 }
 
-.ara-results-page .hero-value-label {
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  font-weight: 700;
+.ara-value-card--secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 18px 20px 16px;
 }
 
-/* A range string is far wider than the single figure this was sized for. */
-.ara-results-page .hero-value-amount {
-  color: var(--green);
+.ara-value-tag {
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 12px;
   font-weight: 800;
-  font-size: 34px;
-  white-space: nowrap;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.ara-value-card--primary .ara-value-tag {
+  color: var(--gold);
+}
+
+.ara-value-card--secondary .ara-value-tag {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* Deliberately allowed to wrap. A catastrophic-injury range runs to seven
+   figures on both sides, and nowrap on a phone would push the whole page wide
+   rather than break at the dash. */
+.ara-value-amount {
+  font-family: 'Open Sans', var(--font-sans);
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.ara-value-card--primary .ara-value-amount {
+  font-size: 40px;
+  color: var(--green);
+}
+
+.ara-value-card--secondary .ara-value-amount {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.ara-value-note {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 420px;
 }
 
 @media (max-width: 560px) {
-  .ara-results-page .hero-value-amount {
-    font-size: 24px;
+  .ara-value-card {
+    padding: 22px 16px 20px;
+  }
+
+  .ara-value-card--secondary {
+    padding: 16px 16px 14px;
+  }
+
+  .ara-value-card--primary .ara-value-amount {
+    font-size: 30px;
+  }
+
+  .ara-value-card--secondary .ara-value-amount {
+    font-size: 21px;
   }
 }
 
-.ara-results-page .results-section {
-  background: transparent;
+@media (max-width: 380px) {
+  .ara-value-card--primary .ara-value-amount {
+    font-size: 26px;
+  }
 }
 
-.ara-results-page .results-section h3 {
-  color: #ffffff;
-}
-
+/* Still used by the "no compensable claim" outcome. */
 .ara-results-page .result-card {
   background: #11182b;
   border: 1px solid #2c3a5c;
   border-radius: 8px;
-}
-
-.ara-results-page .result-label {
-  color: #ffffff;
-}
-
-.ara-results-page .result-sublabel,
-.ara-results-page .result-detail {
-  color: rgba(255, 255, 255, 0.65);
 }
 
 .ara-results-page .next-steps h3 {
