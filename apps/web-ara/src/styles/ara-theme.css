@@ -866,10 +866,29 @@ body {
   background: var(--ara-black);
 }
 
-/* The estimate now opens the page, so it carries the top spacing the "check
-   your phone" hero used to provide. */
+/* The estimate opens the page on a light panel rather than the black canvas.
+   It is the one thing the visitor came for, so it gets lifted off the
+   background and put in the brand's own palette; everything below it stays
+   dark and reads as follow-up. */
 .ara-estimate-first {
-  padding-top: 38px;
+  margin-top: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px 22px 24px;
+}
+
+.ara-results-page .ara-estimate-first .ara-estimate-heading {
+  color: var(--navy);
+}
+
+/* The "no compensable claim" outcome renders inside the same panel. */
+.ara-estimate-first .result-card {
+  background: var(--gray-50);
+  border: 1px solid #e2e7ef;
+}
+
+.ara-estimate-first .result-card p {
+  color: var(--navy);
 }
 
 /* Follows the estimate and its divider, so it no longer needs to clear the
@@ -1005,13 +1024,13 @@ body {
 }
 
 .ara-value-card--primary {
-  background: rgba(224, 175, 52, 0.09);
+  background: rgba(224, 175, 52, 0.12);
   border: 2px solid var(--gold);
 }
 
 .ara-value-card--secondary {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: var(--gray-50);
+  border: 1px solid #e2e7ef;
   padding: 18px 20px 16px;
 }
 
@@ -1024,11 +1043,11 @@ body {
 }
 
 .ara-value-card--primary .ara-value-tag {
-  color: var(--gold);
+  color: var(--gold-dark);
 }
 
 .ara-value-card--secondary .ara-value-tag {
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--gray-500);
 }
 
 /* Deliberately allowed to wrap. A catastrophic-injury range runs to seven
@@ -1040,20 +1059,22 @@ body {
   line-height: 1.12;
 }
 
+/* The brighter --green fails contrast against a light panel at this weight,
+   so the figure uses the darker tone. */
 .ara-value-card--primary .ara-value-amount {
   font-size: 40px;
-  color: var(--green);
+  color: var(--green-dark);
 }
 
 .ara-value-card--secondary .ara-value-amount {
   font-size: 24px;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--navy);
 }
 
 .ara-value-note {
   font-size: 12px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--gray-500);
   max-width: 420px;
 }
 

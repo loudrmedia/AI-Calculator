@@ -138,7 +138,7 @@ export function ResultsStep() {
       <div className="ara-estimate-first">
         {!hasInjuries && !state.inputs.hasPropertyDamage ? (
           <div className="result-card" style={{ textAlign: 'center' }}>
-            <p style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+            <p>
               Based on your selections (no injuries, no property damage), there may not be 
               a compensable claim. However, if you believe you have damages, we recommend 
               consulting with an attorney.
@@ -213,9 +213,9 @@ export function ResultsStep() {
       <hr className="ara-divider" />
 
       <div className="ara-results-cta">
-        <h2>Or...call us now to find out faster</h2>
+        <h2>Prefer to talk?</h2>
         <p className="ara-get-started">
-          <span className="ara-chevron">≫</span> Get Started <span className="ara-chevron">≪</span>
+          <span className="ara-chevron">≫</span> Call Us <span className="ara-chevron">≪</span>
         </p>
 
         <a href={PHONE_LINK} className="ara-call-btn call-pulse">
