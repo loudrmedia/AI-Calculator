@@ -668,7 +668,7 @@ body {
   border-radius: 0;
   box-shadow: none;
   margin-top: 0;
-  padding: 46px 16px 52px;
+  padding: 46px 16px 30px;
 }
 
 .faq-section > * {
@@ -701,6 +701,46 @@ body {
 
 .faq-icon {
   color: var(--gold-dark);
+}
+
+/* ============================================================
+   Back to top
+   ============================================================ */
+
+/* Shares the FAQ's white background and absorbs its bottom padding, so the
+   button reads as the end of that section rather than a band of its own. */
+.ara-back-to-top {
+  background: #ffffff;
+  padding: 0 16px 46px;
+  text-align: center;
+}
+
+.ara-back-to-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.ara-back-to-top-btn:hover {
+  background: var(--option-bg-hover);
+  transform: translateY(-2px);
+}
+
+.ara-back-to-top-arrow {
+  font-size: 17px;
+  line-height: 1;
 }
 
 /* ============================================================
