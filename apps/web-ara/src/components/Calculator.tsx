@@ -9,7 +9,7 @@ import { Footer } from './Footer';
 import { Settlements } from './Settlements';
 import { PracticeAreas } from './PracticeAreas';
 import { CallNowBand } from './CallNowBand';
-import { BackToTop } from './BackToTop';
+import { EstimateCta } from './EstimateCta';
 import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
 import { captureTrackingParams } from '../lib/tracking';
@@ -168,7 +168,7 @@ export function Calculator() {
         <PracticeAreas />
         <CallNowBand />
         <FAQ />
-        <BackToTop />
+        <EstimateCta targetRef={funnelRef} offset={NAVBAR_OFFSET} />
       </main>
 
       <Footer />

@@ -704,43 +704,53 @@ body {
 }
 
 /* ============================================================
-   Back to top
+   Closing CTA
    ============================================================ */
 
 /* Shares the FAQ's white background and absorbs its bottom padding, so the
-   button reads as the end of that section rather than a band of its own. */
-.ara-back-to-top {
+   button reads as the close of that section rather than a band of its own. */
+.ara-bottom-cta {
   background: #ffffff;
   padding: 0 16px 46px;
   text-align: center;
 }
 
-.ara-back-to-top-btn {
+.ara-bottom-cta-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 12px 28px;
+  max-width: 100%;
+  padding: 16px 34px;
   border: 1px solid var(--gold-dark);
   border-radius: 999px;
   background: var(--gold);
   color: var(--navy);
   font-family: 'Open Sans', var(--font-sans);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 4px 14px rgba(27, 38, 63, 0.16);
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.ara-back-to-top-btn:hover {
+.ara-bottom-cta-btn:hover {
   background: var(--option-bg-hover);
   transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(27, 38, 63, 0.22);
 }
 
-.ara-back-to-top-arrow {
-  font-size: 17px;
+.ara-bottom-cta-arrow {
+  font-size: 22px;
   line-height: 1;
+}
+
+.ara-bottom-cta-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5b6780;
 }
 
 /* ============================================================
