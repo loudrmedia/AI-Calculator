@@ -5,7 +5,6 @@ import { useFunnel } from '../../lib/funnel-context';
 import { formatRange } from '../../lib/calculator';
 import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
-import { OfferChecker } from '../OfferChecker';
 import { CONFIG } from '../../lib/config';
 import { getTrackingParams, trackLeadConversion } from '../../lib/tracking';
 
@@ -134,6 +133,51 @@ export function ResultsStep() {
 
   return (
     <div style={{ textAlign: 'center' }}>
+      {/* The estimate opens the page. It is what the visitor came for and what
+          they were promised, so it lands before the call expectation below. */}
+      <div className="ara-estimate-first">
+        {!hasInjuries && !state.inputs.hasPropertyDamage ? (
+          <div className="result-card" style={{ textAlign: 'center' }}>
+            <p style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+              Based on your selections (no injuries, no property damage), there may not be 
+              a compensable claim. However, if you believe you have damages, we recommend 
+              consulting with an attorney.
+            </p>
+          </div>
+        ) : (
+          <>
+            <h2 className="ara-estimate-heading">
+              {state.contact.firstName
+                ? `${state.contact.firstName}, here is your case estimate`
+                : 'Here is your case estimate'}
+            </h2>
+
+            {/* Shown as a range rather than a single figure: the estimate is a
+                band, and quoting one number reads as a promise of that amount. */}
+            <div className="hero-value-card">
+              <div className="hero-value-label">Your Estimated Case Value With an Attorney</div>
+              <div className="hero-value-amount">
+                {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
+              </div>
+            </div>
+
+            <div className="results-section">
+              <h3>Without an Attorney</h3>
+
+              <div className="result-card">
+                <div className="result-label">Without Attorney</div>
+                <div className="result-sublabel">Estimated range</div>
+                <div className="result-value" style={{ fontSize: '24px', color: 'var(--danger)' }}>
+                  {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <hr className="ara-divider" />
+
       {/* ARA "check your phone" moment — the lead is already submitted at this point */}
       <div className="ara-results-hero">
         <h1>Check your phone!</h1>
@@ -163,52 +207,6 @@ export function ResultsStep() {
         </div>
       )}
 
-      {!hasInjuries && !state.inputs.hasPropertyDamage ? (
-        <div className="result-card" style={{ textAlign: 'center', marginTop: '28px' }}>
-          <p style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
-            Based on your selections (no injuries, no property damage), there may not be 
-            a compensable claim. However, if you believe you have damages, we recommend 
-            consulting with an attorney.
-          </p>
-        </div>
-      ) : (
-        <>
-          <hr className="ara-divider" />
-
-          <h2 className="ara-estimate-heading">
-            {state.contact.firstName
-              ? `${state.contact.firstName}, here is your case estimate`
-              : 'Here is your case estimate'}
-          </h2>
-
-          {/* Hero value — the payoff, front and center. Shown as a range rather
-              than a single figure: the estimate is a band, and quoting one
-              number reads as a promise of that exact amount. */}
-          <div className="hero-value-card">
-            <div className="hero-value-label">Your Estimated Case Value With an Attorney</div>
-            <div className="hero-value-amount">
-              {formatRange(result.withAttorney.grossLow, result.withAttorney.grossHigh)}
-            </div>
-          </div>
-
-          <div className="results-section">
-            <h3>Without an Attorney</h3>
-
-            <div className="result-card">
-              <div className="result-label">Without Attorney</div>
-              <div className="result-sublabel">Estimated range</div>
-              <div className="result-value" style={{ fontSize: '24px', color: 'var(--danger)' }}>
-                {formatRange(result.withoutAttorney.low, result.withoutAttorney.high)}
-              </div>
-            </div>
-
-          </div>
-
-          <OfferChecker result={result} />
-        </>
-      )}
-
-      {/* Primary CTA — directly after the value, before any legal content */}
       <hr className="ara-divider" />
 
       <div className="ara-results-cta">

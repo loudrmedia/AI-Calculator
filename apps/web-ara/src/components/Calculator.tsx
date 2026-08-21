@@ -166,8 +166,8 @@ export function Calculator() {
         <Settlements />
         <PracticeAreas />
         <CallNowBand />
-        <FAQ />
         <EstimateCta targetRef={funnelRef} offset={NAVBAR_OFFSET} />
+        <FAQ />
       </main>
 
       <Footer />
