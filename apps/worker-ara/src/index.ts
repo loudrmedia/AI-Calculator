@@ -111,6 +111,7 @@ const ACCIDENT_TYPE_LABELS: Record<string, string> = {
   motorcycle_accident: 'Motorcycle Accident',
   truck_accident: 'Truck Accident',
   bicycle_accident: 'Bicycle Accident',
+  pedestrian_accident: 'Pedestrian Accident',
   other: 'Other',
 };
 

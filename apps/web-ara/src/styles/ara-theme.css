@@ -145,10 +145,6 @@ body {
   display: block;
 }
 
-.ara-hero-alert {
-  color: var(--orange);
-}
-
 .ara-hero-sub {
   margin: 12px 0 0;
   font-family: 'Open Sans', var(--font-sans);

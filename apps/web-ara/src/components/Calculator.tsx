@@ -137,7 +137,6 @@ export function Calculator() {
                   best on legal PPC pages, and the same promise the other four
                   markets lead with. */}
               <h1>
-                <span className="ara-hero-alert">Free AI Case Calculator</span>
                 <span>Injured in a California Accident?</span>
                 <span>See What Your Case Could Be Worth</span>
               </h1>
