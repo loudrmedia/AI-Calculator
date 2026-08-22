@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { CallNowBand } from './CallNowBand';
 
 interface FAQItem {
   question: string;
@@ -124,6 +125,7 @@ export function FAQ() {
           </div>
         ))}
       </div>
+      <CallNowBand />
     </div>
   );
 }

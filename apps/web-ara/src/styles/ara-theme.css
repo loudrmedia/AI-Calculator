@@ -631,18 +631,20 @@ body {
    Call-now band
    ============================================================ */
 
+/* Lives inside the FAQ's white section, so it is a closing ask on the same
+   canvas as the questions rather than a navy band that reads as the footer. */
 .ara-call-band {
-  background: var(--navy);
-  padding: 44px 20px 50px;
+  background: #ffffff;
+  padding: 36px 0 0;
   text-align: center;
 }
 
 .ara-call-band h2 {
   font-family: 'Open Sans', var(--font-sans);
   font-weight: 800;
-  font-size: 27px;
-  color: #ffffff;
-  margin: 0 auto 24px;
+  font-size: 24px;
+  color: var(--navy);
+  margin: 0 auto 20px;
   max-width: 620px;
   line-height: 1.35;
 }
@@ -684,7 +686,7 @@ body {
   border-radius: 0;
   box-shadow: none;
   margin-top: 0;
-  padding: 40px 16px 52px;
+  padding: 40px 16px 46px;
 }
 
 .faq-section > * {

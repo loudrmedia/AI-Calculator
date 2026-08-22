@@ -8,7 +8,6 @@ import { FAQ } from './FAQ';
 import { Footer } from './Footer';
 import { Settlements } from './Settlements';
 import { PracticeAreas } from './PracticeAreas';
-import { CallNowBand } from './CallNowBand';
 import { EstimateCta } from './EstimateCta';
 import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
@@ -167,7 +166,6 @@ export function Calculator() {
         <PracticeAreas />
         <EstimateCta targetRef={funnelRef} offset={NAVBAR_OFFSET} />
         <FAQ />
-        <CallNowBand />
       </main>
 
       <Footer />
