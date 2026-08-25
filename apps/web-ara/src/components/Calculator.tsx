@@ -141,7 +141,6 @@ export function Calculator() {
                 </span>
                 <span>See What Your Case Could Be Worth</span>
               </h1>
-              <p className="ara-hero-sub">Only Takes 30 Seconds</p>
             </div>
 
             <div className="ara-hero-form" ref={funnelRef}>
