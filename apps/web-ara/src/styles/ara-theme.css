@@ -449,6 +449,16 @@ body {
   font-weight: 700;
 }
 
+.progress-nudge {
+  margin: 8px 0 0;
+  text-align: center;
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #5c6780;
+}
+
 .trust-badge-row {
   padding-bottom: 18px;
 }
