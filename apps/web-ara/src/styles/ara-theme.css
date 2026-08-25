@@ -179,25 +179,6 @@ body {
   margin: 24px auto 0;
 }
 
-.ara-trust-badges {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-}
-
-.ara-trust-seal {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 120px;
-}
-
-.ara-trust-seal svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 /* ---------- Funnel card ---------- */
 
 .ara-hero-form .card,

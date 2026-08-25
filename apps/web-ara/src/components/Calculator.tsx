@@ -9,7 +9,6 @@ import { Footer } from './Footer';
 import { Settlements } from './Settlements';
 import { PracticeAreas } from './PracticeAreas';
 import { EstimateCta } from './EstimateCta';
-import { TrustBadges } from './TrustBadges';
 import { ExitIntentPopup } from './ExitIntentPopup';
 import { CONFIG } from '../lib/config';
 import { captureTrackingParams } from '../lib/tracking';
@@ -151,7 +150,11 @@ export function Calculator() {
                 column, so the layout can place it per breakpoint: beneath the
                 headline on desktop, where it balances the two columns, and
                 after the form on mobile, so the questions stay near the top. */}
-            <TrustBadges />
+            <img
+              className="ara-awards"
+              src="/ara/awards.png"
+              alt="10 Best Attorney Client Satisfaction, Best Lawyers Law Firm of the Year 2020, Top 25 Motor Vehicle Trial Lawyers"
+            />
           </div>
 
           <p className="ara-prefer-call">
