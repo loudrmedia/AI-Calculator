@@ -140,22 +140,26 @@ body {
 
 .ara-hero-copy {
   padding-top: 24px;
-  text-align: left;
+  text-align: center;
 }
 
 .ara-hero-copy h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   margin: 0;
   font-family: 'Open Sans', var(--font-sans);
   font-weight: 800;
-  font-size: 34px;
-  line-height: 1.12;
+  font-size: 40px;
+  line-height: 1.08;
   color: var(--navy);
   letter-spacing: -0.5px;
-  text-wrap: balance;
 }
 
 .ara-hero-copy h1 span {
   display: block;
+  text-wrap: balance;
 }
 
 .ara-hero-sub {
@@ -1236,7 +1240,7 @@ body {
 
   .ara-hero-copy h1 {
     font-size: 28px;
-    line-height: 1.15;
+    gap: 2px;
   }
 
   .ara-hero-sub {
@@ -1329,8 +1333,8 @@ body {
   }
 
   .ara-hero-copy h1 {
-    font-size: 26px;
-    line-height: 1.15;
+    font-size: 28px;
+    gap: 2px;
   }
 
   .ara-hero-sub {
@@ -1381,6 +1385,6 @@ body {
    handsets, so it steps back down there. */
 @media (max-width: 380px) {
   .ara-hero-copy h1 {
-    font-size: 24px;
+    font-size: 25px;
   }
 }
