@@ -4,14 +4,16 @@ import React from 'react';
 import { useFunnel } from '../lib/funnel-context';
 import { FunnelStep } from '../lib/types';
 
-// One line under the bar, keyed to remaining work. Contact already has the
-// "estimate is ready" banner above the bar, so that step is left blank here.
+// Sits above the bar. Copy follows the goal-gradient pattern used on
+// converting multi-step forms: time on step one, remaining work in the
+// middle, and the payoff named on the last question. Contact already has
+// the "estimate is ready" banner, so that step is left blank here.
 const STEP_NUDGE: Partial<Record<FunnelStep, string>> = {
-  accident_type: 'Takes about 30 seconds.',
-  injuries: 'Almost halfway.',
-  fault: 'A couple more questions.',
-  timing: 'Your estimate is next.',
-  zip_code: 'Last question before we show your range.',
+  accident_type: 'Takes about 30 seconds',
+  injuries: "You're halfway there",
+  fault: 'Just a few more questions',
+  timing: 'Almost done',
+  zip_code: 'Last step — then your estimate',
 };
 
 export function ProgressBar() {
@@ -31,6 +33,7 @@ export function ProgressBar() {
 
   return (
     <div className="progress-bar">
+      {nudge && <p className="progress-nudge">{nudge}</p>}
       <div className="progress-track">
         <div
           className={`progress-fill ${isFirstStep ? 'progress-fill-init' : ''}`}
@@ -38,7 +41,6 @@ export function ProgressBar() {
         />
         <span className="progress-label">{displayProgress}%</span>
       </div>
-      {nudge && <p className="progress-nudge">{nudge}</p>}
     </div>
   );
 }

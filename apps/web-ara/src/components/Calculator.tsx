@@ -136,7 +136,9 @@ export function Calculator() {
                   best on legal PPC pages, and the same promise the other four
                   markets lead with. */}
               <h1>
-                <span>Injured in a California Accident?</span>
+                <span>
+                  Injured in a <span className="ara-hero-accent">California Accident</span>?
+                </span>
                 <span>See What Your Case Could Be Worth</span>
               </h1>
               <p className="ara-hero-sub">Only Takes 30 Seconds</p>

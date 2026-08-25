@@ -106,7 +106,6 @@ export function InjuriesStep() {
   return (
     <div>
       <h2 className="step-title">How badly were you injured?</h2>
-      <p className="step-subtitle">This is the biggest factor in your case value.</p>
 
       <div className="options-grid">
         {TIER_OPTIONS.map((option) => (
