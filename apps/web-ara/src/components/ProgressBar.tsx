@@ -8,7 +8,7 @@ import { FunnelStep } from '../lib/types';
 // "estimate is ready" banner above the bar, so that step is left blank here.
 const STEP_NUDGE: Partial<Record<FunnelStep, string>> = {
   accident_type: 'Takes about 30 seconds.',
-  injuries: 'Biggest factor in your estimate — almost halfway.',
+  injuries: 'Almost halfway.',
   fault: 'A couple more questions.',
   timing: 'Your estimate is next.',
   zip_code: 'Last question before we show your range.',
