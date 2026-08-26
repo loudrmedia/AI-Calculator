@@ -4,15 +4,14 @@ import React from 'react';
 import { useFunnel } from '../lib/funnel-context';
 import { FunnelStep } from '../lib/types';
 
-// Sits above the bar. Copy follows the goal-gradient pattern used on
-// converting multi-step forms: time on step one, remaining work in the
-// middle, and the payoff named on the last question. Contact already has
-// the "estimate is ready" banner, so that step is left blank here.
+// Sits above the bar. Each line matches the percentage that step actually
+// shows (20 / 36 / 52 / 68 / 84). Contact already has the "estimate is ready"
+// banner, so that step is left blank here.
 const STEP_NUDGE: Partial<Record<FunnelStep, string>> = {
   accident_type: 'Takes about 30 seconds',
-  injuries: "You're halfway there",
-  fault: 'Just a few more questions',
-  timing: 'Almost done',
+  injuries: 'Keep going',
+  fault: "You're halfway there",
+  timing: 'Almost there',
   zip_code: 'Last step — then your estimate',
 };
 

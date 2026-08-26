@@ -1042,8 +1042,8 @@ body {
 }
 
 .ara-value-card--secondary {
-  background: var(--gray-50);
-  border: 1px solid #e2e7ef;
+  background: #fef2f2;
+  border: 1px solid #f0b4b4;
   padding: 18px 20px 16px;
 }
 
@@ -1060,7 +1060,7 @@ body {
 }
 
 .ara-value-card--secondary .ara-value-tag {
-  color: var(--gray-500);
+  color: #c81e1e;
 }
 
 /* Deliberately allowed to wrap. A catastrophic-injury range runs to seven
@@ -1081,7 +1081,7 @@ body {
 
 .ara-value-card--secondary .ara-value-amount {
   font-size: 24px;
-  color: var(--navy);
+  color: #c81e1e;
 }
 
 .ara-value-note {
