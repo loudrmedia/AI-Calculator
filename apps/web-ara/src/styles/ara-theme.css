@@ -143,27 +143,81 @@ body {
   text-align: center;
 }
 
-.ara-hero-copy h1 {
-  display: flex;
-  flex-direction: column;
+.ara-hero-badge {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 7px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: #fff8e6;
+  color: var(--navy);
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.ara-hero-badge-icon {
+  display: flex;
+  color: var(--navy);
+}
+
+.ara-hero-copy h1 {
   margin: 0;
   font-family: 'Open Sans', var(--font-sans);
   font-weight: 800;
-  font-size: 40px;
-  line-height: 1.08;
+  font-size: 36px;
+  line-height: 1.18;
   color: var(--navy);
   letter-spacing: -0.5px;
-}
-
-.ara-hero-copy h1 span {
-  display: block;
+  text-wrap: balance;
 }
 
 .ara-hero-copy h1 .ara-hero-accent {
-  display: inline;
   color: #a50811;
+}
+
+.ara-hero-sub {
+  margin: 14px 0 0;
+  font-family: 'Open Sans', var(--font-sans);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #5c6780;
+}
+
+.ara-hero-underline {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+.ara-hero-points {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  color: #5c6780;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ara-hero-points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ara-hero-points svg {
+  flex-shrink: 0;
+  color: var(--gold-dark);
 }
 
 .ara-awards {
@@ -1228,7 +1282,6 @@ body {
 
   .ara-hero-copy h1 {
     font-size: 28px;
-    gap: 2px;
   }
 
   /* Stop the funnel card stretching the full width of a tablet. */
@@ -1316,8 +1369,11 @@ body {
   }
 
   .ara-hero-copy h1 {
-    font-size: 28px;
-    gap: 2px;
+    font-size: 26px;
+  }
+
+  .ara-hero-sub {
+    font-size: 15px;
   }
 
   .ara-call-band h2 {

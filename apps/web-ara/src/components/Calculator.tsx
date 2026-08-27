@@ -132,15 +132,45 @@ export function Calculator() {
         <div className="container">
           <div className="ara-hero">
             <div className="ara-hero-copy">
-              {/* Problem, then outcome, then proof — the structure that tests
-                  best on legal PPC pages, and the same promise the other four
-                  markets lead with. */}
-              <h1>
-                <span>
-                  Injured in a <span className="ara-hero-accent">California Accident</span>?
+              <p className="ara-hero-badge">
+                <span className="ara-hero-badge-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="4" y="3" width="16" height="18" rx="2" />
+                    <path d="M8 7h8M8 11h8M8 15h4" />
+                  </svg>
                 </span>
-                <span>See What Your Case Could Be Worth</span>
+                Free Case Value Calculator
+              </p>
+              <h1>
+                See What Your <span className="ara-hero-accent">California Accident</span> Case Could Be Worth
               </h1>
+              <p className="ara-hero-sub">
+                Get a personalized estimate based on{' '}
+                <span className="ara-hero-underline">real case data</span>
+              </p>
+              <ul className="ara-hero-points">
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+                    <path d="M8 12.5l2.5 2.5L16 9" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                  Free
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="2" />
+                    <path d="M8 11V8a4 4 0 018 0v3" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                  Private
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                    <path d="M12 3l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z" fill="none" stroke="currentColor" strokeWidth="2" />
+                    <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                  No obligation
+                </li>
+              </ul>
             </div>
 
             <div className="ara-hero-form" ref={funnelRef}>
