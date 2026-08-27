@@ -592,14 +592,6 @@ body {
   font-weight: 800;
   font-size: 34px;
   color: var(--navy);
-  margin: 0 0 6px;
-}
-
-.ara-practice-heading p {
-  font-family: 'Open Sans', var(--font-sans);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--navy);
   margin: 0;
 }
 

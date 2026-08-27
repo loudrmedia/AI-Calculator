@@ -23,7 +23,6 @@ export function PracticeAreas() {
       <section className="ara-practice-heading">
         <div className="container">
           <h2>California Car Accident Attorneys</h2>
-          <p>We do personal injury and do it well</p>
         </div>
       </section>
 
