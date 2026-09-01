@@ -142,7 +142,7 @@ export function Calculator() {
                 Free Case Value Calculator
               </p>
               <h1>
-                See What Your <span className="ara-hero-accent">California Accident</span> Case Could Be Worth
+                See What Your California Accident Case <span className="ara-hero-accent">Could Be Worth</span>
               </h1>
               <p className="ara-hero-sub">
                 Get a personalized estimate based on{' '}
