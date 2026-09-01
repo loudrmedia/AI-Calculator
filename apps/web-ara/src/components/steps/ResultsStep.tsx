@@ -185,8 +185,8 @@ export function ResultsStep() {
       <div className="ara-results-hero">
         <h1>Check your phone!</h1>
         <p>
-          In the next <span className="ara-highlight">5 minutes</span> you will receive a call to
-          find out the value of your case.
+          In the next <span className="ara-highlight">5 minutes</span>, you will receive a call to
+          find out how to claim the full value of your case.
         </p>
       </div>
 
