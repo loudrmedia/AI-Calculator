@@ -6,7 +6,6 @@ import { ProgressBar } from './ProgressBar';
 import { Navbar } from './Navbar';
 import { FAQ } from './FAQ';
 import { Footer } from './Footer';
-import { Settlements } from './Settlements';
 import { PracticeAreas } from './PracticeAreas';
 import { EstimateCta } from './EstimateCta';
 import { ExitIntentPopup } from './ExitIntentPopup';
@@ -193,7 +192,6 @@ export function Calculator() {
           </p>
         </div>
 
-        <Settlements />
         <PracticeAreas />
         <EstimateCta targetRef={funnelRef} offset={NAVBAR_OFFSET} />
         <FAQ />
