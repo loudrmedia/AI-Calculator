@@ -73,7 +73,7 @@ export function Calculator() {
           <div className="card">
             {isFirstStep && (
               <div className="header">
-                <h1><span className="title-highlight">CA Accident Victims:</span> See What Your Case Is Worth in 30 Seconds</h1>
+                <h1><span className="title-highlight">CA Accident Victims:</span> See What Your Case Could Be Worth in 30 Seconds</h1>
                 <div className="trust-row">
                   <span className="trust-item"><span className="trust-check">✓</span> Free</span>
                   <span className="trust-item"><span className="trust-check">✓</span> Fast</span>
@@ -86,7 +86,7 @@ export function Calculator() {
               <div className="estimate-ready-banner">
                 <span className="trust-check">✓</span>
                 <span>
-                  <strong>Good news — your estimate is ready.</strong> See your case value instantly on
+                  <strong>Good news — your estimate is ready.</strong> See your potential case value instantly on
                   the next screen.
                 </span>
               </div>
