@@ -23,9 +23,14 @@ export interface TrackingParams {
   fbclid?: string;
   landingPageUrl?: string;
   referrer?: string;
+  // When the params above were first seen. Meta's `_fbc` identifier embeds the
+  // click time, so we need this to rebuild it when the cookie is missing.
+  capturedAt?: number;
 }
 
-const URL_KEYS: (keyof TrackingParams)[] = [
+// `capturedAt` is derived rather than read from the URL, and excluding it keeps
+// every key in this list string-valued.
+const URL_KEYS: Exclude<keyof TrackingParams, 'capturedAt'>[] = [
   'utm_source',
   'utm_medium',
   'utm_campaign',
@@ -46,6 +51,7 @@ function readFromUrl(): TrackingParams {
   });
   captured.landingPageUrl = window.location.href;
   captured.referrer = document.referrer || undefined;
+  captured.capturedAt = Date.now();
   return captured;
 }
 
@@ -79,16 +85,66 @@ declare global {
   }
 }
 
+function readCookie(name: string): string | undefined {
+  const prefix = `${name}=`;
+  const hit = document.cookie.split('; ').find((c) => c.startsWith(prefix));
+  if (!hit) return undefined;
+  try {
+    return decodeURIComponent(hit.slice(prefix.length)) || undefined;
+  } catch {
+    return hit.slice(prefix.length) || undefined;
+  }
+}
+
+export interface MetaIdentifiers {
+  fbp?: string;
+  fbc?: string;
+}
+
+/**
+ * Meta's two browser identifiers, which the Conversions API uses to match a
+ * server-side event back to the same person the pixel saw.
+ *
+ * `_fbp` is written by the pixel on every visit. `_fbc` only exists when the
+ * visit came from an ad click, and the pixel sometimes hasn't written it yet at
+ * submit time, so when it's missing we rebuild it from the stored fbclid in
+ * Meta's documented `fb.<subdomain index>.<click time>.<fbclid>` form.
+ */
+export function getMetaIdentifiers(): MetaIdentifiers {
+  if (typeof window === 'undefined') return {};
+
+  const fbp = readCookie('_fbp');
+  const fbc = readCookie('_fbc');
+  if (fbc) return { fbp, fbc };
+
+  const { fbclid, capturedAt } = getTrackingParams();
+  if (!fbclid) return { fbp };
+
+  return { fbp, fbc: `fb.1.${capturedAt || Date.now()}.${fbclid}` };
+}
+
 const CONVERSION_FIRED_KEY = 'lead_conversion_fired';
 const CONVERSION_ID_KEY = 'lead_conversion_id';
 
+// Held in memory as well as sessionStorage. The lead payload and the pixel
+// event each ask for this id separately, and if storage is blocked the two
+// calls would otherwise generate different values — which is exactly the case
+// where deduplication has to work.
+let conversionIdMemo: string | null = null;
+
 // Generates a unique, stable ID for this lead conversion. Used as the
 // deduplication key (transaction/order ID) so Google Ads / GA4 count only ONE
-// conversion even if the event were ever sent more than once.
+// conversion even if the event were ever sent more than once, and as the Meta
+// `eventID` so a browser event and a Conversions API event collapse into one.
 function getOrCreateConversionId(): string {
+  if (conversionIdMemo) return conversionIdMemo;
+
   try {
     const existing = sessionStorage.getItem(CONVERSION_ID_KEY);
-    if (existing) return existing;
+    if (existing) {
+      conversionIdMemo = existing;
+      return existing;
+    }
   } catch {
     // fall through and generate a fresh id
   }
@@ -98,12 +154,21 @@ function getOrCreateConversionId(): string {
       ? crypto.randomUUID()
       : `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 
+  conversionIdMemo = id;
+
   try {
     sessionStorage.setItem(CONVERSION_ID_KEY, id);
   } catch {
     // ignore — id is still returned for this push
   }
   return id;
+}
+
+// Exposed so the lead payload can carry the same id the pixel will send as
+// `eventID`, which is what lets a Conversions API event be deduplicated
+// against the browser one.
+export function getConversionId(): string {
+  return getOrCreateConversionId();
 }
 
 /**

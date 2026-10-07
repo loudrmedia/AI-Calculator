@@ -57,9 +57,12 @@ interface LeadPayload {
     wbraid?: string;
     gbraid?: string;
     fbclid?: string;
+    fbp?: string;
+    fbc?: string;
     landingPageUrl?: string;
     referrer?: string;
   };
+  conversionId?: string;
   trustedFormCertUrl?: string;
   submittedAt: string;
 }
@@ -275,6 +278,14 @@ function transformForZapier(
     fbclid: sanitizeString(payload.tracking?.fbclid),
     landing_page_url: sanitizeString(payload.tracking?.landingPageUrl),
     referrer: sanitizeString(payload.tracking?.referrer),
+
+    // Meta Conversions API match keys. fbp/fbc identify the browser; event_id
+    // is the same value the pixel sent as eventID, so a server-side event is
+    // deduplicated against the browser one instead of counted twice. ip_address
+    // and user_agent double as the CAPI client_ip_address / client_user_agent.
+    fbp: sanitizeString(payload.tracking?.fbp),
+    fbc: sanitizeString(payload.tracking?.fbc),
+    event_id: sanitizeString(payload.conversionId),
 
     ip_address: sanitizeString(ipAddress),
     user_agent: sanitizeString(userAgent),

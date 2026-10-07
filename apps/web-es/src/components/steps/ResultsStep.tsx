@@ -7,7 +7,12 @@ import { CitationRenderer } from '../CitationRenderer';
 import { Disclaimer } from '../Disclaimer';
 import { OfferChecker } from '../OfferChecker';
 import { CONFIG } from '../../lib/config';
-import { getTrackingParams, trackLeadConversion } from '../../lib/tracking';
+import {
+  getConversionId,
+  getMetaIdentifiers,
+  getTrackingParams,
+  trackLeadConversion,
+} from '../../lib/tracking';
 
 const PHONE_NUMBER = CONFIG.PHONE_NUMBER;
 const PHONE_LINK = CONFIG.PHONE_LINK;
@@ -89,6 +94,7 @@ export function ResultsStep() {
 
     try {
       const tracking = getTrackingParams();
+      const meta = getMetaIdentifiers();
       const payload = {
         inputs: state.inputs,
         contact: state.contact,
@@ -110,9 +116,15 @@ export function ResultsStep() {
           wbraid: tracking.wbraid,
           gbraid: tracking.gbraid,
           fbclid: tracking.fbclid,
+          fbp: meta.fbp,
+          fbc: meta.fbc,
           landingPageUrl: tracking.landingPageUrl,
           referrer: tracking.referrer,
         },
+        // Same value the pixel sends as `eventID` below, so a Conversions API
+        // event raised from this lead collapses into the browser event rather
+        // than double-counting.
+        conversionId: getConversionId(),
         trustedFormCertUrl: getTrustedFormCertUrl(),
         submittedAt: new Date().toISOString(),
       };
