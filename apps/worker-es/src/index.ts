@@ -73,9 +73,9 @@ const ALLOWED_ORIGINS = [
   'https://www.autoreliefassistance.com',
   'https://cal.getautoreliefassistance.com',
   'https://cawa.autoreliefassistance.com',
-  // TODO: confirm the real Spanish domain. Guessed from the txcal/nwcal naming
-  // pattern — if it differs, lead submissions will be blocked by CORS.
-  'https://escal.myautoreliefassistance.com',
+  'https://txcal.myautoreliefassistance.com',
+  'https://nwcal.myautoreliefassistance.com',
+  'https://spcal.getautoreliefassistance.com', // Spanish landing page (apps/web-es)
   'http://localhost:3000',
 ];
 
